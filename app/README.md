@@ -1,20 +1,15 @@
-This is a Kotlin Multiplatform project targeting Android and Web (Kotlin/Wasm).
+# OpenData Kotlin Multiplatform App (`app`)
 
-* [/androidApp](./androidApp/src) contains the Android application entry point.
-* [/shared](./shared/src) is for code shared across your Compose Multiplatform applications:
-  - [commonMain](./shared/src/commonMain/kotlin) is for code that’s common for all targets.
-  - [androidMain](./shared/src/androidMain/kotlin) is for Android-specific Kotlin code.
-  - [wasmJsMain](./shared/src/wasmJsMain/kotlin) is for Web (Kotlin/Wasm) entry point and platform-specific code.
+This module is a **Kotlin Multiplatform** and **Compose Multiplatform** application targeting **Android** and **Web (Kotlin/Wasm)**. 
 
-### Running the apps
+---
 
-You can use `just` from the root (`just app <recipe>`) or inside `app/` (`just <recipe>`), or run Gradle tasks directly:
+## Features
 
-- Web app (dev server): `just app run-web` (`./gradlew :shared:wasmJsBrowserDevelopmentRun --continuous`)
-- Android app: `just app build-android` (`./gradlew :androidApp:assembleDebug`)
+- **Warsaw Open Data & Sensor.Community API Integration**: Fetch newest temperature from city sensors.
+- **Station Markers**" Select individual station markers to inspect concrete weather sensor data.
+- **3D view**: View the temperature data with colored 3d models of the buildings. 
+- **Location Inspection**: Click anywhere to get the estimated temperature of the area.
+- **Sensor filtering**: Filter out sensors that fall outside of the median distribution (to midigate the problem of sensor overheating and inaccurate data).
 
-### Formatting & Tests
-
-- Format code (Spotless): `just app format` (`./gradlew spotlessApply`)
-- Check formatting: `just app format-check` (`./gradlew spotlessCheck`)
-- Android unit tests: `just app test` (`./gradlew :shared:testAndroidHostTest`)
+---
