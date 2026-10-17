@@ -4,12 +4,19 @@ import dev.monand.opendata.api.model.MonitoringJakosciPowietrzaItem
 import dev.monand.opendata.api.model.MonitoringJakosciPowietrzaItemDataInner
 import dev.monand.opendata.api.model.MonitoringJakosciPowietrzaItemIjp
 import dev.monand.opendata.api.model.PogodaItem
+import dev.monand.opendata.api.model.SensorCommunityItem
+import dev.monand.opendata.api.model.SensorDataValue
+import dev.monand.opendata.api.model.SensorInfo
+import dev.monand.opendata.api.model.SensorLocation
+import dev.monand.opendata.api.model.SensorType
 import dev.monand.opendata.core.geo.IdwInterpolator
 import dev.monand.opendata.core.geo.WebMercator
 import dev.monand.opendata.core.map.MapOverlayGeoJson
 import dev.monand.opendata.core.map.MapTileSource
 import dev.monand.opendata.data.model.PogodaStation
 import dev.monand.opendata.data.model.toDomainOrNull
+import dev.monand.opendata.data.repository.DefaultPogodaRepository
+import dev.monand.opendata.feature.heatmap.components.heatColorForTemperatureCelsius
 import kotlin.math.abs
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -93,6 +100,17 @@ class SharedCommonTest {
             )
         assertTrue(geoJson.contains("\"type\":\"FeatureCollection\""))
         assertTrue(geoJson.contains("Stacja A"))
+    }
+
+    @Test
+    fun heatmapUiStateHasCorrectPanLimitsAndShowStationsToggle() {
+        val state = dev.monand.opendata.feature.heatmap.HeatmapUiState()
+        assertTrue(state.showStations)
+        assertEquals(51.90, dev.monand.opendata.feature.heatmap.HeatmapUiState.MIN_PAN_LAT)
+        assertEquals(52.55, dev.monand.opendata.feature.heatmap.HeatmapUiState.MAX_PAN_LAT)
+        assertEquals(20.50, dev.monand.opendata.feature.heatmap.HeatmapUiState.MIN_PAN_LON)
+        assertEquals(21.50, dev.monand.opendata.feature.heatmap.HeatmapUiState.MAX_PAN_LON)
+        assertEquals(9.0, dev.monand.opendata.feature.heatmap.HeatmapUiState.MIN_ZOOM)
     }
 
     @Test
@@ -189,5 +207,64 @@ class SharedCommonTest {
                 ),
             )
         assertNull(dto.toDomainOrNull())
+    }
+
+    @Test
+    fun sensorCommunityOutdoorItemMapsToDomainStation() {
+        val item =
+            SensorCommunityItem(
+                id = 88123L,
+                timestamp = "2026-10-17 17:00:00",
+                location =
+                SensorLocation(
+                    id = 1234L,
+                    latitude = "52.2297",
+                    longitude = "21.0122",
+                    indoor = 0,
+                ),
+                sensor = SensorInfo(sensorType = SensorType(name = "BME280")),
+                sensordatavalues =
+                listOf(
+                    SensorDataValue(value = "11.40", valueType = "temperature"),
+                    SensorDataValue(value = "72.10", valueType = "humidity"),
+                    SensorDataValue(value = "101325.00", valueType = "pressure"),
+                ),
+            )
+        val station = item.toDomainOrNull()
+        assertNotNull(station)
+        assertEquals("Sensor.Community #88123 (BME280)", station.lokalizacja)
+        assertEquals(52.2297, station.lat)
+        assertEquals(21.0122, station.lon)
+        assertEquals(11.40, station.tempPow)
+        assertEquals(72.10, station.wilgPow)
+        assertEquals(1013.25, station.cisnienie)
+    }
+
+    @Test
+    fun sensorCommunityIndoorItemReturnsNull() {
+        val item =
+            SensorCommunityItem(
+                id = 99999L,
+                location = SensorLocation(latitude = "52.22", longitude = "21.01", indoor = 1),
+                sensordatavalues = listOf(SensorDataValue(value = "22.50", valueType = "temperature")),
+            )
+        assertNull(item.toDomainOrNull())
+    }
+
+    @Test
+    fun heatColorForTemperatureCelsiusMaps20DegreesToPureYellow() {
+        val yellowColor = heatColorForTemperatureCelsius(20.0, alpha = 1.0f)
+        assertEquals(1.0f, yellowColor.red, 1e-3f)
+        assertEquals(1.0f, yellowColor.green, 1e-3f)
+        assertEquals(0.0f, yellowColor.blue, 1e-3f)
+
+        val coldColor = heatColorForTemperatureCelsius(0.0, alpha = 1.0f)
+        assertEquals(0.0f, coldColor.red, 1e-3f)
+        assertTrue(coldColor.blue > coldColor.green)
+
+        val hotColor = heatColorForTemperatureCelsius(30.0, alpha = 1.0f)
+        assertEquals(1.0f, hotColor.red, 1e-3f)
+        assertTrue(hotColor.green < 0.2f)
+        assertEquals(0.0f, hotColor.blue, 1e-3f)
     }
 }

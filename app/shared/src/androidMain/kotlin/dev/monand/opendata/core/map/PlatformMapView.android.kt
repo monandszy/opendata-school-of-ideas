@@ -20,7 +20,9 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import dev.monand.opendata.data.model.LocationInspection
 import dev.monand.opendata.data.model.PogodaStation
+import dev.monand.opendata.feature.heatmap.HeatmapUiState
 import org.maplibre.android.MapLibre
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.camera.CameraUpdateFactory
@@ -29,6 +31,7 @@ import org.maplibre.android.geometry.LatLngQuad
 import org.maplibre.android.maps.MapLibreMap
 import org.maplibre.android.maps.MapView
 import org.maplibre.android.maps.Style
+import org.maplibre.android.style.expressions.Expression
 import org.maplibre.android.style.expressions.Expression.coalesce
 import org.maplibre.android.style.expressions.Expression.get
 import org.maplibre.android.style.expressions.Expression.literal
@@ -57,11 +60,14 @@ private const val IDW_LAYER_ID = "idw-heatmap-layer"
 private const val BUILDINGS_3D_LAYER_ID = "warsaw-3d-buildings-layer"
 private const val STATIONS_SOURCE_ID = "stations-source"
 private const val STATIONS_LAYER_ID = "stations-circle-layer"
+private const val INSPECTION_SOURCE_ID = "inspection-source"
+private const val INSPECTION_LAYER_ID = "inspection-circle-layer"
 
 @Composable
 actual fun PlatformMapView(
     stations: List<PogodaStation>,
     selectedStation: PogodaStation?,
+    activeInspection: LocationInspection?,
     tileSource: MapTileSource,
     centerLat: Double,
     centerLon: Double,
@@ -70,11 +76,13 @@ actual fun PlatformMapView(
     bearing: Double,
     is3dMode: Boolean,
     showHeatmap: Boolean,
+    showStations: Boolean,
     minTemp: Double,
     maxTemp: Double,
     cameraCommandId: Int,
     onCameraMoved: (lat: Double, lon: Double, zoom: Double, pitch: Double, bearing: Double) -> Unit,
     onSelectStation: (PogodaStation?) -> Unit,
+    onMapClicked: (lat: Double, lon: Double) -> Unit,
     modifier: Modifier,
     overlays: @Composable BoxScope.() -> Unit,
 ) {
@@ -87,6 +95,7 @@ actual fun PlatformMapView(
 
     val currentStations by rememberUpdatedState(stations)
     val currentOnSelectStation by rememberUpdatedState(onSelectStation)
+    val currentOnMapClicked by rememberUpdatedState(onMapClicked)
     val currentOnCameraMoved by rememberUpdatedState(onCameraMoved)
 
     val mapView =
@@ -111,24 +120,10 @@ actual fun PlatformMapView(
             MapOverlayGeoJson.buildStationsGeoJson(stations, selectedStation, minTemp, maxTemp)
         }
 
-    DisposableEffect(lifecycleOwner, mapView) {
-        val observer =
-            LifecycleEventObserver { _, event ->
-                when (event) {
-                    Lifecycle.Event.ON_START -> mapView.onStart()
-                    Lifecycle.Event.ON_RESUME -> mapView.onResume()
-                    Lifecycle.Event.ON_PAUSE -> mapView.onPause()
-                    Lifecycle.Event.ON_STOP -> mapView.onStop()
-                    Lifecycle.Event.ON_DESTROY -> mapView.onDestroy()
-                    else -> Unit
-                }
-            }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-            mapView.onDestroy()
+    val inspectionGeoJson =
+        remember(activeInspection, minTemp, maxTemp) {
+            MapOverlayGeoJson.buildInspectionGeoJson(activeInspection, minTemp, maxTemp)
         }
-    }
 
     LaunchedEffect(mapInstance, tileSource) {
         val map = mapInstance ?: return@LaunchedEffect
@@ -139,7 +134,12 @@ actual fun PlatformMapView(
                     style = style,
                     idwBitmap = idwBitmap,
                     stationsGeoJson = stationsGeoJson,
+                    inspectionGeoJson = inspectionGeoJson,
+                    stations = stations,
+                    minTemp = minTemp,
+                    maxTemp = maxTemp,
                     showHeatmap = showHeatmap,
+                    showStations = showStations,
                     is3dMode = is3dMode,
                 )
                 styleReadyCounter++
@@ -147,14 +147,19 @@ actual fun PlatformMapView(
         }
     }
 
-    LaunchedEffect(styleReadyCounter, idwBitmap, stationsGeoJson, showHeatmap, is3dMode) {
+    LaunchedEffect(styleReadyCounter, idwBitmap, stationsGeoJson, inspectionGeoJson, showHeatmap, showStations, is3dMode) {
         val style = mapInstance?.style ?: return@LaunchedEffect
         if (!style.isFullyLoaded) return@LaunchedEffect
         updateOverlayLayers(
             style = style,
             idwBitmap = idwBitmap,
             stationsGeoJson = stationsGeoJson,
+            inspectionGeoJson = inspectionGeoJson,
+            stations = stations,
+            minTemp = minTemp,
+            maxTemp = maxTemp,
             showHeatmap = showHeatmap,
+            showStations = showStations,
             is3dMode = is3dMode,
         )
     }
@@ -185,6 +190,17 @@ actual fun PlatformMapView(
                         map.uiSettings.isRotateGesturesEnabled = true
                         map.uiSettings.isZoomGesturesEnabled = true
                         map.uiSettings.isScrollGesturesEnabled = true
+
+                        map.setLatLngBoundsForCameraTarget(
+                            org.maplibre.android.geometry.LatLngBounds.from(
+                                HeatmapUiState.MAX_PAN_LAT,
+                                HeatmapUiState.MAX_PAN_LON,
+                                HeatmapUiState.MIN_PAN_LAT,
+                                HeatmapUiState.MIN_PAN_LON,
+                            ),
+                        )
+                        map.setMinZoomPreference(HeatmapUiState.MIN_ZOOM)
+                        map.setMaxZoomPreference(HeatmapUiState.MAX_ZOOM)
 
                         val initialPos =
                             CameraPosition
@@ -230,7 +246,11 @@ actual fun PlatformMapView(
                                 } else {
                                     null
                                 }
-                            currentOnSelectStation(matched)
+                            if (matched != null) {
+                                currentOnSelectStation(matched)
+                            } else {
+                                currentOnMapClicked(latLng.latitude, latLng.longitude)
+                            }
                             true
                         }
 
@@ -249,7 +269,12 @@ private fun setupOverlayLayers(
     style: Style,
     idwBitmap: Bitmap,
     stationsGeoJson: String,
+    inspectionGeoJson: String,
+    stations: List<PogodaStation>,
+    minTemp: Double,
+    maxTemp: Double,
     showHeatmap: Boolean,
+    showStations: Boolean,
     is3dMode: Boolean,
 ) {
     val quad =
@@ -278,16 +303,21 @@ private fun setupOverlayLayers(
 
     val vectorSource = style.sources.firstOrNull { it is org.maplibre.android.style.sources.VectorSource }
     if (vectorSource != null && style.getLayer(BUILDINGS_3D_LAYER_ID) == null) {
+        val buildingColor = if (showHeatmap) Color.WHITE else Color.parseColor("#363C4A")
+        val buildingOpacity = if (showHeatmap) 0.60f else 0.85f
+
         val extrusionLayer =
             FillExtrusionLayer(BUILDINGS_3D_LAYER_ID, vectorSource.id)
                 .withSourceLayer("building")
                 .withProperties(
-                    fillExtrusionColor(Color.parseColor("#363C4A")),
+                    fillExtrusionColor(buildingColor),
                     fillExtrusionHeight(coalesce(toNumber(get("render_height")), toNumber(get("height")), literal(12.0f))),
                     fillExtrusionBase(coalesce(toNumber(get("render_min_height")), toNumber(get("min_height")), literal(0.0f))),
-                    fillExtrusionOpacity(0.85f),
+                    fillExtrusionOpacity(buildingOpacity),
                     visibility(if (is3dMode) Property.VISIBLE else Property.NONE),
-                )
+                ).apply {
+                    minZoom = 12.0f
+                }
         style.addLayer(extrusionLayer)
     }
 
@@ -304,8 +334,26 @@ private fun setupOverlayLayers(
                     circleStrokeColor(Color.WHITE),
                     circleStrokeWidth(toNumber(get("strokeWidth"))),
                     circlePitchAlignment(Property.CIRCLE_PITCH_ALIGNMENT_MAP),
+                    visibility(if (showStations) Property.VISIBLE else Property.NONE),
                 )
         style.addLayer(circleLayer)
+    }
+
+    if (style.getSource(INSPECTION_SOURCE_ID) == null) {
+        style.addSource(GeoJsonSource(INSPECTION_SOURCE_ID, inspectionGeoJson))
+    }
+
+    if (style.getLayer(INSPECTION_LAYER_ID) == null) {
+        val inspectionLayer =
+            CircleLayer(INSPECTION_LAYER_ID, INSPECTION_SOURCE_ID)
+                .withProperties(
+                    circleColor(toColor(get("color"))),
+                    circleRadius(toNumber(get("radius"))),
+                    circleStrokeColor(Color.WHITE),
+                    circleStrokeWidth(toNumber(get("strokeWidth"))),
+                    circlePitchAlignment(Property.CIRCLE_PITCH_ALIGNMENT_MAP),
+                )
+        style.addLayer(inspectionLayer)
     }
 }
 
@@ -313,7 +361,12 @@ private fun updateOverlayLayers(
     style: Style,
     idwBitmap: Bitmap,
     stationsGeoJson: String,
+    inspectionGeoJson: String,
+    stations: List<PogodaStation>,
+    minTemp: Double,
+    maxTemp: Double,
     showHeatmap: Boolean,
+    showStations: Boolean,
     is3dMode: Boolean,
 ) {
     (style.getSourceAs<ImageSource>(IDW_SOURCE_ID))?.setImage(idwBitmap)
@@ -321,14 +374,26 @@ private fun updateOverlayLayers(
         visibility(if (showHeatmap) Property.VISIBLE else Property.NONE),
     )
 
+    val buildingColor = if (showHeatmap) Color.WHITE else Color.parseColor("#363C4A")
+    val buildingOpacity = if (showHeatmap) 0.60f else 0.85f
+
     style.getLayer(BUILDINGS_3D_LAYER_ID)?.setProperties(
         visibility(if (is3dMode) Property.VISIBLE else Property.NONE),
+        fillExtrusionColor(buildingColor),
+        fillExtrusionOpacity(buildingOpacity),
     )
     style.getLayer("building-3d")?.setProperties(
         visibility(if (is3dMode) Property.VISIBLE else Property.NONE),
+        fillExtrusionColor(buildingColor),
+        fillExtrusionOpacity(buildingOpacity),
     )
 
     (style.getSourceAs<GeoJsonSource>(STATIONS_SOURCE_ID))?.setGeoJson(stationsGeoJson)
+    style.getLayer(STATIONS_LAYER_ID)?.setProperties(
+        visibility(if (showStations) Property.VISIBLE else Property.NONE),
+    )
+
+    (style.getSourceAs<GeoJsonSource>(INSPECTION_SOURCE_ID))?.setGeoJson(inspectionGeoJson)
 }
 
 private fun textureToBitmap(texture: IdwHeatmapTexture): Bitmap {

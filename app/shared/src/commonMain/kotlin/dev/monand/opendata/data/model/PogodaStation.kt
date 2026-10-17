@@ -2,6 +2,7 @@ package dev.monand.opendata.data.model
 
 import dev.monand.opendata.api.model.MonitoringJakosciPowietrzaItem
 import dev.monand.opendata.api.model.PogodaItem
+import dev.monand.opendata.api.model.SensorCommunityItem
 
 data class PogodaStation(
     val lokalizacja: String,
@@ -73,5 +74,46 @@ fun MonitoringJakosciPowietrzaItem.toDomainOrNull(): PogodaStation? {
         cisnienie = pressure,
         ijp = ijp?.name,
         czas = tempEntry.time,
+    )
+}
+
+fun SensorCommunityItem.toDomainOrNull(): PogodaStation? {
+    val loc = location ?: return null
+    if (loc.indoor == 1) return null // Exclude indoor sensors
+
+    val latitude = loc.latitude?.toDoubleOrNull() ?: return null
+    val longitude = loc.longitude?.toDoubleOrNull() ?: return null
+
+    val tempVal =
+        sensordatavalues
+            .firstOrNull { it.valueType.equals("temperature", ignoreCase = true) }
+            ?.value
+            ?.toDoubleOrNull() ?: return null
+
+    val humidityVal =
+        sensordatavalues
+            .firstOrNull { it.valueType.equals("humidity", ignoreCase = true) }
+            ?.value
+            ?.toDoubleOrNull()
+
+    val pressureVal =
+        sensordatavalues
+            .firstOrNull { it.valueType.equals("pressure", ignoreCase = true) }
+            ?.value
+            ?.toDoubleOrNull()
+            ?.let { if (it > 2000.0) it / 100.0 else it }
+
+    val sensorModel = sensor?.sensorType?.name ?: "Sensor.Community"
+    val stationId = id ?: loc.id ?: 0L
+    val label = "Sensor.Community #$stationId ($sensorModel)"
+
+    return PogodaStation(
+        lokalizacja = label,
+        lat = latitude,
+        lon = longitude,
+        tempPow = tempVal,
+        wilgPow = humidityVal,
+        cisnienie = pressureVal,
+        czas = timestamp,
     )
 }

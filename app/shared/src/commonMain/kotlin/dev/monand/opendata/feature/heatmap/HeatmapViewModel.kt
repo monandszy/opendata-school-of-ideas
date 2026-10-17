@@ -2,7 +2,9 @@ package dev.monand.opendata.feature.heatmap
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.monand.opendata.core.geo.IdwInterpolator
 import dev.monand.opendata.core.map.MapTileSource
+import dev.monand.opendata.data.model.LocationInspection
 import dev.monand.opendata.data.model.PogodaStation
 import dev.monand.opendata.data.repository.DefaultPogodaRepository
 import dev.monand.opendata.data.repository.PogodaRepository
@@ -36,7 +38,7 @@ class HeatmapViewModel(
                                 liveStations.find { it.lokalizacja == selected.lokalizacja }
                             }
                         current.copy(
-                            stations = liveStations,
+                            rawStations = liveStations,
                             isLoadingStations = false,
                             errorMessage = null,
                             lastUpdated = latestTimestamp,
@@ -51,6 +53,12 @@ class HeatmapViewModel(
                         )
                     }
                 }
+        }
+    }
+
+    fun onToggleFilterOutliers() {
+        _uiState.update { current ->
+            current.copy(filterOutliers = !current.filterOutliers)
         }
     }
 
@@ -128,6 +136,12 @@ class HeatmapViewModel(
         }
     }
 
+    fun onToggleStationsVisibility() {
+        _uiState.update { current ->
+            current.copy(showStations = !current.showStations)
+        }
+    }
+
     fun onSelectTileSource(source: MapTileSource) {
         _uiState.update { current ->
             current.copy(tileSource = source)
@@ -136,7 +150,40 @@ class HeatmapViewModel(
 
     fun onSelectStation(station: PogodaStation?) {
         _uiState.update { current ->
-            current.copy(selectedStation = station)
+            current.copy(
+                selectedStation = station,
+                activeInspection = if (station != null) null else current.activeInspection,
+            )
+        }
+    }
+
+    fun onMapClicked(lat: Double, lon: Double) {
+        val currentStations = _uiState.value.stations
+        if (currentStations.isEmpty()) return
+        val idwRes = IdwInterpolator.interpolate(lat, lon, currentStations)
+        val nearest = currentStations.minByOrNull { s ->
+            val dy = (lat - s.lat) * 111.2
+            val dx = (lon - s.lon) * 68.1
+            dy * dy + dx * dx
+        }
+        val inspection = LocationInspection(
+            lat = lat,
+            lon = lon,
+            estimatedTemp = idwRes.temp,
+            minDistanceKm = idwRes.minDistanceKm,
+            nearestStationName = nearest?.lokalizacja ?: "Nieznana stacja",
+        )
+        _uiState.update { current ->
+            current.copy(
+                activeInspection = inspection,
+                selectedStation = null,
+            )
+        }
+    }
+
+    fun onClearInspection() {
+        _uiState.update { current ->
+            current.copy(activeInspection = null)
         }
     }
 }

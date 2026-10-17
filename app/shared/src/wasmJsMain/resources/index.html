@@ -22,7 +22,7 @@
             width: 0;
             height: 0;
             z-index: 0;
-            background: #e8ecef;
+            background: #121212;
             overflow: hidden;
         }
         canvas {
@@ -33,6 +33,8 @@
     </style>
     <script>
         (function() {
+            document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+
             const origGetContext = HTMLCanvasElement.prototype.getContext;
             HTMLCanvasElement.prototype.getContext = function(type, attrs) {
                 if (type === 'webgl' || type === 'webgl2') {
@@ -48,8 +50,13 @@
                 heatmapDataUrl: null,
                 heatmapCoords: null,
                 showHeatmap: true,
+                showStations: true,
                 is3dMode: false,
-                stationsGeoJsonStr: null
+                stationsGeoJsonStr: null,
+                inspectionGeoJsonStr: null,
+                buildingColorExprJsonStr: null,
+                offCanvas: null,
+                offCanvasCtx: null
             };
 
             function ensureHostElement() {
@@ -120,17 +127,21 @@
                     }
                 }
 
+                const buildingColor = state.showHeatmap ? '#ffffff' : '#363c4a';
+                const buildingOpacity = state.showHeatmap ? 0.60 : 0.85;
+
                 if (vectorSourceId && !map.getLayer('warsaw-3d-buildings-layer')) {
                     map.addLayer({
                         id: 'warsaw-3d-buildings-layer',
                         type: 'fill-extrusion',
                         source: vectorSourceId,
                         'source-layer': 'building',
+                        minzoom: 12,
                         paint: {
-                            'fill-extrusion-color': '#363c4a',
+                            'fill-extrusion-color': buildingColor,
                             'fill-extrusion-height': ['coalesce', ['to-number', ['get', 'render_height']], ['coalesce', ['to-number', ['get', 'height']], 12]],
                             'fill-extrusion-base': ['coalesce', ['to-number', ['get', 'render_min_height']], ['coalesce', ['to-number', ['get', 'min_height']], 0]],
-                            'fill-extrusion-opacity': 0.85
+                            'fill-extrusion-opacity': buildingOpacity
                         },
                         layout: {
                             visibility: state.is3dMode ? 'visible' : 'none'
@@ -144,6 +155,8 @@
                         'visibility',
                         state.is3dMode ? 'visible' : 'none'
                     );
+                    map.setPaintProperty('warsaw-3d-buildings-layer', 'fill-extrusion-color', buildingColor);
+                    map.setPaintProperty('warsaw-3d-buildings-layer', 'fill-extrusion-opacity', buildingOpacity);
                 }
                 if (map.getLayer('building-3d')) {
                     map.setLayoutProperty(
@@ -151,6 +164,8 @@
                         'visibility',
                         state.is3dMode ? 'visible' : 'none'
                     );
+                    map.setPaintProperty('building-3d', 'fill-extrusion-color', buildingColor);
+                    map.setPaintProperty('building-3d', 'fill-extrusion-opacity', buildingOpacity);
                 }
 
                 if (state.stationsGeoJsonStr) {
@@ -177,11 +192,52 @@
                                     'circle-stroke-color': '#ffffff',
                                     'circle-stroke-width': ['get', 'strokeWidth'],
                                     'circle-pitch-alignment': 'map'
+                                },
+                                layout: {
+                                    visibility: state.showStations ? 'visible' : 'none'
+                                }
+                            });
+                        } else {
+                            map.setLayoutProperty(
+                                'stations-circle-layer',
+                                'visibility',
+                                state.showStations ? 'visible' : 'none'
+                            );
+                        }
+                    } catch (e) {
+                        console.error('Failed to parse stations GeoJSON', e);
+                    }
+                }
+
+                if (state.inspectionGeoJsonStr) {
+                    try {
+                        const geojson = JSON.parse(state.inspectionGeoJsonStr);
+                        const existingInspection = map.getSource('inspection-source');
+                        if (existingInspection) {
+                            existingInspection.setData(geojson);
+                        } else {
+                            map.addSource('inspection-source', {
+                                type: 'geojson',
+                                data: geojson
+                            });
+                        }
+
+                        if (!map.getLayer('inspection-circle-layer')) {
+                            map.addLayer({
+                                id: 'inspection-circle-layer',
+                                type: 'circle',
+                                source: 'inspection-source',
+                                paint: {
+                                    'circle-color': ['get', 'color'],
+                                    'circle-radius': ['get', 'radius'],
+                                    'circle-stroke-color': '#ffffff',
+                                    'circle-stroke-width': ['get', 'strokeWidth'],
+                                    'circle-pitch-alignment': 'map'
                                 }
                             });
                         }
                     } catch (e) {
-                        console.error('Failed to parse stations GeoJSON', e);
+                        console.error('Failed to parse inspection GeoJSON', e);
                     }
                 }
             }
@@ -219,6 +275,9 @@
                             zoom: zoom,
                             pitch: pitch,
                             bearing: bearing,
+                            maxBounds: [[20.50, 51.90], [21.50, 52.55]],
+                            minZoom: 9.0,
+                            maxZoom: 18.0,
                             attributionControl: false,
                             interactive: false
                         });
@@ -243,26 +302,37 @@
                     west,
                     east,
                     showHeatmap,
+                    showStations,
                     is3dMode,
-                    stationsGeoJsonStr
+                    stationsGeoJsonStr,
+                    inspectionGeoJsonStr
                 ) {
                     state.showHeatmap = showHeatmap;
+                    state.showStations = showStations;
                     state.is3dMode = is3dMode;
                     state.stationsGeoJsonStr = stationsGeoJsonStr;
+                    state.inspectionGeoJsonStr = inspectionGeoJsonStr;
 
                     if (base64Rgba && width > 0 && height > 0) {
+                        if (!state.offCanvas) {
+                            state.offCanvas = document.createElement('canvas');
+                        }
+                        if (state.offCanvas.width !== width || state.offCanvas.height !== height) {
+                            state.offCanvas.width = width;
+                            state.offCanvas.height = height;
+                        }
+                        if (!state.offCanvasCtx) {
+                            state.offCanvasCtx = state.offCanvas.getContext('2d');
+                        }
+
                         const binary = atob(base64Rgba);
                         const bytes = new Uint8ClampedArray(binary.length);
                         for (let i = 0; i < binary.length; i++) {
                             bytes[i] = binary.charCodeAt(i);
                         }
-                        const offCanvas = document.createElement('canvas');
-                        offCanvas.width = width;
-                        offCanvas.height = height;
-                        const ctx = offCanvas.getContext('2d');
                         const imgData = new ImageData(bytes, width, height);
-                        ctx.putImageData(imgData, 0, 0);
-                        state.heatmapDataUrl = offCanvas.toDataURL('image/png');
+                        state.offCanvasCtx.putImageData(imgData, 0, 0);
+                        state.heatmapDataUrl = state.offCanvas.toDataURL('image/png');
                         state.heatmapCoords = [
                             [west, north],
                             [east, north],
@@ -272,6 +342,14 @@
                     }
 
                     applyOverlaysToMap();
+                },
+
+                unproject: function(xPhysical, yPhysical) {
+                    const map = state.map;
+                    if (!map) return '';
+                    const dpr = window.devicePixelRatio || 1;
+                    const lngLat = map.unproject([xPhysical / dpr, yPhysical / dpr]);
+                    return lngLat.lat + ',' + lngLat.lng;
                 },
 
                 animateCamera: function(lat, lon, zoom, pitch, bearing) {
@@ -307,10 +385,18 @@
                     const map = state.map;
                     if (!map) return '';
                     const dpr = window.devicePixelRatio || 1;
-                    const nextZoom = Math.max(9.0, Math.min(18.0, map.getZoom() - scrollDeltaY * 0.35));
-                    map.zoomTo(nextZoom, {
+                    let zoomChange = 0;
+                    const absDelta = Math.abs(scrollDeltaY);
+                    if (absDelta >= 10.0) {
+                        zoomChange = scrollDeltaY > 0 ? -0.25 : 0.25;
+                    } else {
+                        zoomChange = -scrollDeltaY * 0.05;
+                    }
+                    const nextZoom = Math.max(9.0, Math.min(18.0, map.getZoom() + zoomChange));
+                    map.easeTo({
+                        zoom: nextZoom,
                         around: map.unproject([cursorXPhysical / dpr, cursorYPhysical / dpr]),
-                        animate: false
+                        duration: absDelta >= 10.0 ? 120 : 0
                     });
                     return formatCameraState(map);
                 },

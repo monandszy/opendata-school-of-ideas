@@ -7,4 +7,11 @@ config.devServer.proxy = [
         secure: true,
         pathRewrite: { '^/warsaw-api': '' },
     },
+    {
+        context: ['/sensor-community-api'],
+        target: 'https://data.sensor.community',
+        changeOrigin: true,
+        secure: true,
+        pathRewrite: { '^/sensor-community-api': '' },
+    },
 ];

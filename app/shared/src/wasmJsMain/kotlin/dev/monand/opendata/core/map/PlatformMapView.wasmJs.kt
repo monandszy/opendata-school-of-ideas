@@ -19,17 +19,22 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.isAltPressed
 import androidx.compose.ui.input.pointer.isCtrlPressed
+import androidx.compose.ui.input.pointer.isPrimaryPressed
+import androidx.compose.ui.input.pointer.isSecondaryPressed
 import androidx.compose.ui.input.pointer.isShiftPressed
+import androidx.compose.ui.input.pointer.isTertiaryPressed
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.unit.dp
+import dev.monand.opendata.data.model.LocationInspection
 import dev.monand.opendata.data.model.PogodaStation
 import kotlin.io.encoding.Base64
 
@@ -64,10 +69,10 @@ private external fun jsEnsureMap(
 )
 
 @JsFun(
-    """(base64Rgba, width, height, north, south, west, east, showHeatmap, is3dMode, stationsGeoJsonStr) => {
+    """(base64Rgba, width, height, north, south, west, east, showHeatmap, showStations, is3dMode, stationsGeoJsonStr, inspectionGeoJsonStr) => {
         if (window.warsawMapBridge) {
             window.warsawMapBridge.updateOverlays(
-                base64Rgba, width, height, north, south, west, east, showHeatmap, is3dMode, stationsGeoJsonStr
+                base64Rgba, width, height, north, south, west, east, showHeatmap, showStations, is3dMode, stationsGeoJsonStr, inspectionGeoJsonStr
             );
         }
     }""",
@@ -81,8 +86,10 @@ private external fun jsUpdateOverlays(
     west: Double,
     east: Double,
     showHeatmap: Boolean,
+    showStations: Boolean,
     is3dMode: Boolean,
     stationsGeoJsonStr: String,
+    inspectionGeoJsonStr: String,
 )
 
 @JsFun(
@@ -143,10 +150,21 @@ private external fun jsQueryStationAt(
     yPhysical: Double,
 ): String
 
+@JsFun(
+    """(xPhysical, yPhysical) => {
+        return window.warsawMapBridge ? window.warsawMapBridge.unproject(xPhysical, yPhysical) : '';
+    }""",
+)
+private external fun jsUnproject(
+    xPhysical: Double,
+    yPhysical: Double,
+): String
+
 @Composable
 actual fun PlatformMapView(
     stations: List<PogodaStation>,
     selectedStation: PogodaStation?,
+    activeInspection: LocationInspection?,
     tileSource: MapTileSource,
     centerLat: Double,
     centerLon: Double,
@@ -155,28 +173,30 @@ actual fun PlatformMapView(
     bearing: Double,
     is3dMode: Boolean,
     showHeatmap: Boolean,
+    showStations: Boolean,
     minTemp: Double,
     maxTemp: Double,
     cameraCommandId: Int,
     onCameraMoved: (lat: Double, lon: Double, zoom: Double, pitch: Double, bearing: Double) -> Unit,
     onSelectStation: (PogodaStation?) -> Unit,
+    onMapClicked: (lat: Double, lon: Double) -> Unit,
     modifier: Modifier,
     overlays: @Composable BoxScope.() -> Unit,
 ) {
     val currentStations by rememberUpdatedState(stations)
     val currentOnCameraMoved by rememberUpdatedState(onCameraMoved)
     val currentOnSelectStation by rememberUpdatedState(onSelectStation)
+    val currentOnMapClicked by rememberUpdatedState(onMapClicked)
 
     var lastAppliedCommandId by remember { mutableIntStateOf(cameraCommandId) }
     var isOrbitModifierDown by remember { mutableStateOf(false) }
 
     val idwTexture =
-        remember(stations, minTemp, maxTemp, zoom) {
+        remember(stations, minTemp, maxTemp) {
             MapOverlayGeoJson.generateIdwTexture(
                 stations = stations,
                 minTemp = minTemp,
                 maxTemp = maxTemp,
-                zoom = zoom,
             )
         }
     val base64Texture =
@@ -192,7 +212,14 @@ actual fun PlatformMapView(
                 maxTemp = maxTemp,
             )
         }
-
+    val inspectionGeoJson =
+        remember(activeInspection, minTemp, maxTemp) {
+            MapOverlayGeoJson.buildInspectionGeoJson(
+                activeInspection = activeInspection,
+                minTemp = minTemp,
+                maxTemp = maxTemp,
+            )
+        }
     LaunchedEffect(tileSource.styleUrl) {
         jsEnsureMap(tileSource.styleUrl, centerLat, centerLon, zoom, pitch, bearing)
         jsUpdateOverlays(
@@ -204,12 +231,14 @@ actual fun PlatformMapView(
             west = idwTexture.westLon,
             east = idwTexture.eastLon,
             showHeatmap = showHeatmap,
+            showStations = showStations,
             is3dMode = is3dMode,
             stationsGeoJsonStr = stationsGeoJson,
+            inspectionGeoJsonStr = inspectionGeoJson,
         )
     }
 
-    LaunchedEffect(base64Texture, showHeatmap, is3dMode, stationsGeoJson) {
+    LaunchedEffect(base64Texture, showHeatmap, showStations, is3dMode, stationsGeoJson, inspectionGeoJson) {
         jsUpdateOverlays(
             base64Rgba = base64Texture,
             width = idwTexture.width,
@@ -219,8 +248,10 @@ actual fun PlatformMapView(
             west = idwTexture.westLon,
             east = idwTexture.eastLon,
             showHeatmap = showHeatmap,
+            showStations = showStations,
             is3dMode = is3dMode,
             stationsGeoJsonStr = stationsGeoJson,
+            inspectionGeoJsonStr = inspectionGeoJson,
         )
     }
 
@@ -252,16 +283,77 @@ actual fun PlatformMapView(
                 .fillMaxSize()
                 .pointerInput(Unit) {
                     awaitPointerEventScope {
+                        var isDragging = false
+                        var downPos = Offset.Zero
+                        var lastPos = Offset.Zero
+                        var isOrbitDrag = false
+
                         while (true) {
                             val event = awaitPointerEvent(PointerEventPass.Initial)
+                            val change = event.changes.firstOrNull() ?: continue
                             val mods = event.keyboardModifiers
-                            isOrbitModifierDown =
-                                mods.isShiftPressed || mods.isCtrlPressed || mods.isAltPressed
-                            if (event.type == PointerEventType.Scroll) {
-                                val change = event.changes.firstOrNull()
-                                if (change != null) {
+                            val buttons = event.buttons
+
+                            when (event.type) {
+                                PointerEventType.Press -> {
+                                    isDragging = true
+                                    downPos = change.position
+                                    lastPos = change.position
+                                    isOrbitDrag = buttons.isSecondaryPressed ||
+                                        buttons.isTertiaryPressed ||
+                                        mods.isShiftPressed ||
+                                        mods.isCtrlPressed ||
+                                        mods.isAltPressed
+                                }
+
+                                PointerEventType.Move -> {
+                                    if (isDragging) {
+                                        val currentPos = change.position
+                                        val dragAmount = currentPos - lastPos
+                                        lastPos = currentPos
+
+                                        if (dragAmount.x != 0f || dragAmount.y != 0f) {
+                                            change.consume()
+                                            val stateStr = if (isOrbitDrag) {
+                                                jsOrbitBy(dragAmount.x.toDouble(), dragAmount.y.toDouble())
+                                            } else {
+                                                jsPanBy(dragAmount.x.toDouble(), dragAmount.y.toDouble())
+                                            }
+                                            dispatchCameraState(stateStr, currentOnCameraMoved)
+                                        }
+                                    }
+                                }
+
+                                PointerEventType.Release -> {
+                                    if (isDragging) {
+                                        isDragging = false
+                                        val totalDist = (change.position - downPos).getDistance()
+                                        if (totalDist < 6f && !isOrbitDrag) {
+                                            val stationName = jsQueryStationAt(change.position.x.toDouble(), change.position.y.toDouble())
+                                            if (stationName.isNotEmpty()) {
+                                                val tapped = currentStations.find { it.lokalizacja == stationName }
+                                                currentOnSelectStation(tapped)
+                                            } else {
+                                                val unprojected = jsUnproject(change.position.x.toDouble(), change.position.y.toDouble())
+                                                if (unprojected.isNotEmpty()) {
+                                                    val parts = unprojected.split(',')
+                                                    if (parts.size == 2) {
+                                                        val lat = parts[0].toDoubleOrNull()
+                                                        val lon = parts[1].toDoubleOrNull()
+                                                        if (lat != null && lon != null) {
+                                                            currentOnMapClicked(lat, lon)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                PointerEventType.Scroll -> {
                                     val scrollY = change.scrollDelta.y.toDouble()
                                     if (scrollY != 0.0) {
+                                        change.consume()
                                         val stateStr =
                                             jsZoomByScroll(
                                                 scrollDeltaY = scrollY,
@@ -273,28 +365,6 @@ actual fun PlatformMapView(
                                 }
                             }
                         }
-                    }
-                }.pointerInput(Unit) {
-                    detectDragGestures { change, dragAmount ->
-                        change.consume()
-                        val stateStr =
-                            if (isOrbitModifierDown) {
-                                jsOrbitBy(dragAmount.x.toDouble(), dragAmount.y.toDouble())
-                            } else {
-                                jsPanBy(dragAmount.x.toDouble(), dragAmount.y.toDouble())
-                            }
-                        dispatchCameraState(stateStr, currentOnCameraMoved)
-                    }
-                }.pointerInput(Unit) {
-                    detectTapGestures { offset ->
-                        val stationName = jsQueryStationAt(offset.x.toDouble(), offset.y.toDouble())
-                        val tapped =
-                            if (stationName.isNotEmpty()) {
-                                currentStations.find { it.lokalizacja == stationName }
-                            } else {
-                                null
-                            }
-                        currentOnSelectStation(tapped)
                     }
                 },
         ) {

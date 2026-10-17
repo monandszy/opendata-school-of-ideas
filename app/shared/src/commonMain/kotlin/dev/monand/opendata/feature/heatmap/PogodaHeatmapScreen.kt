@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -17,8 +19,8 @@ import dev.monand.opendata.core.map.PlatformMapView
 import dev.monand.opendata.data.model.PogodaStation
 import dev.monand.opendata.feature.heatmap.components.ApiErrorDialog
 import dev.monand.opendata.feature.heatmap.components.HeatmapTopBar
+import dev.monand.opendata.feature.heatmap.components.LocationInspectionCard
 import dev.monand.opendata.feature.heatmap.components.MapAttributionBadge
-import dev.monand.opendata.feature.heatmap.components.MapZoomControls
 import dev.monand.opendata.feature.heatmap.components.StationDetailCard
 
 @Composable
@@ -34,8 +36,12 @@ fun PogodaHeatmapScreen(viewModel: HeatmapViewModel = viewModel { HeatmapViewMod
         onResetView = viewModel::onResetView,
         onToggle3dMode = viewModel::onToggle3dMode,
         onToggleHeatmap = viewModel::onToggleHeatmap,
+        onToggleStationsVisibility = viewModel::onToggleStationsVisibility,
+        onToggleFilterOutliers = viewModel::onToggleFilterOutliers,
         onSelectTileSource = viewModel::onSelectTileSource,
         onSelectStation = viewModel::onSelectStation,
+        onMapClicked = viewModel::onMapClicked,
+        onClearInspection = viewModel::onClearInspection,
     )
 }
 
@@ -50,8 +56,12 @@ fun PogodaHeatmapContent(
     onResetView: () -> Unit,
     onToggle3dMode: () -> Unit,
     onToggleHeatmap: () -> Unit,
+    onToggleStationsVisibility: () -> Unit,
+    onToggleFilterOutliers: () -> Unit,
     onSelectTileSource: (MapTileSource) -> Unit,
     onSelectStation: (PogodaStation?) -> Unit,
+    onMapClicked: (Double, Double) -> Unit,
+    onClearInspection: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (uiState.errorMessage != null) {
@@ -62,60 +72,74 @@ fun PogodaHeatmapContent(
         )
     }
 
-    Column(modifier = modifier.fillMaxSize().safeDrawingPadding().padding(12.dp)) {
-        HeatmapTopBar(
-            minTemp = uiState.minTemp,
-            maxTemp = uiState.maxTemp,
-            stationCount = uiState.stations.size,
-            isLoading = uiState.isLoadingStations,
-            lastUpdated = uiState.lastUpdated,
-            tileSource = uiState.tileSource,
-            showHeatmap = uiState.showHeatmap,
-            is3dMode = uiState.is3dMode,
-            onSelectTileSource = onSelectTileSource,
-            onToggleHeatmap = onToggleHeatmap,
-            onToggle3dMode = onToggle3dMode,
-            onRefreshStations = onRefreshStations,
-        )
-
-        PlatformMapView(
-            stations = uiState.stations,
-            selectedStation = uiState.selectedStation,
-            tileSource = uiState.tileSource,
-            centerLat = uiState.centerLat,
-            centerLon = uiState.centerLon,
-            zoom = uiState.zoom,
-            pitch = uiState.pitch,
-            bearing = uiState.bearing,
-            is3dMode = uiState.is3dMode,
-            showHeatmap = uiState.showHeatmap,
-            minTemp = uiState.minTemp,
-            maxTemp = uiState.maxTemp,
-            cameraCommandId = uiState.cameraCommandId,
-            onCameraMoved = onCameraMoved,
-            onSelectStation = onSelectStation,
-            modifier = Modifier.fillMaxWidth().weight(1f),
-        ) {
-            MapZoomControls(
-                zoom = uiState.zoom,
-                onZoomIn = onZoomIn,
-                onZoomOut = onZoomOut,
-                onResetView = onResetView,
-                modifier = Modifier.align(Alignment.TopEnd),
+    Surface(
+        modifier = modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.onBackground,
+    ) {
+        Column(modifier = Modifier.fillMaxSize().safeDrawingPadding().padding(12.dp)) {
+            HeatmapTopBar(
+                minTemp = uiState.measuredMinTemp,
+                maxTemp = uiState.measuredMaxTemp,
+                stationCount = uiState.stations.size,
+                isLoading = uiState.isLoadingStations,
+                lastUpdated = uiState.lastUpdated,
+                tileSource = uiState.tileSource,
+                showHeatmap = uiState.showHeatmap,
+                showStations = uiState.showStations,
+                filterOutliers = uiState.filterOutliers,
+                is3dMode = uiState.is3dMode,
+                onSelectTileSource = onSelectTileSource,
+                onToggleHeatmap = onToggleHeatmap,
+                onToggleStationsVisibility = onToggleStationsVisibility,
+                onToggleFilterOutliers = onToggleFilterOutliers,
+                onToggle3dMode = onToggle3dMode,
+                onRefreshStations = onRefreshStations,
             )
 
-            val station = uiState.selectedStation
-            if (station != null) {
-                StationDetailCard(
-                    station = station,
-                    modifier = Modifier.align(Alignment.BottomStart),
+            PlatformMapView(
+                stations = uiState.stations,
+                selectedStation = uiState.selectedStation,
+                activeInspection = uiState.activeInspection,
+                tileSource = uiState.tileSource,
+                centerLat = uiState.centerLat,
+                centerLon = uiState.centerLon,
+                zoom = uiState.zoom,
+                pitch = uiState.pitch,
+                bearing = uiState.bearing,
+                is3dMode = uiState.is3dMode,
+                showHeatmap = uiState.showHeatmap,
+                showStations = uiState.showStations,
+                minTemp = uiState.minTemp,
+                maxTemp = uiState.maxTemp,
+                cameraCommandId = uiState.cameraCommandId,
+                onCameraMoved = onCameraMoved,
+                onSelectStation = onSelectStation,
+                onMapClicked = onMapClicked,
+                modifier = Modifier.fillMaxWidth().weight(1f),
+            ) {
+                val station = uiState.selectedStation
+                val inspection = uiState.activeInspection
+                if (station != null) {
+                    StationDetailCard(
+                        station = station,
+                        modifier = Modifier.align(Alignment.BottomStart),
+                    )
+                } else if (inspection != null) {
+                    LocationInspectionCard(
+                        inspection = inspection,
+                        minTemp = uiState.minTemp,
+                        maxTemp = uiState.maxTemp,
+                        onClose = onClearInspection,
+                        modifier = Modifier.align(Alignment.BottomStart),
+                    )
+                }
+
+                MapAttributionBadge(
+                    attribution = uiState.tileSource.attribution,
+                    modifier = Modifier.align(Alignment.BottomEnd),
                 )
             }
-
-            MapAttributionBadge(
-                attribution = uiState.tileSource.attribution,
-                modifier = Modifier.align(Alignment.BottomEnd),
-            )
         }
     }
 }

@@ -3,6 +3,7 @@ package dev.monand.opendata.core.map
 import dev.monand.opendata.core.geo.IdwInterpolator
 import dev.monand.opendata.data.model.PogodaStation
 import dev.monand.opendata.feature.heatmap.components.heatColorForNormalizedTemp
+import dev.monand.opendata.feature.heatmap.components.heatColorForTemperatureCelsius
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
@@ -21,10 +22,10 @@ data class IdwHeatmapTexture(
     val eastLon: Double = DEFAULT_EAST_LON,
 ) {
     companion object {
-        const val DEFAULT_NORTH_LAT = 52.38
-        const val DEFAULT_SOUTH_LAT = 52.08
-        const val DEFAULT_WEST_LON = 20.82
-        const val DEFAULT_EAST_LON = 21.28
+        const val DEFAULT_NORTH_LAT = 52.85
+        const val DEFAULT_SOUTH_LAT = 51.60
+        const val DEFAULT_WEST_LON = 20.10
+        const val DEFAULT_EAST_LON = 21.90
     }
 }
 
@@ -34,8 +35,8 @@ object MapOverlayGeoJson {
         minTemp: Double,
         maxTemp: Double,
         zoom: Double = 11.5,
-        width: Int = 80,
-        height: Int = 80,
+        width: Int = 100,
+        height: Int = 100,
         northLat: Double = IdwHeatmapTexture.DEFAULT_NORTH_LAT,
         southLat: Double = IdwHeatmapTexture.DEFAULT_SOUTH_LAT,
         westLon: Double = IdwHeatmapTexture.DEFAULT_WEST_LON,
@@ -55,7 +56,7 @@ object MapOverlayGeoJson {
         }
 
         val range = (maxTemp - minTemp).coerceAtLeast(1e-5)
-        val maxInfluenceRadiusKm = (10.0 / 1.25.pow((zoom - 10.0).coerceAtLeast(0.0))).coerceIn(1.8, 12.0)
+        val maxInfluenceRadiusKm = (15.0 / 1.25.pow((zoom - 10.0).coerceAtLeast(0.0))).coerceIn(2.7, 18.0)
         var idx = 0
 
         for (y in 0 until height) {
@@ -73,8 +74,7 @@ object MapOverlayGeoJson {
                 } else {
                     val falloff = (1.0f - (res.minDistanceKm / maxInfluenceRadiusKm).toFloat()).coerceIn(0f, 1f)
                     val alphaDecay = falloff * falloff
-                    val t = ((res.temp - minTemp) / range).toFloat().coerceIn(0f, 1f)
-                    val color = heatColorForNormalizedTemp(t, alpha = alphaDecay * 0.72f)
+                    val color = heatColorForTemperatureCelsius(res.temp, alpha = alphaDecay * 0.72f)
                     bytes[idx++] = (color.red * 255f).roundToInt().coerceIn(0, 255).toByte()
                     bytes[idx++] = (color.green * 255f).roundToInt().coerceIn(0, 255).toByte()
                     bytes[idx++] = (color.blue * 255f).roundToInt().coerceIn(0, 255).toByte()
@@ -99,15 +99,13 @@ object MapOverlayGeoJson {
         minTemp: Double,
         maxTemp: Double,
     ): String {
-        val range = (maxTemp - minTemp).coerceAtLeast(1e-5)
         val featureCollection =
             buildJsonObject {
                 put("type", "FeatureCollection")
                 putJsonArray("features") {
                     for (s in stations) {
                         val isSelected = selectedStation?.lokalizacja == s.lokalizacja
-                        val t = ((s.tempPow - minTemp) / range).toFloat().coerceIn(0f, 1f)
-                        val color = heatColorForNormalizedTemp(t, alpha = 1f)
+                        val color = heatColorForTemperatureCelsius(s.tempPow, alpha = 1f)
                         val hexColor = colorToHex(color.red, color.green, color.blue)
                         add(
                             buildJsonObject {
@@ -136,6 +134,48 @@ object MapOverlayGeoJson {
             }
         return featureCollection.toString()
     }
+
+    fun buildInspectionGeoJson(
+        activeInspection: dev.monand.opendata.data.model.LocationInspection?,
+        minTemp: Double,
+        maxTemp: Double,
+    ): String {
+        if (activeInspection == null) {
+            return """{"type":"FeatureCollection","features":[]}"""
+        }
+        val color = heatColorForTemperatureCelsius(activeInspection.estimatedTemp, alpha = 1f)
+        val hexColor = colorToHex(color.red, color.green, color.blue)
+
+        val featureCollection =
+            buildJsonObject {
+                put("type", "FeatureCollection")
+                putJsonArray("features") {
+                    add(
+                        buildJsonObject {
+                            put("type", "Feature")
+                            putJsonObject("geometry") {
+                                put("type", "Point")
+                                put(
+                                    "coordinates",
+                                    buildJsonArray {
+                                        add(kotlinx.serialization.json.JsonPrimitive(activeInspection.lon))
+                                        add(kotlinx.serialization.json.JsonPrimitive(activeInspection.lat))
+                                    },
+                                )
+                            }
+                            putJsonObject("properties") {
+                                put("color", hexColor)
+                                put("radius", 9.0)
+                                put("strokeWidth", 3.0)
+                            }
+                        },
+                    )
+                }
+            }
+        return featureCollection.toString()
+    }
+
+    fun buildBuildingColorExpressionJson(): String = """["interpolate",["linear"],["get","temp"],0.0,"rgb(0, 150, 255)",10.0,"rgb(51, 220, 102)",20.0,"rgb(255, 255, 0)",25.0,"rgb(255, 140, 0)",30.0,"rgb(255, 30, 0)"]"""
 
     private fun colorToHex(
         r: Float,
