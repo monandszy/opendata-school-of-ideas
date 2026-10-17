@@ -801,107 +801,170 @@
     },
     "schemas": {
       "MonitoringJakosciPowietrzaResponse": {
-        "type": "object",
-        "properties": {
-          "ijp": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "description": "Słowny sumaryczny indeks jakości powietrza"
-                },
-                "recommendations": {
-                  "type": "string",
-                  "description": "Rekomendacje związane z indeksem jakości powietrza"
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "ijp": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Słowny sumaryczny indeks jakości powietrza"
+                  },
+                  "recommendations": {
+                    "type": "string",
+                    "description": "Rekomendacje związane z indeksem jakości powietrza"
+                  }
                 }
-              }
+              },
+              "description": "Sumaryczny indeks jakości powietrza wyzanaczany zgodnie z Polskim Indeksem Jakości Powietrza"
             },
-            "description": "Sumaryczny indeks jakości powietrza wyzanaczany zgodnie z Polskim Indeksem Jakości Powietrza"
-          },
-          "data_source": {
-            "type": "string",
-            "description": "Źródło pomiaru"
-          },
-          "Name": {
-            "type": "string",
-            "description": "Nazwa stacji"
-          },
-          "lon": {
-            "type": "integer",
-            "description": "długość geograficzna"
-          },
-          "lat": {
-            "type": "integer",
-            "description": "Szerokość geograficzna"
-          },
-          "adres": {
-            "type": "array",
-            "items": {
+            "data_source": {
+              "type": "string",
+              "description": "Źródło pomiaru"
+            },
+            "name": {
+              "type": "string",
+              "description": "Nazwa stacji"
+            },
+            "station_type": {
+              "type": "string"
+            },
+            "lon": {
+              "type": "number",
+              "description": "długość geograficzna"
+            },
+            "owner": {
+              "type": "string"
+            },
+            "station": {
+              "type": "string"
+            },
+            "address": {
               "type": "object",
               "properties": {
                 "city": {
-                  "type": "string",
-                  "description": "Miejscowość"
+                  "type": "string"
                 },
                 "street": {
-                  "type": "string",
-                  "description": "ulicaa"
+                  "type": "string"
                 },
                 "zip_code": {
-                  "type": "string",
-                  "description": "kod pocztowy"
+                  "type": "string"
+                },
+                "district": {
+                  "type": "string"
                 },
                 "commune": {
-                  "type": "string",
-                  "description": "Gmina"
+                  "type": "string"
                 }
               }
             },
-            "description": "adres stacji"
-          },
-          "pomiary": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "index": {
-                  "type": "array",
-                  "items": {
+            "lat": {
+              "type": "number",
+              "description": "Szerokość geograficzna"
+            },
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ijp": {
                     "type": "object",
                     "properties": {
                       "name": {
-                        "type": "string",
-                        "description": "słowny indeks jakości powietrza dla pomiaru"
+                        "type": "string"
                       }
                     }
                   },
-                  "description": "Indeks jakości powietrza dla pomiru"
-                },
-                "param_name": {
-                  "type": "string",
-                  "description": "Nazwa zanieczyszczenia"
-                },
-                "param_code": {
-                  "type": "string",
-                  "description": "Kod zanieczyszczenia"
-                },
-                "value": {
-                  "type": "string",
-                  "description": "Wartość pomiaru"
-                },
-                "time": {
-                  "type": "string",
-                  "description": "Czas pomiaru"
-                },
-                "unit": {
-                  "type": "string",
-                  "description": "Jednostka"
+                  "param_name": {
+                    "type": "string"
+                  },
+                  "param_code": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "number"
+                  },
+                  "time": {
+                    "type": "string"
+                  },
+                  "unit": {
+                    "type": "string"
+                  }
                 }
               }
             },
-            "description": "pomiary"
+            "adres": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string",
+                    "description": "Miejscowość"
+                  },
+                  "street": {
+                    "type": "string",
+                    "description": "ulicaa"
+                  },
+                  "zip_code": {
+                    "type": "string",
+                    "description": "kod pocztowy"
+                  },
+                  "commune": {
+                    "type": "string",
+                    "description": "Gmina"
+                  }
+                }
+              },
+              "description": "adres stacji"
+            },
+            "pomiary": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "index": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "description": "słowny indeks jakości powietrza dla pomiaru"
+                        }
+                      }
+                    },
+                    "description": "Indeks jakości powietrza dla pomiru"
+                  },
+                  "param_name": {
+                    "type": "string",
+                    "description": "Nazwa zanieczyszczenia"
+                  },
+                  "param_code": {
+                    "type": "string",
+                    "description": "Kod zanieczyszczenia"
+                  },
+                  "value": {
+                    "type": "string",
+                    "description": "Wartość pomiaru"
+                  },
+                  "time": {
+                    "type": "string",
+                    "description": "Czas pomiaru"
+                  },
+                  "unit": {
+                    "type": "string",
+                    "description": "Jednostka"
+                  }
+                }
+              },
+              "description": "pomiary"
+            }
           }
         }
       },
@@ -913,11 +976,11 @@
             "description": "Nazwa Parkingu"
           },
           "latitude": {
-            "type": "integer",
+            "type": "number",
             "description": "Szerokość geograficzna"
           },
           "longitude": {
-            "type": "integer",
+            "type": "number",
             "description": "Długość geograficzna"
           },
           "adress": {
@@ -992,30 +1055,36 @@
         }
       },
       "UtrudnieniaWRuchuDrogowymResponse": {
-        "type": "object",
-        "properties": {
-          "start_date": {
-            "type": "string",
-            "description": "Początek utrudnienia"
-          },
-          "end_date": {
-            "type": "string",
-            "description": "Godzina wydarzenia"
-          },
-          "content": {
-            "type": "array",
-            "items": {
-              "type": "object"
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "start_date": {
+              "type": "string",
+              "description": "Początek utrudnienia"
             },
-            "description": "Lista tekstowej treści akapitów"
-          },
-          "id": {
-            "type": "integer",
-            "description": "Numer identyfikacyjny postu w serwisie infoulice https://infoulice.um.warszawa.pl/?page_id={id}"
-          },
-          "geo": {
-            "type": "string",
-            "description": "Obiekt zawierający dane geometryczne. geomType z wartością równą 1 odpowiada linii gdzie kolekcja latlngs wyznacza współrzędne wierzchołków linii. geomType z wartością równą 0 oznacza punkt a jedynym elementen kolekcji latlngs to współrzędne tego punktu."
+            "end_date": {
+              "type": "string",
+              "description": "Godzina wydarzenia"
+            },
+            "content": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              },
+              "description": "Lista tekstowej treści akapitów"
+            },
+            "name": {
+              "type": "string"
+            },
+            "id": {
+              "type": "integer",
+              "description": "Numer identyfikacyjny postu w serwisie infoulice https://infoulice.um.warszawa.pl/?page_id={id}"
+            },
+            "geo": {
+              "type": "string",
+              "description": "Obiekt zawierający dane geometryczne. geomType z wartością równą 1 odpowiada linii gdzie kolekcja latlngs wyznacza współrzędne wierzchołków linii. geomType z wartością równą 0 oznacza punkt a jedynym elementen kolekcji latlngs to współrzędne tego punktu."
+            }
           }
         }
       },
@@ -1068,11 +1137,11 @@
         "type": "object",
         "properties": {
           "Lat": {
-            "type": "integer",
+            "type": "number",
             "description": "Szerokość geograficzna"
           },
           "Lon": {
-            "type": "integer",
+            "type": "number",
             "description": "Długość geograficzna"
           },
           "Time": {
@@ -1098,24 +1167,27 @@
         "description": "Generic response payload"
       },
       "LinieDostepneNaPrzystankuResponse": {
-        "type": "object",
-        "properties": {
-          "values": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "value": {
-                  "type": "string",
-                  "description": "numer linii dostępnej na przystanku"
-                },
-                "key": {
-                  "type": "string",
-                  "description": "stała waertość \"linia\""
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "values": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "description": "numer linii dostępnej na przystanku"
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "stała waertość \"linia\""
+                  }
                 }
-              }
-            },
-            "description": "tablica waartości dostępnych linii na przystanku"
+              },
+              "description": "tablica waartości dostępnych linii na przystanku"
+            }
           }
         }
       },
@@ -1232,58 +1304,122 @@
             },
             "description": "Informacje o taborze metra"
           },
-          "tramwaje": {
+          "markiTramwaje": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
+                "dlugosc": {
+                  "type": "integer",
+                  "description": "Długość pojazdu w mm"
+                },
                 "idMarki": {
                   "type": "integer",
-                  "description": "Klucz obcy z gałęzi marki tramwaje (idMarki)"
+                  "description": "Identyfikator marki"
                 },
-                "kolorPojazdu": {
+                "katWielkosci": {
                   "type": "string",
-                  "description": "Kolor pojazdu"
+                  "description": "Kategoria wielkości"
                 },
-                "kolorPoreczy": {
+                "kierunkowosc": {
                   "type": "string",
-                  "description": "Kolor poręczy"
+                  "description": "Kierunkowość pojazdu"
                 },
-                "kolorTapicerki": {
+                "klimatyzacja": {
                   "type": "string",
-                  "description": "Kolor tapicerki"
+                  "description": "Wyposażony w klimatyzację"
                 },
-                "nazwaOperatora": {
+                "komGlosWewnatrz": {
                   "type": "string",
-                  "description": "Nazwa operatora"
+                  "description": "Komunikat głosowy wewnętrzny"
                 },
-                "nazwaSkroconaOperatora": {
+                "komGlosZewnatrz": {
                   "type": "string",
-                  "description": "Skrócona nazwa operatora"
+                  "description": "Komunikat głosowy zewnętrzny"
                 },
-                "nazwaZajezdni": {
-                  "type": "string",
-                  "description": "Nazwa zajezdni"
-                },
-                "numerTaborowy": {
-                  "type": "string",
-                  "description": "Numer taborowy"
-                },
-                "rokProdukcji": {
+                "liczMiejscSiedzacychTab": {
                   "type": "integer",
-                  "description": "Rok produkcji"
+                  "description": "Liczba miejsc siedzących tabliczka znamionowa"
                 },
-                "schematMalowania": {
-                  "type": "string",
-                  "description": "Schemat malowania"
+                "liczMiejscSpec": {
+                  "type": "integer",
+                  "description": "Liczba miejsc specjalnych"
                 },
-                "trakcja": {
+                "liczMiejscStojacychTab": {
+                  "type": "integer",
+                  "description": "Liczba miejsc stojących tabliczka znamionowa"
+                },
+                "liczMiejscTab": {
+                  "type": "integer",
+                  "description": "Liczba miejsc tabliczka znamionowa"
+                },
+                "liczMiejscWozekDziec": {
+                  "type": "integer",
+                  "description": "Liczba miejsc dla wózka dziecięcego"
+                },
+                "liczMiejscWozekInwalid": {
+                  "type": "integer",
+                  "description": "Liczba miejsc dla wózka inwalidzkiego"
+                },
+                "marka": {
                   "type": "string",
-                  "description": "Trakcja"
+                  "description": "Nazwa marki"
+                },
+                "operator": {
+                  "type": "string",
+                  "description": "Operator"
+                },
+                "operatorSkrot": {
+                  "type": "string",
+                  "description": "Operator skrót"
+                },
+                "platnosc": {
+                  "type": "string",
+                  "description": "Metody płatności w biletomacie"
+                },
+                "podloga": {
+                  "type": "number",
+                  "description": "Rodzaj podłogi"
+                },
+                "posiadaSSB": {
+                  "type": "string",
+                  "description": "Posiada system sprzedaży biletów"
+                },
+                "powierzchniaPodlogi": {
+                  "type": "number",
+                  "description": "Powierzchnia podłogi"
+                },
+                "producent": {
+                  "type": "string",
+                  "description": "Producent"
+                },
+                "szerokosc": {
+                  "type": "integer",
+                  "description": "Szerokość pojazdu w mm"
+                },
+                "typ": {
+                  "type": "string",
+                  "description": "Typ"
+                },
+                "ukladSiedzen": {
+                  "type": "string",
+                  "description": "Układ siedzeń"
+                },
+                "wariant": {
+                  "type": "string",
+                  "description": "Wariant"
+                },
+                "wersja": {
+                  "type": "string",
+                  "description": "Wersja"
+                },
+                "wysokoscCalkowita": {
+                  "type": "integer",
+                  "description": "Wysokość całkowita w mm"
                 }
               }
             },
-            "description": "Informacje o taborze tramwajowym"
+            "description": "Informacje o markach tramwajów"
           },
           "kolej": {
             "type": "array",
@@ -1342,247 +1478,58 @@
             },
             "description": "Informacje o taborze kolejowym"
           },
-          "markiBus": {
+          "tramwaje": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "dlugosc": {
-                  "type": "integer",
-                  "description": "Długość pojazdu w mm"
-                },
                 "idMarki": {
                   "type": "integer",
-                  "description": "Identyfikator marki"
+                  "description": "Klucz obcy z gałęzi marki tramwaje (idMarki)"
                 },
-                "katWielkosci": {
+                "kolorPojazdu": {
                   "type": "string",
-                  "description": "Kategoria wielkości"
+                  "description": "Kolor pojazdu"
                 },
-                "klimatyzacja": {
+                "kolorPoreczy": {
                   "type": "string",
-                  "description": "Wyposażony w klimatyzację"
+                  "description": "Kolor poręczy"
                 },
-                "komGlosWewnatrz": {
+                "kolorTapicerki": {
                   "type": "string",
-                  "description": "Komunikat głosowy wewnętrzny"
+                  "description": "Kolor tapicerki"
                 },
-                "komGlosZewnatrz": {
+                "nazwaOperatora": {
                   "type": "string",
-                  "description": "Komunikat głosowy zewnętrzny"
+                  "description": "Nazwa operatora"
                 },
-                "liczMiejscSiedzacychTab": {
+                "nazwaSkroconaOperatora": {
                   "type": "string",
-                  "description": "Liczba miejsc siedzących tabliczka znamionowa"
+                  "description": "Skrócona nazwa operatora"
                 },
-                "liczMiejscSpec": {
+                "nazwaZajezdni": {
+                  "type": "string",
+                  "description": "Nazwa zajezdni"
+                },
+                "numerTaborowy": {
+                  "type": "string",
+                  "description": "Numer taborowy"
+                },
+                "rokProdukcji": {
                   "type": "integer",
-                  "description": "Liczba miejsc specjalnych"
+                  "description": "Rok produkcji"
                 },
-                "liczMiejscStojacychTab": {
-                  "type": "integer",
-                  "description": "Liczba miejsc stojących tabliczka znamionowa"
-                },
-                "liczMiejscTab": {
-                  "type": "integer",
-                  "description": "Liczba miejsc tabliczka znamionowa"
-                },
-                "liczMiejscWozekDziec": {
-                  "type": "integer",
-                  "description": "Liczba miejsc dla wózka dziecięcego"
-                },
-                "liczMiejscWozekInwalid": {
-                  "type": "integer",
-                  "description": "Liczba miejsc dla wózka inwalidzkiego"
-                },
-                "marka": {
+                "schematMalowania": {
                   "type": "string",
-                  "description": "Nazwa marki"
+                  "description": "Schemat malowania"
                 },
-                "operator": {
+                "trakcja": {
                   "type": "string",
-                  "description": "Operator"
-                },
-                "operatorSkrot": {
-                  "type": "string",
-                  "description": "Operator skrót"
-                },
-                "platnosc": {
-                  "type": "string",
-                  "description": "Metody płatności w biletomacie"
-                },
-                "podloga": {
-                  "type": "string",
-                  "description": "Rodzaj podłogi"
-                },
-                "posiadaSSB": {
-                  "type": "string",
-                  "description": "Posiada system sprzedaży biletów"
-                },
-                "powierzchniaPodlogi": {
-                  "type": "string",
-                  "description": "Powierzchnia podłogi"
-                },
-                "producent": {
-                  "type": "string",
-                  "description": "Producent"
-                },
-                "rodzajZasilania": {
-                  "type": "string",
-                  "description": "Rodzaj zasilania"
-                },
-                "szerokość": {
-                  "type": "integer",
-                  "description": "Szerokość pojazdu w mm"
-                },
-                "typ": {
-                  "type": "string",
-                  "description": "Typ"
-                },
-                "ukladSiedzen": {
-                  "type": "string",
-                  "description": "Układ siedzeń"
-                },
-                "wariant": {
-                  "type": "string",
-                  "description": "Wariant"
-                },
-                "wersja": {
-                  "type": "string",
-                  "description": "Wersja"
-                },
-                "wysokoscCalkowita": {
-                  "type": "integer",
-                  "description": "Wysokość całkowita w mm"
-                },
-                "zasilanie": {
-                  "type": "string",
-                  "description": "Rodzaj zasilania"
+                  "description": "Trakcja"
                 }
               }
             },
-            "description": "Informacje o markach autobusów"
-          },
-          "markiMetro": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "dlugosc": {
-                  "type": "integer",
-                  "description": "Długość pojazdu w mm"
-                },
-                "dlugoscPrzedzialu": {
-                  "type": "string",
-                  "description": "Długość przedziału"
-                },
-                "efektywnaSzerWejscia": {
-                  "type": "integer",
-                  "description": "Efektywna szerokość wejścia w mm"
-                },
-                "idMarki": {
-                  "type": "integer",
-                  "description": "Identyfikator marki"
-                },
-                "katWielkosci": {
-                  "type": "string",
-                  "description": "Kategoria wielkości"
-                },
-                "klimatyzacja": {
-                  "type": "string",
-                  "description": "Wyposażony w klimatyzację"
-                },
-                "komGlosWewnatrz": {
-                  "type": "string",
-                  "description": "Komunikat głosowy wewnętrzny"
-                },
-                "komGlosZewnatrz": {
-                  "type": "string",
-                  "description": "Komunikat głosowy zewnętrzny"
-                },
-                "liczMiejscSiedzacychTab": {
-                  "type": "integer",
-                  "description": "Liczba miejsc siedzących tabliczka znamionowa"
-                },
-                "liczMiejscSpec": {
-                  "type": "integer",
-                  "description": "Liczba miejsc specjalnych"
-                },
-                "liczMiejscStojacychTab": {
-                  "type": "integer",
-                  "description": "Liczba miejsc stojących tabliczka znamionowa"
-                },
-                "liczMiejscTab": {
-                  "type": "integer",
-                  "description": "Liczba miejsc tabliczka znamionowa"
-                },
-                "liczMiejscWozekDziec": {
-                  "type": "integer",
-                  "description": "Liczba miejsc dla wózka dziecięcego"
-                },
-                "liczMiejscWozekInwalid": {
-                  "type": "integer",
-                  "description": "Liczba miejsc dla wózka inwalidzkiego"
-                },
-                "marka": {
-                  "type": "string",
-                  "description": "Nazwa marki"
-                },
-                "operator": {
-                  "type": "string",
-                  "description": "Operator"
-                },
-                "operatorSkrot": {
-                  "type": "string",
-                  "description": "Operator skrót"
-                },
-                "platnosc": {
-                  "type": "string",
-                  "description": "Metody płatności w biletomacie"
-                },
-                "podloga": {
-                  "type": "string",
-                  "description": "Rodzaj podłogi"
-                },
-                "posiadaSSB": {
-                  "type": "string",
-                  "description": "Posiada system sprzedaży biletów"
-                },
-                "powierzchniaPodlogi": {
-                  "type": "string",
-                  "description": "Powierzchnia podłogi"
-                },
-                "producent": {
-                  "type": "string",
-                  "description": "Producent"
-                },
-                "szerokość": {
-                  "type": "integer",
-                  "description": "Szerokość pojazdu w mm"
-                },
-                "typ": {
-                  "type": "string",
-                  "description": "Typ"
-                },
-                "ukladSiedzen": {
-                  "type": "string",
-                  "description": "Układ siedzeń"
-                },
-                "wariant": {
-                  "type": "string",
-                  "description": "Wariant"
-                },
-                "wersja": {
-                  "type": "string",
-                  "description": "Wersja"
-                },
-                "wysokoscCalkowita": {
-                  "type": "integer",
-                  "description": "Wysokość całkowita w mm"
-                }
-              }
-            },
-            "description": "Informacje o markach pojazdów metra"
+            "description": "Informacje o taborze tramwajowym"
           },
           "markiKolej": {
             "type": "array",
@@ -1666,7 +1613,7 @@
                   "description": "Posiada system sprzedaży biletów"
                 },
                 "powierzchniaPodlogi": {
-                  "type": "string",
+                  "type": "number",
                   "description": "Powierzchnia podłogi"
                 },
                 "producent": {
@@ -1701,7 +1648,7 @@
             },
             "description": "Informacje o markach pojazdów kolejowych"
           },
-          "markiTramwaje": {
+          "markiMetro": {
             "type": "array",
             "items": {
               "type": "object",
@@ -1710,6 +1657,14 @@
                   "type": "integer",
                   "description": "Długość pojazdu w mm"
                 },
+                "dlugoscPrzedzialu": {
+                  "type": "string",
+                  "description": "Długość przedziału"
+                },
+                "efektywnaSzerWejscia": {
+                  "type": "integer",
+                  "description": "Efektywna szerokość wejścia w mm"
+                },
                 "idMarki": {
                   "type": "integer",
                   "description": "Identyfikator marki"
@@ -1717,10 +1672,6 @@
                 "katWielkosci": {
                   "type": "string",
                   "description": "Kategoria wielkości"
-                },
-                "kierunkowosc": {
-                  "type": "string",
-                  "description": "Kierunkowość pojazdu"
                 },
                 "klimatyzacja": {
                   "type": "string",
@@ -1775,7 +1726,7 @@
                   "description": "Metody płatności w biletomacie"
                 },
                 "podloga": {
-                  "type": "string",
+                  "type": "number",
                   "description": "Rodzaj podłogi"
                 },
                 "posiadaSSB": {
@@ -1783,14 +1734,14 @@
                   "description": "Posiada system sprzedaży biletów"
                 },
                 "powierzchniaPodlogi": {
-                  "type": "string",
+                  "type": "number",
                   "description": "Powierzchnia podłogi"
                 },
                 "producent": {
                   "type": "string",
                   "description": "Producent"
                 },
-                "szerokosc": {
+                "szerokość": {
                   "type": "integer",
                   "description": "Szerokość pojazdu w mm"
                 },
@@ -1816,20 +1767,144 @@
                 }
               }
             },
-            "description": "Informacje o markach tramwajów"
+            "description": "Informacje o markach pojazdów metra"
+          },
+          "markiBus": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "dlugosc": {
+                  "type": "integer",
+                  "description": "Długość pojazdu w mm"
+                },
+                "idMarki": {
+                  "type": "integer",
+                  "description": "Identyfikator marki"
+                },
+                "katWielkosci": {
+                  "type": "string",
+                  "description": "Kategoria wielkości"
+                },
+                "klimatyzacja": {
+                  "type": "string",
+                  "description": "Wyposażony w klimatyzację"
+                },
+                "komGlosWewnatrz": {
+                  "type": "string",
+                  "description": "Komunikat głosowy wewnętrzny"
+                },
+                "komGlosZewnatrz": {
+                  "type": "string",
+                  "description": "Komunikat głosowy zewnętrzny"
+                },
+                "liczMiejscSiedzacychTab": {
+                  "type": "string",
+                  "description": "Liczba miejsc siedzących tabliczka znamionowa"
+                },
+                "liczMiejscSpec": {
+                  "type": "integer",
+                  "description": "Liczba miejsc specjalnych"
+                },
+                "liczMiejscStojacychTab": {
+                  "type": "integer",
+                  "description": "Liczba miejsc stojących tabliczka znamionowa"
+                },
+                "liczMiejscTab": {
+                  "type": "integer",
+                  "description": "Liczba miejsc tabliczka znamionowa"
+                },
+                "liczMiejscWozekDziec": {
+                  "type": "integer",
+                  "description": "Liczba miejsc dla wózka dziecięcego"
+                },
+                "liczMiejscWozekInwalid": {
+                  "type": "integer",
+                  "description": "Liczba miejsc dla wózka inwalidzkiego"
+                },
+                "marka": {
+                  "type": "string",
+                  "description": "Nazwa marki"
+                },
+                "operator": {
+                  "type": "string",
+                  "description": "Operator"
+                },
+                "operatorSkrot": {
+                  "type": "string",
+                  "description": "Operator skrót"
+                },
+                "platnosc": {
+                  "type": "string",
+                  "description": "Metody płatności w biletomacie"
+                },
+                "podloga": {
+                  "type": "number",
+                  "description": "Rodzaj podłogi"
+                },
+                "posiadaSSB": {
+                  "type": "string",
+                  "description": "Posiada system sprzedaży biletów"
+                },
+                "powierzchniaPodlogi": {
+                  "type": "number",
+                  "description": "Powierzchnia podłogi"
+                },
+                "producent": {
+                  "type": "string",
+                  "description": "Producent"
+                },
+                "rodzajZasilania": {
+                  "type": "string",
+                  "description": "Rodzaj zasilania"
+                },
+                "szerokość": {
+                  "type": "integer",
+                  "description": "Szerokość pojazdu w mm"
+                },
+                "typ": {
+                  "type": "string",
+                  "description": "Typ"
+                },
+                "ukladSiedzen": {
+                  "type": "string",
+                  "description": "Układ siedzeń"
+                },
+                "wariant": {
+                  "type": "string",
+                  "description": "Wariant"
+                },
+                "wersja": {
+                  "type": "string",
+                  "description": "Wersja"
+                },
+                "wysokoscCalkowita": {
+                  "type": "integer",
+                  "description": "Wysokość całkowita w mm"
+                },
+                "zasilanie": {
+                  "type": "string",
+                  "description": "Rodzaj zasilania"
+                }
+              }
+            },
+            "description": "Informacje o markach autobusów"
           }
         }
       },
       "LokalizacjaDefibryzatorowAedResponse": {
-        "type": "object",
-        "properties": {
-          "geometry": {
-            "type": "string",
-            "description": "Informacja o lokalizacji"
-          },
+        "type": "array",
+        "items": {
+          "type": "object",
           "properties": {
-            "type": "string",
-            "description": "Informacja o defibrylatorze"
+            "geometry": {
+              "type": "string",
+              "description": "Informacja o lokalizacji"
+            },
+            "properties": {
+              "type": "string",
+              "description": "Informacja o defibrylatorze"
+            }
           }
         }
       },
@@ -1863,47 +1938,50 @@
         }
       },
       "PogodaResponse": {
-        "type": "object",
-        "properties": {
-          "Lokalizacja": {
-            "type": "string",
-            "description": "Nazwa lokalizacji stacji"
-          },
-          "lat": {
-            "type": "integer",
-            "description": "Szerokość geograficzna"
-          },
-          "lon": {
-            "type": "integer",
-            "description": "długość geograficzna"
-          },
-          "czas": {
-            "type": "string",
-            "description": "Czas pomiaru"
-          },
-          "temp_pow": {
-            "type": "string",
-            "description": "Temperatura powietrza"
-          },
-          "temp_naw": {
-            "type": "string",
-            "description": "Temperatura nawierzchni"
-          },
-          "wilg_pow": {
-            "type": "string",
-            "description": "Wilgotność powietrza"
-          },
-          "pred_wiatru": {
-            "type": "string",
-            "description": "Prędkość wiatru"
-          },
-          "kier_wiatru": {
-            "type": "string",
-            "description": "Kierunek wiatru"
-          },
-          "int_opadu": {
-            "type": "string",
-            "description": "Intensywność opadu"
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "lokalizacja": {
+              "type": "string",
+              "description": "Nazwa lokalizacji stacji"
+            },
+            "lat": {
+              "type": "number",
+              "description": "Szerokość geograficzna"
+            },
+            "lon": {
+              "type": "number",
+              "description": "długość geograficzna"
+            },
+            "czas": {
+              "type": "string",
+              "description": "Czas pomiaru"
+            },
+            "temp_pow": {
+              "type": "number",
+              "description": "Temperatura powietrza"
+            },
+            "temp_naw": {
+              "type": "number",
+              "description": "Temperatura nawierzchni"
+            },
+            "wilg_pow": {
+              "type": "number",
+              "description": "Wilgotność powietrza"
+            },
+            "pred_wiatru": {
+              "type": "number",
+              "description": "Prędkość wiatru"
+            },
+            "kier_wiatru": {
+              "type": "number",
+              "description": "Kierunek wiatru"
+            },
+            "int_opadu": {
+              "type": "number",
+              "description": "Intensywność opadu"
+            }
           }
         }
       },
@@ -2010,75 +2088,78 @@
         }
       },
       "OtwarteBoiskaResponse": {
-        "type": "object",
-        "properties": {
-          "Dzielnica": {
-            "type": "string",
-            "description": "Dzielnica"
-          },
-          "Adres obiektu": {
-            "type": "string",
-            "description": "Adres obiektu"
-          },
-          "Nazwa placówki oświatowej": {
-            "type": "string",
-            "description": "Nazwa placówki oświatowej"
-          },
-          "Typ obiektu": {
-            "type": "string",
-            "description": "Typ obiektu"
-          },
-          "Boisk uniwersalne zawiera": {
-            "type": "string",
-            "description": "Wyposażenie boiska uniwersalnego"
-          },
-          "Rodzaj nawierzchni": {
-            "type": "string",
-            "description": "Rodzaj nawierzchni"
-          },
-          "Obiekt wyposażony w trybuny": {
-            "type": "string",
-            "description": "Czy obiekt jest wyposażony w trybuny"
-          },
-          "Obiekt wyposażony w piłkochwyty": {
-            "type": "string",
-            "description": "Czy obiekt jest wyposażony w piłkochwyty"
-          },
-          "Poniedziałek": {
-            "type": "string",
-            "description": "Godziny dostępności w ponidziałek"
-          },
-          "Wtorek": {
-            "type": "string",
-            "description": "Godziny dostępności we wtorek"
-          },
-          "Środa": {
-            "type": "string",
-            "description": "Godziny dostępności w środę"
-          },
-          "Czwartek": {
-            "type": "string",
-            "description": "Godziny dostępności w czwartek"
-          },
-          "Piątek": {
-            "type": "string",
-            "description": "Godziny dostępności w piątek"
-          },
-          "Sobota": {
-            "type": "string",
-            "description": "Godziny dostępności w sobotę"
-          },
-          "Niedziela": {
-            "type": "string",
-            "description": "Godziny dostępności w niedzielę"
-          },
-          "Uwagi": {
-            "type": "string",
-            "description": "Uwagi"
-          },
-          "Data aktualizacji": {
-            "type": "string",
-            "description": "Data aktualizacji danych"
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "Dzielnica": {
+              "type": "string",
+              "description": "Dzielnica"
+            },
+            "Adres obiektu": {
+              "type": "string",
+              "description": "Adres obiektu"
+            },
+            "Nazwa placówki oświatowej": {
+              "type": "string",
+              "description": "Nazwa placówki oświatowej"
+            },
+            "Typ obiektu": {
+              "type": "string",
+              "description": "Typ obiektu"
+            },
+            "Boisk uniwersalne zawiera": {
+              "type": "string",
+              "description": "Wyposażenie boiska uniwersalnego"
+            },
+            "Rodzaj nawierzchni": {
+              "type": "string",
+              "description": "Rodzaj nawierzchni"
+            },
+            "Obiekt wyposażony w trybuny": {
+              "type": "string",
+              "description": "Czy obiekt jest wyposażony w trybuny"
+            },
+            "Obiekt wyposażony w piłkochwyty": {
+              "type": "string",
+              "description": "Czy obiekt jest wyposażony w piłkochwyty"
+            },
+            "Poniedziałek": {
+              "type": "string",
+              "description": "Godziny dostępności w ponidziałek"
+            },
+            "Wtorek": {
+              "type": "string",
+              "description": "Godziny dostępności we wtorek"
+            },
+            "Środa": {
+              "type": "string",
+              "description": "Godziny dostępności w środę"
+            },
+            "Czwartek": {
+              "type": "string",
+              "description": "Godziny dostępności w czwartek"
+            },
+            "Piątek": {
+              "type": "string",
+              "description": "Godziny dostępności w piątek"
+            },
+            "Sobota": {
+              "type": "string",
+              "description": "Godziny dostępności w sobotę"
+            },
+            "Niedziela": {
+              "type": "string",
+              "description": "Godziny dostępności w niedzielę"
+            },
+            "Uwagi": {
+              "type": "string",
+              "description": "Uwagi"
+            },
+            "Data aktualizacji": {
+              "type": "string",
+              "description": "Data aktualizacji danych"
+            }
           }
         }
       },
@@ -2316,6 +2397,14 @@
             "type": "string",
             "description": "Nazwisko autora"
           },
+          "lat": {
+            "type": "string",
+            "nullable": true
+          },
+          "lng": {
+            "type": "string",
+            "nullable": true
+          },
           "classifications": {
             "type": "string",
             "description": "Kategorie projektu"
@@ -2358,6 +2447,9 @@
           "universalDesign": {
             "type": "integer",
             "description": "Projektowanie uniwersalne. 0-nie, 1-tak, 2-brak odopowiedzi"
+          },
+          "universalDesignArgumentation": {
+            "type": "string"
           },
           "cost": {
             "type": "string",
@@ -2407,6 +2499,9 @@
               "type": "object"
             },
             "description": "Komentarze do projektu"
+          },
+          "created": {
+            "type": "string"
           }
         }
       },
