@@ -2,15 +2,17 @@
 
 Repository for working with **Warsaw Open Data** (`dane.um.warszawa.pl`).
 
-The goal was to create a map of Warsaw showing the heat distribution.
 
+![alt text](docs/chrome_AVRd8evvGo.png)
+
+![alt text](docs/chrome_gwBwsBcoBR.png)
 ---
 
 ## Submodules Linktree
 
 - [**`api-gen/`**](./api-gen/README.md) – Python utility for fetching metadata from `dane.um.warszawa.pl` and compiling OpenAPI 3.0 specifications (`openapi.yaml` / `openapi.json`).
-- [**`app/`**](./app/README.md) – Kotlin Multiplatform & Compose Multiplatform app targeting Android and Web (Kotlin/Wasm), featuring spatial IDW heatmaps and interactive map overlays.
-- [**`docs/`**](./docs/ApiList.md) – API reference documentation, list of endpoints, and pre-compiled OpenAPI specifications (`openapi.yaml`, `openapi.json`).
+- [**`app/`**](./app/README.md) – Kotlin Multiplatform & Compose Multiplatform app targeting Android and Web (Kotlin/Wasm). Map of Warsaw showing the heat distribution.
+- [**`docs/`**](./docs/ApiList.md) – API reference documentation, list of endpoints, and pre-compiled OpenAPI specifications.
 
 ---
 
