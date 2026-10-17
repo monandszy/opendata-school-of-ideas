@@ -1,0 +1,5 @@
+.env
+.env.*
+!.env.example
+api-gen/.venv/
+api-gen/cache/

@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenData</title>
+    <title>OpenData – Warszawa Pogoda & 3D MapLibre</title>
+    <link href="https://unpkg.com/maplibre-gl@5.1.0/dist/maplibre-gl.css" rel="stylesheet" />
+    <script src="https://unpkg.com/maplibre-gl@5.1.0/dist/maplibre-gl.js"></script>
     <style>
         html, body {
             width: 100%;
@@ -11,10 +13,327 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
+            background: transparent;
+        }
+        #maplibre-host {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 0;
+            height: 0;
+            z-index: 0;
+            background: #e8ecef;
+            overflow: hidden;
+        }
+        canvas {
+            position: relative;
+            z-index: 1;
+            background: transparent !important;
         }
     </style>
+    <script>
+        (function() {
+            const origGetContext = HTMLCanvasElement.prototype.getContext;
+            HTMLCanvasElement.prototype.getContext = function(type, attrs) {
+                if (type === 'webgl' || type === 'webgl2') {
+                    attrs = Object.assign({}, attrs, { alpha: true, premultipliedAlpha: true });
+                }
+                return origGetContext.call(this, type, attrs);
+            };
+
+            const state = {
+                map: null,
+                styleUrl: null,
+                styleLoaded: false,
+                heatmapDataUrl: null,
+                heatmapCoords: null,
+                showHeatmap: true,
+                is3dMode: false,
+                stationsGeoJsonStr: null
+            };
+
+            function ensureHostElement() {
+                let el = document.getElementById('maplibre-host');
+                if (!el) {
+                    el = document.createElement('div');
+                    el.id = 'maplibre-host';
+                    document.body.prepend(el);
+                }
+                return el;
+            }
+
+            function applyOverlaysToMap() {
+                const map = state.map;
+                if (!map || !state.styleLoaded) return;
+
+                if (state.heatmapDataUrl && state.heatmapCoords) {
+                    const existingSource = map.getSource('idw-heatmap-source');
+                    if (existingSource) {
+                        existingSource.updateImage({
+                            url: state.heatmapDataUrl,
+                            coordinates: state.heatmapCoords
+                        });
+                    } else {
+                        map.addSource('idw-heatmap-source', {
+                            type: 'image',
+                            url: state.heatmapDataUrl,
+                            coordinates: state.heatmapCoords
+                        });
+                    }
+
+                    if (!map.getLayer('idw-heatmap-layer')) {
+                        const firstSymbolOrExtrusion = (map.getStyle().layers || []).find(
+                            l => l.type === 'symbol' || l.type === 'fill-extrusion'
+                        );
+                        map.addLayer({
+                            id: 'idw-heatmap-layer',
+                            type: 'raster',
+                            source: 'idw-heatmap-source',
+                            paint: {
+                                'raster-opacity': 0.55,
+                                'raster-resampling': 'linear'
+                            },
+                            layout: {
+                                visibility: state.showHeatmap ? 'visible' : 'none'
+                            }
+                        }, firstSymbolOrExtrusion ? firstSymbolOrExtrusion.id : undefined);
+                    } else {
+                        map.setLayoutProperty(
+                            'idw-heatmap-layer',
+                            'visibility',
+                            state.showHeatmap ? 'visible' : 'none'
+                        );
+                    }
+                }
+
+                let vectorSourceId = null;
+                if (map.getSource('openmaptiles')) vectorSourceId = 'openmaptiles';
+                else if (map.getSource('carto')) vectorSourceId = 'carto';
+                else if (map.getSource('composite')) vectorSourceId = 'composite';
+                else if (map.getStyle() && map.getStyle().sources) {
+                    const sources = map.getStyle().sources;
+                    for (let k in sources) {
+                        if (sources[k] && sources[k].type === 'vector') {
+                            vectorSourceId = k;
+                            break;
+                        }
+                    }
+                }
+
+                if (vectorSourceId && !map.getLayer('warsaw-3d-buildings-layer')) {
+                    map.addLayer({
+                        id: 'warsaw-3d-buildings-layer',
+                        type: 'fill-extrusion',
+                        source: vectorSourceId,
+                        'source-layer': 'building',
+                        paint: {
+                            'fill-extrusion-color': '#363c4a',
+                            'fill-extrusion-height': ['coalesce', ['to-number', ['get', 'render_height']], ['coalesce', ['to-number', ['get', 'height']], 12]],
+                            'fill-extrusion-base': ['coalesce', ['to-number', ['get', 'render_min_height']], ['coalesce', ['to-number', ['get', 'min_height']], 0]],
+                            'fill-extrusion-opacity': 0.85
+                        },
+                        layout: {
+                            visibility: state.is3dMode ? 'visible' : 'none'
+                        }
+                    });
+                }
+
+                if (map.getLayer('warsaw-3d-buildings-layer')) {
+                    map.setLayoutProperty(
+                        'warsaw-3d-buildings-layer',
+                        'visibility',
+                        state.is3dMode ? 'visible' : 'none'
+                    );
+                }
+                if (map.getLayer('building-3d')) {
+                    map.setLayoutProperty(
+                        'building-3d',
+                        'visibility',
+                        state.is3dMode ? 'visible' : 'none'
+                    );
+                }
+
+                if (state.stationsGeoJsonStr) {
+                    try {
+                        const geojson = JSON.parse(state.stationsGeoJsonStr);
+                        const existingStations = map.getSource('stations-source');
+                        if (existingStations) {
+                            existingStations.setData(geojson);
+                        } else {
+                            map.addSource('stations-source', {
+                                type: 'geojson',
+                                data: geojson
+                            });
+                        }
+
+                        if (!map.getLayer('stations-circle-layer')) {
+                            map.addLayer({
+                                id: 'stations-circle-layer',
+                                type: 'circle',
+                                source: 'stations-source',
+                                paint: {
+                                    'circle-color': ['get', 'color'],
+                                    'circle-radius': ['get', 'radius'],
+                                    'circle-stroke-color': '#ffffff',
+                                    'circle-stroke-width': ['get', 'strokeWidth'],
+                                    'circle-pitch-alignment': 'map'
+                                }
+                            });
+                        }
+                    } catch (e) {
+                        console.error('Failed to parse stations GeoJSON', e);
+                    }
+                }
+            }
+
+            function formatCameraState(map) {
+                if (!map) return '';
+                const c = map.getCenter();
+                return [c.lat, c.lng, map.getZoom(), map.getPitch(), map.getBearing()].join(',');
+            }
+
+            window.warsawMapBridge = {
+                setViewport: function(leftPx, topPx, widthPx, heightPx) {
+                    const dpr = window.devicePixelRatio || 1;
+                    const el = ensureHostElement();
+                    el.style.left = (leftPx / dpr) + 'px';
+                    el.style.top = (topPx / dpr) + 'px';
+                    el.style.width = (widthPx / dpr) + 'px';
+                    el.style.height = (heightPx / dpr) + 'px';
+                    if (state.map) {
+                        state.map.resize();
+                    }
+                },
+
+                ensureMap: function(styleUrl, lat, lon, zoom, pitch, bearing) {
+                    ensureHostElement();
+                    if (!window.maplibregl) return;
+
+                    if (!state.map) {
+                        state.styleUrl = styleUrl;
+                        state.styleLoaded = false;
+                        const map = new window.maplibregl.Map({
+                            container: 'maplibre-host',
+                            style: styleUrl,
+                            center: [lon, lat],
+                            zoom: zoom,
+                            pitch: pitch,
+                            bearing: bearing,
+                            attributionControl: false,
+                            interactive: false
+                        });
+                        state.map = map;
+                        map.on('style.load', function() {
+                            state.styleLoaded = true;
+                            applyOverlaysToMap();
+                        });
+                    } else if (state.styleUrl !== styleUrl) {
+                        state.styleUrl = styleUrl;
+                        state.styleLoaded = false;
+                        state.map.setStyle(styleUrl);
+                    }
+                },
+
+                updateOverlays: function(
+                    base64Rgba,
+                    width,
+                    height,
+                    north,
+                    south,
+                    west,
+                    east,
+                    showHeatmap,
+                    is3dMode,
+                    stationsGeoJsonStr
+                ) {
+                    state.showHeatmap = showHeatmap;
+                    state.is3dMode = is3dMode;
+                    state.stationsGeoJsonStr = stationsGeoJsonStr;
+
+                    if (base64Rgba && width > 0 && height > 0) {
+                        const binary = atob(base64Rgba);
+                        const bytes = new Uint8ClampedArray(binary.length);
+                        for (let i = 0; i < binary.length; i++) {
+                            bytes[i] = binary.charCodeAt(i);
+                        }
+                        const offCanvas = document.createElement('canvas');
+                        offCanvas.width = width;
+                        offCanvas.height = height;
+                        const ctx = offCanvas.getContext('2d');
+                        const imgData = new ImageData(bytes, width, height);
+                        ctx.putImageData(imgData, 0, 0);
+                        state.heatmapDataUrl = offCanvas.toDataURL('image/png');
+                        state.heatmapCoords = [
+                            [west, north],
+                            [east, north],
+                            [east, south],
+                            [west, south]
+                        ];
+                    }
+
+                    applyOverlaysToMap();
+                },
+
+                animateCamera: function(lat, lon, zoom, pitch, bearing) {
+                    if (!state.map) return;
+                    state.map.easeTo({
+                        center: [lon, lat],
+                        zoom: zoom,
+                        pitch: pitch,
+                        bearing: bearing,
+                        duration: 600
+                    });
+                },
+
+                panBy: function(dxPhysical, dyPhysical) {
+                    const map = state.map;
+                    if (!map) return '';
+                    const dpr = window.devicePixelRatio || 1;
+                    map.panBy([-dxPhysical / dpr, -dyPhysical / dpr], { animate: false });
+                    return formatCameraState(map);
+                },
+
+                orbitBy: function(dxPhysical, dyPhysical) {
+                    const map = state.map;
+                    if (!map) return '';
+                    const dpr = window.devicePixelRatio || 1;
+                    const newBearing = map.getBearing() + (dxPhysical / dpr) * 0.45;
+                    const newPitch = Math.max(0, Math.min(60, map.getPitch() - (dyPhysical / dpr) * 0.45));
+                    map.jumpTo({ bearing: newBearing, pitch: newPitch });
+                    return formatCameraState(map);
+                },
+
+                zoomByScroll: function(scrollDeltaY, cursorXPhysical, cursorYPhysical) {
+                    const map = state.map;
+                    if (!map) return '';
+                    const dpr = window.devicePixelRatio || 1;
+                    const nextZoom = Math.max(9.0, Math.min(18.0, map.getZoom() - scrollDeltaY * 0.35));
+                    map.zoomTo(nextZoom, {
+                        around: map.unproject([cursorXPhysical / dpr, cursorYPhysical / dpr]),
+                        animate: false
+                    });
+                    return formatCameraState(map);
+                },
+
+                queryStationAt: function(xPhysical, yPhysical) {
+                    const map = state.map;
+                    if (!map || !state.styleLoaded || !map.getLayer('stations-circle-layer')) return '';
+                    const dpr = window.devicePixelRatio || 1;
+                    const x = xPhysical / dpr;
+                    const y = yPhysical / dpr;
+                    const bbox = [[x - 14, y - 14], [x + 14, y + 14]];
+                    const features = map.queryRenderedFeatures(bbox, { layers: ['stations-circle-layer'] });
+                    if (features && features.length > 0 && features[0].properties) {
+                        return features[0].properties.lokalizacja || '';
+                    }
+                    return '';
+                }
+            };
+        })();
+    </script>
 </head>
 <body>
+<div id="maplibre-host"></div>
 <script type="application/javascript" src="composeApp.js"></script>
 </body>
 </html>

@@ -8,7 +8,7 @@ default:
 
 # Run the WasmJs web app in development mode with continuous reload
 run-web:
-    .\gradlew.bat :shared:wasmJsBrowserDevelopmentRun --continuous
+    .\gradlew.bat :shared:wasmJsBrowserDevelopmentRun --continuous --no-configuration-cache
 
 # Build the production WasmJs web distribution
 build-web:

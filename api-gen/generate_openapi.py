@@ -41,9 +41,9 @@ def map_type_to_openapi(type_str: str) -> dict:
     t = type_str.strip().lower()
     if t in ["string", "tekst", "str", "token"]:
         return {"type": "string"}
-    elif t in ["int", "integer", "liczba całkowita", "liczba calkowita", "number"]:
+    elif t in ["int", "integer", "liczba całkowita", "liczba calkowita"]:
         return {"type": "integer"}
-    elif t in ["float", "double", "decimal", "liczba zmiennoprzecinkowa"]:
+    elif t in ["float", "double", "decimal", "liczba zmiennoprzecinkowa", "number", "numeric"]:
         return {"type": "number"}
     elif t in ["boolean", "bool", "prawda/fałsz", "prawda/falsz"]:
         return {"type": "boolean"}
@@ -243,8 +243,9 @@ def main():
                     elif sec.get('section_name') == "Przykład odpowiedzi":
                         for el in sec.get('section_elements', []):
                             raw_content = el.get('content', '')
+                            cleaned_content = re.sub(r',\s*\.\.\.\s*(?=[\]\}])', '', raw_content.strip())
                             try:
-                                sample_resp_obj = json.loads(raw_content)
+                                sample_resp_obj = json.loads(cleaned_content)
                             except Exception:
                                 pass
 
@@ -266,15 +267,55 @@ def main():
                     elements = sec.get('section_elements', [])
                     response_schema = build_schema_from_pa(elements)
 
+        # Reconcile with sample_resp_obj if both exist
+        if response_schema and response_schema.get("properties") and sample_resp_obj is not None:
+            sample_item = sample_resp_obj[0] if (isinstance(sample_resp_obj, list) and len(sample_resp_obj) > 0) else sample_resp_obj
+            if isinstance(sample_item, dict):
+                pa_props = response_schema["properties"]
+                lower_to_pa_key = {k.lower(): k for k in pa_props.keys()}
+                reconciled_props = {}
+                used_pa_keys = set()
+                for actual_k, actual_v in sample_item.items():
+                    pa_k = lower_to_pa_key.get(actual_k.lower())
+                    if pa_k is not None:
+                        used_pa_keys.add(pa_k)
+                        prop_schema = dict(pa_props[pa_k])
+                        if isinstance(actual_v, float):
+                            prop_schema["type"] = "number"
+                        elif isinstance(actual_v, int) and not isinstance(actual_v, bool) and prop_schema.get("type") not in ["number", "integer"]:
+                            prop_schema["type"] = "integer"
+                        reconciled_props[actual_k] = prop_schema
+                    else:
+                        reconciled_props[actual_k] = build_schema_from_json_sample(actual_v)
+                for pa_k, pa_v in pa_props.items():
+                    if pa_k not in used_pa_keys:
+                        reconciled_props[pa_k] = pa_v
+                response_schema["properties"] = reconciled_props
+            if isinstance(sample_resp_obj, list) and response_schema.get("type") == "object":
+                response_schema = {"type": "array", "items": response_schema}
+
         # Infer fallback schema if pa_data had no details
-        if not response_schema or not response_schema.get("properties"):
+        if not response_schema or (response_schema.get("type") == "object" and not response_schema.get("properties")):
             if sample_resp_obj is not None:
                 response_schema = build_schema_from_json_sample(sample_resp_obj)
             else:
                 response_schema = {"type": "object", "description": "Generic response payload"}
 
-        # Store schema component
-        openapi_doc["components"]["schemas"][schema_name] = response_schema
+        # Store schema component (extract named Item schema for array responses)
+        if (
+            response_schema.get("type") == "array"
+            and isinstance(response_schema.get("items"), dict)
+            and response_schema["items"].get("type") == "object"
+        ):
+            item_schema_name = f"{to_camel_case(ds_name)}Item"
+            openapi_doc["components"]["schemas"][item_schema_name] = response_schema["items"]
+            openapi_doc["components"]["schemas"][schema_name] = {
+                "type": "array",
+                "items": {"$ref": f"#/components/schemas/{item_schema_name}"},
+            }
+        else:
+            openapi_doc["components"]["schemas"][schema_name] = response_schema
+
 
         # Build path operation
         if path not in openapi_doc["paths"]:
