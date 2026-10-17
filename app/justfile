@@ -1,0 +1,43 @@
+# Kotlin Multiplatform App Justfile
+
+set windows-shell := ["pwsh.exe", "-NoProfile", "-Command"]
+
+# Default recipe: show available app commands
+default:
+    @just --list --justfile {{justfile()}}
+
+# Run the WasmJs web app in development mode with continuous reload
+run-web:
+    .\gradlew.bat :shared:wasmJsBrowserDevelopmentRun --continuous
+
+# Build the production WasmJs web distribution
+build-web:
+    .\gradlew.bat :shared:wasmJsBrowserDistribution
+
+# Assemble the Android debug APK
+build-android:
+    .\gradlew.bat :androidApp:assembleDebug
+
+# Install the Android debug APK onto a connected device or emulator
+install-android:
+    .\gradlew.bat :androidApp:installDebug
+
+# Run shared Android host unit tests
+test:
+    .\gradlew.bat :shared:testAndroidHostTest
+
+# Format all Kotlin and Gradle files with Spotless
+format:
+    .\gradlew.bat spotlessApply
+
+# Check code formatting with Spotless
+format-check:
+    .\gradlew.bat spotlessCheck
+
+# Run full project checks (formatting + tests)
+check:
+    .\gradlew.bat check
+
+# Clean Gradle build directories
+clean:
+    .\gradlew.bat clean
