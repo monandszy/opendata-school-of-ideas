@@ -123,6 +123,7 @@ fun PogodaHeatmapContent(
                 if (station != null) {
                     StationDetailCard(
                         station = station,
+                        onClose = { onSelectStation(null) },
                         modifier = Modifier.align(Alignment.BottomStart),
                     )
                 } else if (inspection != null) {

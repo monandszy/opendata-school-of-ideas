@@ -69,9 +69,207 @@
                 return el;
             }
 
+            function getFeatureCentroid(feature) {
+                if (!feature || !feature.geometry) return null;
+                const geom = feature.geometry;
+                let sumLng = 0, sumLat = 0, count = 0;
+
+                function processCoords(coords) {
+                    if (!Array.isArray(coords) || coords.length === 0) return;
+                    if (typeof coords[0] === 'number') {
+                        sumLng += coords[0];
+                        sumLat += coords[1];
+                        count++;
+                    } else {
+                        for (let i = 0; i < coords.length; i++) {
+                            processCoords(coords[i]);
+                        }
+                    }
+                }
+                processCoords(geom.coordinates);
+                return count > 0 ? { lat: sumLat / count, lng: sumLng / count } : null;
+            }
+
+            function interpolateTemp(lat, lng, stations) {
+                if (!stations || stations.length === 0) return 15.0;
+                let weightSum = 0;
+                let tempSum = 0;
+                for (let i = 0; i < stations.length; i++) {
+                    const s = stations[i];
+                    const dLat = lat - s.lat;
+                    const dLon = lng - s.lon;
+                    const distSq = dLat * dLat + dLon * dLon;
+                    if (distSq < 1e-8) return s.tempPow;
+                    const weight = 1.0 / distSq;
+                    weightSum += weight;
+                    tempSum += s.tempPow * weight;
+                }
+                return weightSum > 0 ? tempSum / weightSum : 15.0;
+            }
+
+            function heatColorHex(temp) {
+                let r, g, b;
+                if (temp <= 0.0) {
+                    r = 0; g = 150; b = 255;
+                } else if (temp <= 10.0) {
+                    const k = temp / 10.0;
+                    r = Math.round(51 * k);
+                    g = Math.round(150 + 70 * k);
+                    b = Math.round(255 - 153 * k);
+                } else if (temp <= 20.0) {
+                    const k = (temp - 10.0) / 10.0;
+                    r = Math.round(51 + 204 * k);
+                    g = Math.round(220 + 35 * k);
+                    b = Math.round(102 - 102 * k);
+                } else if (temp <= 25.0) {
+                    const k = (temp - 20.0) / 5.0;
+                    r = 255;
+                    g = Math.round(255 - 115 * k);
+                    b = 0;
+                } else if (temp <= 30.0) {
+                    const k = (temp - 25.0) / 5.0;
+                    r = 255;
+                    g = Math.round(140 - 110 * k);
+                    b = 0;
+                } else {
+                    r = 255; g = 30; b = 0;
+                }
+                r = Math.min(255, Math.max(0, r));
+                g = Math.min(255, Math.max(0, g));
+                b = Math.min(255, Math.max(0, b));
+                return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+            }
+
+            function update3dBuildingColors() {
+                const map = state.map;
+                if (!map || !state.styleLoaded) return;
+
+                let targetLayer = null;
+                if (map.getLayer('warsaw-3d-buildings-layer')) targetLayer = 'warsaw-3d-buildings-layer';
+                else if (map.getLayer('building-3d')) targetLayer = 'building-3d';
+                if (!targetLayer) return;
+
+                const defaultBuildingColor = state.showHeatmap ? '#ffffff' : '#363c4a';
+                if (!state.is3dMode || !state.showHeatmap) {
+                    map.setPaintProperty(targetLayer, 'fill-extrusion-color', defaultBuildingColor);
+                    return;
+                }
+
+                let stations = [];
+                if (state.stationsGeoJsonStr) {
+                    try {
+                        const parsed = JSON.parse(state.stationsGeoJsonStr);
+                        if (parsed && parsed.features) {
+                            stations = parsed.features.map(f => ({
+                                lat: f.geometry.coordinates[1],
+                                lon: f.geometry.coordinates[0],
+                                tempPow: f.properties.tempPow
+                            })).filter(s => typeof s.lat === 'number' && typeof s.lon === 'number' && typeof s.tempPow === 'number');
+                        }
+                    } catch(e) {}
+                }
+                if (stations.length === 0) {
+                    map.setPaintProperty(targetLayer, 'fill-extrusion-color', defaultBuildingColor);
+                    return;
+                }
+
+                const features = map.queryRenderedFeatures({ layers: [targetLayer] });
+                if (!features || features.length === 0) return;
+
+                const keyValPairs = [];
+                for (let i = 0; i < features.length; i++) {
+                    const f = features[i];
+                    const key = f.id !== undefined && f.id !== null ? f.id : (f.properties ? (f.properties.osm_id || f.properties.id) : null);
+                    const centroid = getFeatureCentroid(f);
+                    if (centroid) {
+                        const temp = interpolateTemp(centroid.lat, centroid.lng, stations);
+                        const color = heatColorHex(temp);
+                        if (key !== null && key !== undefined) {
+                            keyValPairs.push(key, color);
+                        }
+                        if (f.id !== undefined && f.id !== null && f.source && f.sourceLayer) {
+                            try {
+                                map.setFeatureState(
+                                    { source: f.source, sourceLayer: f.sourceLayer, id: f.id },
+                                    { tempColor: color }
+                                );
+                            } catch(e) {}
+                        }
+                    }
+                }
+
+                if (keyValPairs.length > 0) {
+                    const matchExpr = [
+                        'match',
+                        ['coalesce', ['id'], ['get', 'osm_id'], ['get', 'id'], 0]
+                    ];
+                    const limit = Math.min(keyValPairs.length, 2000);
+                    for (let k = 0; k < limit; k += 2) {
+                        matchExpr.push(keyValPairs[k], keyValPairs[k+1]);
+                    }
+                    matchExpr.push(['coalesce', ['feature-state', 'tempColor'], defaultBuildingColor]);
+
+                    map.setPaintProperty(targetLayer, 'fill-extrusion-color', matchExpr);
+                }
+            }
+
             function applyOverlaysToMap() {
                 const map = state.map;
                 if (!map || !state.styleLoaded) return;
+
+                let vectorSourceId = null;
+                if (map.getSource('openmaptiles')) vectorSourceId = 'openmaptiles';
+                else if (map.getSource('carto')) vectorSourceId = 'carto';
+                else if (map.getSource('composite')) vectorSourceId = 'composite';
+                else if (map.getStyle() && map.getStyle().sources) {
+                    const sources = map.getStyle().sources;
+                    for (let k in sources) {
+                        if (sources[k] && sources[k].type === 'vector') {
+                            vectorSourceId = k;
+                            break;
+                        }
+                    }
+                }
+
+                const firstSymbol = (map.getStyle().layers || []).find(l => l.type === 'symbol');
+
+                if (vectorSourceId && !map.getLayer('warsaw-3d-buildings-layer')) {
+                    map.addLayer({
+                        id: 'warsaw-3d-buildings-layer',
+                        type: 'fill-extrusion',
+                        source: vectorSourceId,
+                        'source-layer': 'building',
+                        minzoom: 12,
+                        paint: {
+                            'fill-extrusion-color': '#ffffff',
+                            'fill-extrusion-height': ['coalesce', ['to-number', ['get', 'render_height']], ['coalesce', ['to-number', ['get', 'height']], 12]],
+                            'fill-extrusion-base': ['coalesce', ['to-number', ['get', 'render_min_height']], ['coalesce', ['to-number', ['get', 'min_height']], 0]],
+                            'fill-extrusion-opacity': 0.85
+                        },
+                        layout: {
+                            visibility: state.is3dMode ? 'visible' : 'none'
+                        }
+                    }, firstSymbol ? firstSymbol.id : undefined);
+                }
+
+                if (map.getLayer('warsaw-3d-buildings-layer')) {
+                    map.setLayoutProperty(
+                        'warsaw-3d-buildings-layer',
+                        'visibility',
+                        state.is3dMode ? 'visible' : 'none'
+                    );
+                    map.setPaintProperty('warsaw-3d-buildings-layer', 'fill-extrusion-color', state.showHeatmap ? '#ffffff' : '#363c4a');
+                    map.setPaintProperty('warsaw-3d-buildings-layer', 'fill-extrusion-opacity', 0.85);
+                }
+                if (map.getLayer('building-3d')) {
+                    map.setLayoutProperty(
+                        'building-3d',
+                        'visibility',
+                        state.is3dMode ? 'visible' : 'none'
+                    );
+                    map.setPaintProperty('building-3d', 'fill-extrusion-color', state.showHeatmap ? '#ffffff' : '#363c4a');
+                    map.setPaintProperty('building-3d', 'fill-extrusion-opacity', 0.85);
+                }
 
                 if (state.heatmapDataUrl && state.heatmapCoords) {
                     const existingSource = map.getSource('idw-heatmap-source');
@@ -89,21 +287,18 @@
                     }
 
                     if (!map.getLayer('idw-heatmap-layer')) {
-                        const firstSymbolOrExtrusion = (map.getStyle().layers || []).find(
-                            l => l.type === 'symbol' || l.type === 'fill-extrusion'
-                        );
                         map.addLayer({
                             id: 'idw-heatmap-layer',
                             type: 'raster',
                             source: 'idw-heatmap-source',
                             paint: {
-                                'raster-opacity': 0.55,
+                                'raster-opacity': 0.65,
                                 'raster-resampling': 'linear'
                             },
                             layout: {
                                 visibility: state.showHeatmap ? 'visible' : 'none'
                             }
-                        }, firstSymbolOrExtrusion ? firstSymbolOrExtrusion.id : undefined);
+                        }, firstSymbol ? firstSymbol.id : undefined);
                     } else {
                         map.setLayoutProperty(
                             'idw-heatmap-layer',
@@ -111,61 +306,6 @@
                             state.showHeatmap ? 'visible' : 'none'
                         );
                     }
-                }
-
-                let vectorSourceId = null;
-                if (map.getSource('openmaptiles')) vectorSourceId = 'openmaptiles';
-                else if (map.getSource('carto')) vectorSourceId = 'carto';
-                else if (map.getSource('composite')) vectorSourceId = 'composite';
-                else if (map.getStyle() && map.getStyle().sources) {
-                    const sources = map.getStyle().sources;
-                    for (let k in sources) {
-                        if (sources[k] && sources[k].type === 'vector') {
-                            vectorSourceId = k;
-                            break;
-                        }
-                    }
-                }
-
-                const buildingColor = state.showHeatmap ? '#ffffff' : '#363c4a';
-                const buildingOpacity = state.showHeatmap ? 0.60 : 0.85;
-
-                if (vectorSourceId && !map.getLayer('warsaw-3d-buildings-layer')) {
-                    map.addLayer({
-                        id: 'warsaw-3d-buildings-layer',
-                        type: 'fill-extrusion',
-                        source: vectorSourceId,
-                        'source-layer': 'building',
-                        minzoom: 12,
-                        paint: {
-                            'fill-extrusion-color': buildingColor,
-                            'fill-extrusion-height': ['coalesce', ['to-number', ['get', 'render_height']], ['coalesce', ['to-number', ['get', 'height']], 12]],
-                            'fill-extrusion-base': ['coalesce', ['to-number', ['get', 'render_min_height']], ['coalesce', ['to-number', ['get', 'min_height']], 0]],
-                            'fill-extrusion-opacity': buildingOpacity
-                        },
-                        layout: {
-                            visibility: state.is3dMode ? 'visible' : 'none'
-                        }
-                    });
-                }
-
-                if (map.getLayer('warsaw-3d-buildings-layer')) {
-                    map.setLayoutProperty(
-                        'warsaw-3d-buildings-layer',
-                        'visibility',
-                        state.is3dMode ? 'visible' : 'none'
-                    );
-                    map.setPaintProperty('warsaw-3d-buildings-layer', 'fill-extrusion-color', buildingColor);
-                    map.setPaintProperty('warsaw-3d-buildings-layer', 'fill-extrusion-opacity', buildingOpacity);
-                }
-                if (map.getLayer('building-3d')) {
-                    map.setLayoutProperty(
-                        'building-3d',
-                        'visibility',
-                        state.is3dMode ? 'visible' : 'none'
-                    );
-                    map.setPaintProperty('building-3d', 'fill-extrusion-color', buildingColor);
-                    map.setPaintProperty('building-3d', 'fill-extrusion-opacity', buildingOpacity);
                 }
 
                 if (state.stationsGeoJsonStr) {
@@ -285,6 +425,12 @@
                         map.on('style.load', function() {
                             state.styleLoaded = true;
                             applyOverlaysToMap();
+                        });
+                        map.on('moveend', function() {
+                            update3dBuildingColors();
+                        });
+                        map.on('idle', function() {
+                            update3dBuildingColors();
                         });
                     } else if (state.styleUrl !== styleUrl) {
                         state.styleUrl = styleUrl;

@@ -2,19 +2,24 @@ package dev.monand.opendata.feature.heatmap.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -96,76 +101,116 @@ fun MapZoomControls(
 }
 
 @Composable
-fun StationDetailCard(
-    station: PogodaStation,
+fun MapOverlayCard(
+    title: String,
+    onClose: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     Surface(
-        modifier = modifier.padding(12.dp),
+        modifier = modifier
+            .padding(12.dp)
+            .widthIn(max = 320.dp),
         shape = RoundedCornerShape(12.dp),
         color = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f),
         contentColor = MaterialTheme.colorScheme.onSurface,
         tonalElevation = 6.dp,
     ) {
-        Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Column(
+            modifier = Modifier.padding(14.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.weight(1f, fill = false),
+                )
+                if (onClose != null) {
+                    CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
+                        TextButton(
+                            onClick = onClose,
+                            contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp),
+                        ) {
+                            Text("Zamknij", style = MaterialTheme.typography.labelMedium)
+                        }
+                    }
+                }
+            }
+
+            content()
+        }
+    }
+}
+
+@Composable
+fun StationDetailCard(
+    station: PogodaStation,
+    onClose: (() -> Unit)? = null,
+    modifier: Modifier = Modifier,
+) {
+    MapOverlayCard(
+        title = station.lokalizacja,
+        onClose = onClose,
+        modifier = modifier,
+    ) {
+        Text(
+            text = "Temperatura powietrza: ${station.tempPow}°C",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.primary,
+        )
+        if (station.tempNaw != null) {
             Text(
-                text = station.lokalizacja,
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
+                text = "Temperatura nawierzchni: ${station.tempNaw}°C",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+        }
+        if (station.wilgPow != null) {
             Text(
-                text = "Temperatura powietrza: ${station.tempPow}°C",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.primary,
+                text = "Wilgotność: ${station.wilgPow}%",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            if (station.tempNaw != null) {
-                Text(
-                    text = "Temperatura nawierzchni: ${station.tempNaw}°C",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-            if (station.wilgPow != null) {
-                Text(
-                    text = "Wilgotność: ${station.wilgPow}%",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-            if (station.cisnienie != null) {
-                Text(
-                    text = "Ciśnienie: ${station.cisnienie} hPa",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-            if (station.predWiatru != null) {
-                Text(
-                    text = "Wiatr: ${station.predWiatru} m/s",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-            if (station.ijp != null) {
-                Text(
-                    text = "Jakość powietrza (IJP): ${station.ijp}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-            if (station.czas != null) {
-                Text(
-                    text = "Pomiar: ${station.czas}",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
+        }
+        if (station.cisnienie != null) {
             Text(
-                text = "Współrzędne: ${station.lat}, ${station.lon}",
+                text = "Ciśnienie: ${station.cisnienie} hPa",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+        if (station.predWiatru != null) {
+            Text(
+                text = "Wiatr: ${station.predWiatru} m/s",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+        if (station.ijp != null) {
+            Text(
+                text = "Jakość powietrza (IJP): ${station.ijp}",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+        if (station.czas != null) {
+            Text(
+                text = "Pomiar: ${station.czas}",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
+        Text(
+            text = "Współrzędne: ${station.lat}, ${station.lon}",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
     }
 }
 
@@ -204,52 +249,33 @@ fun LocationInspectionCard(
 
     val badgeColor = heatColorForTemperatureCelsius(inspection.estimatedTemp, alpha = 1.0f)
 
-    Surface(
-        modifier = modifier.padding(12.dp),
-        shape = RoundedCornerShape(12.dp),
-        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f),
-        contentColor = MaterialTheme.colorScheme.onSurface,
-        tonalElevation = 6.dp,
+    MapOverlayCard(
+        title = "Sprawdzenie temperatury",
+        onClose = onClose,
+        modifier = modifier,
     ) {
-        Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = "Sprawdzenie temperatury",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
-                TextButton(onClick = onClose) {
-                    Text("Zamknij")
-                }
-            }
-
-            Surface(
-                shape = RoundedCornerShape(8.dp),
-                color = badgeColor,
-            ) {
-                Text(
-                    text = "$formattedTemp °C (Szacunek IDW)",
-                    style = MaterialTheme.typography.titleSmall,
-                    color = Color.Black,
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                )
-            }
-
+        Surface(
+            shape = RoundedCornerShape(6.dp),
+            color = badgeColor,
+        ) {
             Text(
-                text = "Najbliższa stacja: ${inspection.nearestStationName} ($formattedDist km)",
+                text = "$formattedTemp °C (Szacunek IDW)",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-
-            Text(
-                text = "Współrzędne: $formattedLat, $formattedLon",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = Color.Black,
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
             )
         }
+
+        Text(
+            text = "Najbliższa stacja: ${inspection.nearestStationName} ($formattedDist km)",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+
+        Text(
+            text = "Współrzędne: $formattedLat, $formattedLon",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
     }
 }
