@@ -1,0 +1,20 @@
+[
+  {
+    "section_name": "Przykład wywołania",
+    "section_elements": [
+      {
+        "title": "Przykład zapytania dla pobrania Wydarzenia w Warszawie",
+        "content": "curl --location --request POST 'https://dane.um.warszawa.pl/api/action/get_bmm_kalendarz_wydarzen' --header 'Authorization: token_uzytkownika'"
+      }
+    ]
+  },
+  {
+    "section_name": "Przykład odpowiedzi",
+    "section_elements": [
+      {
+        "title": "Przykład odpowiedzi dla pobrania Wydarzenia w Warszawie",
+        "content": "{\n\t\"address\": [\n\t\t{\n\t\t\t\"name\": \"Teatr Syrena\",\n\t\t\t\"street\": \"Litewska 3\"\n\t\t}\n\t],\n\t\"availableLanguages\": [\n\t\t\"pl_PL\"\n\t],\n\t\"language\": \"pl_PL\",\n\t\"map\": {\n\t\t\"features\": [\n\t\t\t{\n\t\t\t\t\"geometry\": {\n\t\t\t\t\t\"coordinates\": [\n\t\t\t\t\t\t21.038453,\n\t\t\t\t\t\t52.252014\n\t\t\t\t\t],\n\t\t\t\t\t\"type\": \"Point\"\n\t\t\t\t},\n\t\t\t\t\"properties\": {\n\t\t\t\t\t\"district\": \"Praga-Północ\",\n\t\t\t\t\t\"fullStreetName\": \"ulica Targowa\",\n\t\t\t\t\t\"shortStreetName\": \"ul. Targowa\",\n\t\t\t\t\t\"streetNumber\": \"56\"\n\t\t\t\t},\n\t\t\t\t\"type\": \"Feature\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"geometry\": {\n\t\t\t\t\t\"coordinates\": [\n\t\t\t\t\t\t21.049415,\n\t\t\t\t\t\t52.272562\n\t\t\t\t\t],\n\t\t\t\t\t\"type\": \"Point\"\n\t\t\t\t},\n\t\t\t\t\"properties\": {\n\t\t\t\t\t\"district\": \"Targówek\",\n\t\t\t\t\t\"fullStreetName\": \"ulica Kołowa\",\n\t\t\t\t\t\"shortStreetName\": \"ul. Kołowa\",\n\t\t\t\t\t\"streetNumber\": \"20\"\n\t\t\t\t},\n\t\t\t\t\"type\": \"Feature\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"geometry\": {\n\t\t\t\t\t\"coordinates\": [\n\t\t\t\t\t\t21.022151,\n\t\t\t\t\t\t52.216486\n\t\t\t\t\t],\n\t\t\t\t\t\"type\": \"Point\"\n\t\t\t\t},\n\t\t\t\t\"properties\": {\n\t\t\t\t\t\"district\": \"Śródmieście\",\n\t\t\t\t\t\"fullStreetName\": \"ulica Litewska\",\n\t\t\t\t\t\"shortStreetName\": \"ul. Litewska\",\n\t\t\t\t\t\"streetNumber\": \"3\"\n\t\t\t\t},\n\t\t\t\t\"type\": \"Feature\"\n\t\t\t}\n\t\t],\n\t\t\"type\": \"FeatureCollection\"\n\t},\n\t\"occurrence\": [\n\t\t{\n\t\t\t\"daily\": true,\n\t\t\t\"from\": \"2026-02-26T00:00:00+01\",\n\t\t\t\"to\": \"2026-02-26T23:59:59+01\"\n\t\t}\n\t],\n\t\"text\": \"<p>Legendarny prezydent Warszawy Stefan Starzyński, symbol oporu stolicy we wrześniu 1939 roku, będzie bohaterem kolejnej autorskiej premiery w&nbsp;warszawskim Teatrze Syrena. Musical na podstawie biografii pióra Grzegorza Piątka „Starzyński. Prezydent z&nbsp;pomnika” wyreżyseruje Konrad Imiela.</p><p>Organizator: <a href=\"https://teatrsyrena.pl/\" target=\"_blank\">Teatr Syrena</a></p>\",\n\t\"title\": \"Starzyński. Prezydent z pomnika\",\n\t\"url\": \"https://um.warszawa.pl/waw/80-rocznica/-/starzynski-prezydent-z-pomnika\"\n}"
+      }
+    ]
+  }
+]

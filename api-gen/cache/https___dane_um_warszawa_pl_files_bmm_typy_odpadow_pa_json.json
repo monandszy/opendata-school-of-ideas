@@ -1,0 +1,62 @@
+[
+    {
+      "section_name": "Parametry wywołania",
+      "section_elements": [
+        {
+          "name": "token_uzytkownika",
+          "type": "token",
+          "description": "Token API - obowiązkowy"
+        }
+      ]
+    },
+    {
+      "section_name": "Parametry odpowiedzi",
+      "section_elements": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "description": "Identyfikator"
+        },
+        {
+          "name": "name",
+          "type": "String",
+          "description": "Nazwa typu odpadu"
+        },
+        {
+          "name": "czym_sa",
+          "type": "String",
+          "description": "Opis odpadu"
+        },
+        {
+          "name": "synonyms_list",
+          "type": "Array<String>",
+          "description": "Synonimy typu odpadu"
+        },
+        {
+          "name": "additional_info",
+          "type": "String",
+          "description": "Dodatkowe informacje"
+        },
+        {
+          "name": "nalezy",
+          "type": "Array<String>",
+          "description": "Informacja do należy do typu odpadów"
+        },
+        {
+          "name": "nie_nalezy",
+          "type": "Array<String>",
+          "description": "Co nie należy do typu odpadu"
+        },
+        {
+          "name": "recykling",
+          "type": "String",
+          "description": "Informacje związane z recyklingiem odpadu"
+        },
+        {
+          "name": "co_sie_dzieje",
+          "type": "String",
+          "description": "Przebieg procesu recyklingu oapadu"
+        }
+      ]
+    }
+  ]

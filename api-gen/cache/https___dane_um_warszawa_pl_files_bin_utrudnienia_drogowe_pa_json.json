@@ -1,0 +1,43 @@
+[
+  {
+    "section_name": "Parametry wywołania",
+    "section_elements": [
+      {
+        "name": "token_uzytkownika",
+        "type": "token",
+        "description": "Token API - obowiązkowy"
+      }
+    ]
+  },
+  {
+    "section_name": "Parametry odpowiedzi",
+    "section_elements": [
+
+    {
+        "name": "start_date",
+        "type": "datetime",
+        "description": "Początek utrudnienia"
+    },
+    {
+        "name": "end_date",
+        "type": "datetime",
+        "description": "Godzina wydarzenia"
+    },
+    {
+        "name": "content",
+        "type": "list",
+        "description": "Lista tekstowej treści akapitów"
+    },
+    {
+        "name": "id",
+        "type": "int",
+        "description": "Numer identyfikacyjny postu w serwisie infoulice https://infoulice.um.warszawa.pl/?page_id={id}"
+    },
+    {
+        "name": "geo",
+        "type": "objekt",
+        "description": "Obiekt zawierający dane geometryczne. geomType z wartością równą 1 odpowiada linii gdzie kolekcja latlngs wyznacza współrzędne wierzchołków linii. geomType z wartością równą 0 oznacza punkt a jedynym elementen kolekcji latlngs to współrzędne tego punktu."
+    }
+    ]
+  }
+]

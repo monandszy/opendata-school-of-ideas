@@ -1,0 +1,23 @@
+[    
+    {
+
+        "section_name": "Przykład wywołania",
+        "section_elements": [
+            {
+                "title": "Przykład zapytania dla pobrania wszystkich przystanków",
+                "content": "curl --location --request POST 'https://dane.um.warszawa.pl/api/action/get_ztm_przystanki_komunikacji_miejskiej' --header 'Authorization: token_uzytkownika'"
+
+            }
+        ]
+    },
+    {
+        "section_name": "Przykład odpowiedzi",
+        "section_elements": [
+            {
+                "title": "Przykład odpowiedzi przystanków komuniakcji miejskiej",
+                "content": "\"values\": [\n\t{\n\t\t\"value\": \"1001\",\n\t\t\"key\": \"zespol\"\n\t},\n\t{\n\t\t\"value\": \"01\",\n\t\t\"key\": \"slupek\"\n\t},\n\t{\n\t\t\"value\": \"Kijowska\",\n\t\t\"key\": \"nazwa_zespolu\"\n\t},\n\t{\n\t\t\"value\": \"2201\",\n\t\t\"key\": \"id_ulicy\"\n\t},\n\t{\n\t\t\"value\": \"52.248455\",\n\t\t\"key\": \"szer_geo\"\n\t},\n\t{\n\t\t\"value\": \"21.044827\",\n\t\t\"key\": \"dlug_geo\"\n\t},\n\t{\n\t\t\"value\": \"al.Zieleniecka\",\n\t\t\"key\": \"kierunek\"\n\t},\n\t{\n\t\t\"value\": \"2025-04-01 00:00:00.0\",\n\t\t\"key\": \"obowiazuje_od\"\n\t}\n]\n"
+
+            }
+        ]
+    }
+]

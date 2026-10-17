@@ -1,0 +1,20 @@
+[
+  {
+    "section_name": "Przykład wywołania",
+    "section_elements": [
+      {
+        "title": "Przykład zapytania dla pobrania informacji o ekopunktach",
+        "content": "curl --location --request POST 'https://dane.um.warszawa.pl/api/action/get_bos_ekopunkty' --header 'Authorization: token_uzytkownika'"
+      }
+    ]
+  },
+  {
+    "section_name": "Przykład odpowiedzi",
+    "section_elements": [
+      {
+        "title": "Przykład odpowiedzi dla pobrania informacji o ekopunktach",
+        "content": "{\n\t\"dlugosc\": 21.11252,\n\t\"dni_pracy\": [\n\t\t{\n\t\t\t\"czwartek\": {\n\t\t\t\t\"calodobowo\": true,\n\t\t\t\t\"informacje_dodatkowe\": \"\",\n\t\t\t\t\"nieczynne\": false,\n\t\t\t\t\"otwarta_do\": \"\",\n\t\t\t\t\"otwarta_od\": \"\"\n\t\t\t},\n\t\t\t\"informacje_dodatkowe\": \"\",\n\t\t\t\"niedziela\": {\n\t\t\t\t\"calodobowo\": true,\n\t\t\t\t\"informacje_dodatkowe\": \"\",\n\t\t\t\t\"nieczynne\": false,\n\t\t\t\t\"otwarta_do\": \"\",\n\t\t\t\t\"otwarta_od\": \"\"\n\t\t\t},\n\t\t\t\"piatek\": {\n\t\t\t\t\"calodobowo\": true,\n\t\t\t\t\"informacje_dodatkowe\": \"\",\n\t\t\t\t\"nieczynne\": false,\n\t\t\t\t\"otwarta_do\": \"\",\n\t\t\t\t\"otwarta_od\": \"\"\n\t\t\t},\n\t\t\t\"poniedzialek\": {\n\t\t\t\t\"calodobowo\": true,\n\t\t\t\t\"informacje_dodatkowe\": \"\",\n\t\t\t\t\"nieczynne\": false,\n\t\t\t\t\"otwarta_do\": \"\",\n\t\t\t\t\"otwarta_od\": \"\"\n\t\t\t},\n\t\t\t\"sobota\": {\n\t\t\t\t\"calodobowo\": true,\n\t\t\t\t\"informacje_dodatkowe\": \"\",\n\t\t\t\t\"nieczynne\": false,\n\t\t\t\t\"otwarta_do\": \"\",\n\t\t\t\t\"otwarta_od\": \"\"\n\t\t\t},\n\t\t\t\"sroda\": {\n\t\t\t\t\"calodobowo\": true,\n\t\t\t\t\"informacje_dodatkowe\": \"\",\n\t\t\t\t\"nieczynne\": false,\n\t\t\t\t\"otwarta_do\": \"\",\n\t\t\t\t\"otwarta_od\": \"\"\n\t\t\t},\n\t\t\t\"wtorek\": {\n\t\t\t\t\"calodobowo\": true,\n\t\t\t\t\"informacje_dodatkowe\": \"\",\n\t\t\t\t\"nieczynne\": false,\n\t\t\t\t\"otwarta_do\": \"\",\n\t\t\t\t\"otwarta_od\": \"\"\n\t\t\t}\n\t\t}\n\t],\n\t\"dzielnica\": \"Praga-Południe\",\n\t\"nazwa\": \"\",\n\t\"opis_lokalizacji\": \"teren Pływalni Szuwarek\",\n\t\"szerokosc\": 52.24348,\n\t\"typ_punktu\": [\n\t\t{\n\t\t\t\"id\": 6,\n\t\t\t\"rodzaj\": \"Miejski Punkt Elektroodpadów\"\n\t\t}\n\t],\n\t\"ulica\": \"ul. Biłgorajska\",\n\t\"ulica_lokal\": \"\",\n\t\"ulica_numer\": \"2\"\n},"
+      }
+    ]
+  }
+]

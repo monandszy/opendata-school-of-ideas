@@ -1,0 +1,32 @@
+[
+    {
+        "section_name": "Parametry wywołania",
+        "section_elements": [            
+            {
+                "name": "token_uzytkownika",
+                "type": "token",
+                "description": "Token API - obowiązkowy"
+            },
+            {
+                "name": "dzielnica",
+                "type": "string",
+                "description": "Dzielnica - pisana bez polskich znaków, pisane łącznie np. pragapolnoc"
+            },
+            {
+                "name": "rodzajNieruchomosci",
+                "type": "string",
+                "description": "Zgodne z zaprezentowanym modelem pojęciowym danych rejestru cen nieruchomości w  pkt. 1 załącznika nr 9 do Rozporządzenia Ministra Rozwoju, Pracy i Technologii z dnia 27 lipca 2021 r. w sprawie ewidencji gruntów i budynków (t.j. Dz. U. z 2024 r. poz. 219 z późn. zm.)."
+            },
+            {
+                "name": "rodzajRynku",
+                "type": "string",
+                "description": "Zgodne z zaprezentowanym modelem pojęciowym danych rejestru cen nieruchomości w  pkt. 1 załącznika nr 9 do Rozporządzenia Ministra Rozwoju, Pracy i Technologii z dnia 27 lipca 2021 r. w sprawie ewidencji gruntów i budynków (t.j. Dz. U. z 2024 r. poz. 219 z późn. zm.)."
+            },
+            {
+                "name": "rok",
+                "type": "int",
+                "description": "Rok sporządzenia dokumentu"
+            }
+        ]
+    }    
+]

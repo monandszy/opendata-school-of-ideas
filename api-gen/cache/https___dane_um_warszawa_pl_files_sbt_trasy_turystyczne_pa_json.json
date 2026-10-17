@@ -1,0 +1,65 @@
+[
+  {
+    "section_name": "Parametry wywołania",
+    "section_elements": [
+      {
+        "name": "token_uzytkownika",
+        "type": "token",
+        "description": "Token API - obowiązkowy"
+      }
+    ]
+  },
+  {
+    "section_name": "Parametry odpowiedzi",
+    "section_elements": [
+
+        {
+          "name": "title",
+          "type": "String",
+          "description": "Nazwa trasy"
+        },
+        {
+          "name": "length",
+          "type": "String",
+          "description": "Długość trasy w kilometrach"
+        },
+        {
+          "name": "description",
+          "type": "String",
+          "description": "Krótki opis trasy"
+        },
+        {
+          "name": "traces",
+          "type": "Lista",
+          "description": "Lista punktów geograficznych położonych na trasie"
+        },        
+        {
+          "name": "tourist_points",
+          "description": "Lista obiektów turystycznych do zwiedzenia na trasie",
+          "type": "Lista",
+          "nested_elements": [
+              {
+                  "name": "id_point",
+                  "type": "Number",
+                  "description": "Identyfikator obiektu turystycznego"
+              },
+              {
+                "name": "name",
+                "type": "String",
+                "description": "Nazwa obiektu turystycznego"
+              },
+              {
+                "name": "city",
+                "type": "String",
+                "description": "Miejscowość położenia obiektu turystycznego"
+              },
+              {
+                "name": "latlng",
+                "type": "Słownik",
+                "description": "Położenie obiektu turystycznego"
+              }
+          ]
+        }        
+    ]
+  }
+]

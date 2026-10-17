@@ -1,0 +1,177 @@
+[
+  {
+    "section_name": "Parametry wywołania",
+    "section_elements": [
+      {
+        "name": "token_uzytkownika",
+        "type": "Token",
+        "description": "Token API - obowiązkowy"
+      },
+      {
+        "name": "rok",
+        "type": "Int",
+        "description": "Rok edycji budżetu"
+      },
+      {
+        "name": "status",
+        "type": "String",
+        "description": "Status projektu (zrealizowane lub w_realizacji)"
+      }
+    ]
+  },
+  {
+    "section_name": "Parametry odpowiedzi",
+    "section_elements": [
+      {
+        "name": "id",
+        "type": "Integer",
+        "description": "Identyfikator projektu"
+      },
+      {
+        "name": "number",
+        "type": "Integer",
+        "description": "Numer projektu"
+      },
+      {
+        "name": "editionName",
+        "type": "String",
+        "description": "Nazwa edycji"
+      },
+      {
+        "name": "title",
+        "type": "String",
+        "description": "Tytuł"
+      },
+      {
+        "name": "description",
+        "type": "String",
+        "description": "Opis projektu"
+      },
+      {
+        "name": "shortDescription",
+        "type": "String",
+        "description": "Skrócony opis projektu"
+      },
+      {
+        "name": "status",
+        "type": "Integer",
+        "description": "Status"
+      },
+      {
+        "name": "submitted",
+        "type": "String",
+        "description": "Data i godzina złożenia"
+      },
+      {
+        "name": "firstName",
+        "type": "String",
+        "description": "Imię autora"
+      },
+      {
+        "name": "lastName",
+        "type": "String",
+        "description": "Nazwisko autora"
+      },      
+      {
+        "name": "classifications",
+        "type": "Array<String>",
+        "description": "Kategorie projektu"
+      },
+      {
+        "name": "recipients",
+        "type": "Array",
+        "description": "Odbiorcy projektu"
+      },
+      {
+        "name": "taskLevel",
+        "type": "Integer",
+        "description": "Poziom projektu"
+      },
+      {
+        "name": "localization",
+        "type": "String",
+        "description": "Lokalizacja projektu - opis"
+      },
+      {
+        "name": "localizationExtra",
+        "type": "Null",
+        "description": "Istotne informacje o lokalizacji"
+      },
+      {
+        "name": "pins",
+        "type": "Array<Object>",
+        "description": "Lokalizacja projektu - koordynaty GPS"
+      },
+      {
+        "name": "availabilityDescription",
+        "type": "String",
+        "description": "Zasady korzystania z efektu realizacji projektu przez ogół mieszkańców"
+      },
+      {
+        "name": "argumentation",
+        "type": "String",
+        "description": "Uzasadnienie dla realizacji projektu"
+      },
+      {
+        "name": "costSummary",
+        "type": "String",
+        "description": "Wstępny kosztorys projektu wraz z wyszczególnieniem jego składowych"
+      },
+      {
+        "name": "universalDesign",
+        "type": "Integer",
+        "description": "Projektowanie uniwersalne. 0-nie, 1-tak, 2-brak odopowiedzi"
+      },      
+      {
+        "name": "cost",
+        "type": "String",
+        "description": "Całkowity koszt projektu"
+      },
+      {
+        "name": "mainRegionName",
+        "type": "String",
+        "description": "Nazwa dzielnicy projektu wypełniana dla projektów dzielnicowych i lokalnych"
+      },
+      {
+        "name": "localName",
+        "type": "String",
+        "description": "Nazwa obszaru projektu wypełniona dla projektów lokalnych"
+      },
+      {
+        "name": "history",
+        "type": "Array",
+        "description": "Historia edycji projektu"
+      },
+      {
+        "name": "cocreators",
+        "type": "Array",
+        "description": "Dane współautorów"
+      },
+      {
+        "name": "attachments",
+        "type": "Array<Object>",
+        "description": "Odnośniki do załączników"
+      },
+      {
+        "name": "url",
+        "type": "String",
+        "description": "url"
+      },
+      {
+        "name": "verification",
+        "type": "Object",
+        "description": "Weryfikacja"
+      },
+      {
+        "name": "votes",
+        "type": "Integer",
+        "description": "Głosy"
+      },
+      {
+        "name": "comments",
+        "type": "Array",
+        "description": "Komentarze do projektu"
+      }
+    ]
+  }
+]

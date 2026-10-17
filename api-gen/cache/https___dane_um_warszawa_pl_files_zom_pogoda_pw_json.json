@@ -1,0 +1,22 @@
+[    
+    {
+
+        "section_name": "Przykład wywołania",
+        "section_elements": [
+            {
+                "title": "Przykład zapytania dla pobrania wszystkich przystanków",
+                "content": "curl --location --request POST 'https://dane.um.warszawa.pl/api/action/get_zom_pogoda' \\ \n--header 'Authorization: token_uzytkownika' \\ \n--header 'Content-Type: application/json'"
+
+            }
+        ]
+    },
+    {
+        "section_name": "Przykład odpowiedzi",
+        "section_elements": [
+            {
+                "title": "Przykład zwracający dane lokalizacji pojazdów komuniakcji miejskiej",
+                "content": "[\n\t{\n\t\t\"lokalizacja\": \"Stacja Bielany\",\n\t\t\"lat\": 52.29241,\n\t\t\"lon\": 20.97288,\n\t\t\"czas\": \"2025-08-13 09:10:00\",\n\t\t\"temp_pow\": 24.8,\n\t\t\"temp_naw\": 32.6,\n\t\t\"wilg_pow\": 35.0,\n\t\t\"pred_wiatru\": 0.2,\n\t\t\"kier_wiatru\": 197.0,\n\t\t\"int_opadu\": 0.0\n\t}, ...\n]"
+            }
+        ]
+    }
+]

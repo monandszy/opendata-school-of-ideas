@@ -1,0 +1,44 @@
+[
+    {
+        "section_name": "Parametry wywołania",
+        "section_elements": [            
+            {
+                "name": "token_uzytkownika",
+                "type": "token",
+                "description": "Token API - obowiązkowy"
+            },
+            {
+                "name": "busstopId",
+                "type": "string",
+                "description": "Inentyfikator przystanku"
+            },
+            {
+                "name": "busstopNr",
+                "type": "string",
+                "description": "Inentyfikator słupka przystankowego"
+            }
+        ]
+    },
+    {
+        "section_name": "Parametry odpowiedzi",
+        "section_elements": [
+            {
+				"name": "values",
+                "description": "tablica waartości dostępnych linii na przystanku",
+                "type": "tablica",
+                "nested_elements": [
+                    {
+                        "name": "value",
+                        "type": "String",
+                        "description": "numer linii dostępnej na przystanku"
+                    },
+                    {
+                        "name": "key",
+                        "type": "String",
+                        "description": "stała waertość \"linia\""
+                    }
+                ]
+            }
+        ]
+    }
+]

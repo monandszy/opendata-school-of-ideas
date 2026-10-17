@@ -1,0 +1,20 @@
+[
+  {
+    "section_name": "Przykład wywołania",
+    "section_elements": [
+      {
+        "title": "Przykład zapytania dla pobrania danych z budżetu obywatelskiego",
+        "content": "curl --location --request POST 'https://dane.um.warszawa.pl/api/action/get_cks_budzet_obywatelski' --header 'Authorization: token_uzytkownika' --data '{\"rok\": 2020, \"status\": \"zrealizowane\"}'"        
+      }
+    ]
+  },
+  {
+    "section_name": "Przykład odpowiedzi",
+    "section_elements": [
+      {
+        "title": "Przykład odpowiedzi dla danych budżetu obywatelskiego",
+        "content": "{\n\t\"id\": 30515,\n\t\"number\": 68,\n\t\"editionName\": \"na rok 2026\",\n\t\"title\": \"Otwarcie Skateparku w Aninie \",\n\t\"description\": \"Wydarzenie dla dzieci, młodzieży i dorosłych\\nWydarzenie to ma na celu integrację mieszkańców oraz zachęcenie ich do aktywnego spędzania czasu wolnego. Tematycznie związane z jazdą na rolkach, desce, hulajnodze. Dodatkowo wydarzenie wzbogacone będzie o warsztaty graffiti oraz pokazy. Bezpłatne wydarzenie to ma na celu integrację mieszkańców oraz zachęcenie ich do aktywnego spędzania czasu wolnego. To również integracja międzypokoleniowa. Na przestrzeni lat zauważyliśmy, że z wydarzenia korzystają nie tylko dzieci i młodzież ale również wyróżniamy dorosłych fanów jazdy na rolkach.\",\n\t\"shortDescription\": \"Bezpłatne wydarzenie dla całej rodziny, promujące aktywny tryb życia.\\r\\nZabawa z DJ'em, warsztaty jazdy na hulajnodze i rolkach, warsztaty graffiti, a także fotobudka.\",\n\t\"status\": 5,\n\t\"submitted\": \"2025-01-10T08:37:22.341+01:00\",\n\t\"firstName\": \"Osoba \",\n\t\"lastName\": \"Osoba \",\n\t\"lat\": null,\n\t\"lng\": null,\n\t\"classifications\": [\n\t\t\"sport i rekreacja\"\n\t],\n\t\"recipients\": [],\n\t\"taskLevel\": 4,\n\t\"localization\": \"OSiR Wawer, ul. V Poprzeczna 22\",\n\t\"localizationExtra\": null,\n\t\"pins\": [\n\t\t{\n\t\t\t\"id\": \"1736494063571\",\n\t\t\t\"lat\": 52.21928768039521,\n\t\t\t\"lng\": 21.162548661231998\n\t\t}\n\t],\n\t\"availabilityDescription\": null,\n\t\"argumentation\": null,\n\t\"costSummary\": \"DJ - 1 500 zł;\\r\\nFotobudka - 2 700 zł;\\r\\nWarsztaty nauki jazdy na rolkach - 1 500 zł;\\r\\nWarsztaty graffiti - 2 000zł; \\r\\nOznaczenie graficzne - 500 zł. \",\n\t\"universalDesign\": 1,\n\t\"universalDesignArgumentation\": \"\",\n\t\"cost\": \"8200.0\",\n\t\"mainRegionName\": \"Marysin Wawerski, Anin\",\n\t\"localName\": \"Marysin Wawerski, Anin\",\n\t\"history\": [],\n\t\"cocreators\": [],\n\t\"attachments\": [\n\t\t{\n\t\t\t\"url\": \"https://umw-decidim-bo.s3.eu-central-1.amazonaws.com/1oumdltawvhnb9ha6wkthra1sjxd?response-content-disposition=inline%3B%20filename%3D%22untitled-20.jpg%22%3B%20filename%2A%3DUTF-8%27%27untitled-20.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA24S74JL6PR4CHGML%2F20260921%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20260921T141504Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=9f98fe6b2e3bfd7913e0943b025da759c40ac1668e340641719ce2c2cc392e9b\",\n\t\t\t\"originalName\": \"untitled-20.jpg\"\n\t\t},\n\t\t{\n\t\t\t\"url\": \"https://umw-decidim-bo.s3.eu-central-1.amazonaws.com/elw6m2oclfps1prvc4kfwrmg637n?response-content-disposition=inline%3B%20filename%3D%22untitled-30.jpg%22%3B%20filename%2A%3DUTF-8%27%27untitled-30.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA24S74JL6PR4CHGML%2F20260921%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20260921T141504Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=60e5a1e3eab17c7b4d4929b4ef1d5075b68c32b0d57cacc03b114c3331408e15\",\n\t\t\t\"originalName\": \"untitled-30.jpg\"\n\t\t}\n\t],\n\t\"url\": \"http://bo.um.warszawa.pl/processes/na-rok-2026/f/13/projects/30515\",\n\t\"verification\": {\n\t\t\"resultNotes\": \"\",\n\t\t\"attachments\": []\n\t},\n\t\"votes\": 0,\n\t\"comments\": [],\n\t\"created\": \"2025-01-10T08:37:22.341+01:00\"\n}"
+      }
+    ]
+  }
+]

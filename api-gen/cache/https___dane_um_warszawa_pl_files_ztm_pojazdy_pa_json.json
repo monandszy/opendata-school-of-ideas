@@ -1,0 +1,853 @@
+[
+  {
+    "section_name": "Parametry wywołania",
+    "section_elements": [
+      {
+        "name": "token_uzytkownika",
+        "type": "token",
+        "description": "Token API - obowiązkowy"
+      }
+    ]
+  },
+  {
+    "section_name": "Parametry odpowiedzi",
+    "section_elements": [
+      {
+        "name": "busy",
+        "description": "Informacje o taborze autobusowym",
+        "type": "tablica",
+        "nested_elements": [
+          {
+            "name": "idMarki",
+            "type": "Int",
+            "description": "Klucz obcy z gałęzi markiBus (idMarki)"
+          },
+          {
+            "name": "kolorPojazdu",
+            "type": "String",
+            "description": "Kolor pojazdu"
+          },
+          {
+            "name": "kolorPoreczy",
+            "type": "String",
+            "description": "Kolor poręczy"
+          },
+          {
+            "name": "kolorTapicerki",
+            "type": "String",
+            "description": "Kolor tapicerki"
+          },
+          {
+            "name": "nazwaOperatora",
+            "type": "String",
+            "description": "Nazwa operatora"
+          },
+          {
+            "name": "nazwaSkroconaOperatora",
+            "type": "String",
+            "description": "Skrócona nazwa operatora"
+          },
+          {
+            "name": "nazwaZajezdni",
+            "type": "String",
+            "description": "Nazwa zajezdni"
+          },
+          {
+            "name": "numerRejestracyjny",
+            "type": "String",
+            "description": "Numer rejestracyjny"
+          },
+          {
+            "name": "numerTaborowy",
+            "type": "String",
+            "description": "Numer taborowy"
+          },
+          {
+            "name": "rokProdukcji",
+            "type": "Int",
+            "description": "Rok produkcji"
+          },
+          {
+            "name": "schematMalowania",
+            "type": "String",
+            "description": "Schemat malowania"
+          },
+          {
+            "name": "trakcja",
+            "type": "String",
+            "description": "Trakcja"
+          }
+        ]
+      },
+      {
+        "name": "metro",
+        "description": "Informacje o taborze metra",
+        "type": "tablica",
+        "nested_elements": [
+          {
+            "name": "idMarki",
+            "type": "Int",
+            "description": "Klucz obcy z gałęzi Marki metro (idMarki)"
+          },
+          {
+            "name": "kolorPojazdu",
+            "type": "String",
+            "description": "Kolor pojazdu"
+          },
+          {
+            "name": "kolorPoreczy",
+            "type": "String",
+            "description": "Kolor poręczy"
+          },
+          {
+            "name": "kolorTapicerki",
+            "type": "String",
+            "description": "Kolor tapicerki"
+          },
+          {
+            "name": "nazwaOperatora",
+            "type": "String",
+            "description": "Nazwa operatora"
+          },
+          {
+            "name": "nazwaSkroconaOperatora",
+            "type": "String",
+            "description": "Skrócona nazwa operatora"
+          },
+          {
+            "name": "nazwaZajezdni",
+            "type": "String",
+            "description": "Nazwa zajezdni"
+          },
+          {
+            "name": "numerTaborowy",
+            "type": "String",
+            "description": "Numer taborowy"
+          },
+          {
+            "name": "rokProdukcji",
+            "type": "Int",
+            "description": "Rok produkcji"
+          },
+          {
+            "name": "schematMalowania",
+            "type": "String",
+            "description": "Schemat malowania"
+          },
+          {
+            "name": "trakcja",
+            "type": "String",
+            "description": "Trakcja"
+          }
+        ]
+      },
+      {
+        "name": "tramwaje",
+        "description": "Informacje o taborze tramwajowym",
+        "type": "tablica",
+        "nested_elements": [
+          {
+            "name": "idMarki",
+            "type": "Int",
+            "description": "Klucz obcy z gałęzi marki tramwaje (idMarki)"
+          },
+          {
+            "name": "kolorPojazdu",
+            "type": "String",
+            "description": "Kolor pojazdu"
+          },
+          {
+            "name": "kolorPoreczy",
+            "type": "String",
+            "description": "Kolor poręczy"
+          },
+          {
+            "name": "kolorTapicerki",
+            "type": "String",
+            "description": "Kolor tapicerki"
+          },
+          {
+            "name": "nazwaOperatora",
+            "type": "String",
+            "description": "Nazwa operatora"
+          },
+          {
+            "name": "nazwaSkroconaOperatora",
+            "type": "String",
+            "description": "Skrócona nazwa operatora"
+          },
+          {
+            "name": "nazwaZajezdni",
+            "type": "String",
+            "description": "Nazwa zajezdni"
+          },
+          {
+            "name": "numerTaborowy",
+            "type": "String",
+            "description": "Numer taborowy"
+          },
+          {
+            "name": "rokProdukcji",
+            "type": "Int",
+            "description": "Rok produkcji"
+          },
+          {
+            "name": "schematMalowania",
+            "type": "String",
+            "description": "Schemat malowania"
+          },
+          {
+            "name": "trakcja",
+            "type": "String",
+            "description": "Trakcja"
+          }
+        ]
+      },
+      {
+        "name": "kolej",
+        "description": "Informacje o taborze kolejowym",
+        "type": "tablica",
+        "nested_elements": [
+          {
+            "name": "evn",
+            "type": "String",
+            "description": "European Vehicle Number"
+          },
+          {
+            "name": "idMarki",
+            "type": "Int",
+            "description": "Klucz obcy z gałęzi Marki kolej (idMarki)"
+          },
+          {
+            "name": "kolorPojazdu",
+            "type": "String",
+            "description": "Kolor pojazdu"
+          },
+          {
+            "name": "kolorPoreczy",
+            "type": "String",
+            "description": "Kolor poręczy"
+          },
+          {
+            "name": "kolorTapicerki",
+            "type": "String",
+            "description": "Kolor tapicerki"
+          },
+          {
+            "name": "nazwaOperatora",
+            "type": "String",
+            "description": "Nazwa operatora"
+          },
+          {
+            "name": "nazwaSkroconaOperatora",
+            "type": "String",
+            "description": "Skrócona nazwa operatora"
+          },
+          {
+            "name": "nazwaZajezdni",
+            "type": "String",
+            "description": "Nazwa zajezdni"
+          },
+          {
+            "name": "numerTaborowy",
+            "type": "String",
+            "description": "Numer taborowy"
+          },
+          {
+            "name": "rokProdukcji",
+            "type": "Int",
+            "description": "Rok produkcji"
+          },
+          {
+            "name": "schematMalowania",
+            "type": "String",
+            "description": "Schemat malowania"
+          },
+          {
+            "name": "trakcja",
+            "type": "String",
+            "description": "Trakcja"
+          }
+        ]
+      },
+      {
+        "name": "markiBus",
+        "description": "Informacje o markach autobusów",
+        "type": "tablica",
+        "nested_elements": [
+          {
+            "name": "dlugosc",
+            "type": "Int",
+            "description": "Długość pojazdu w mm"
+          },
+          {
+            "name": "idMarki",
+            "type": "Int",
+            "description": "Identyfikator marki"
+          },
+          {
+            "name": "katWielkosci",
+            "type": "String",
+            "description": "Kategoria wielkości"
+          },
+          {
+            "name": "klimatyzacja",
+            "type": "String",
+            "description": "Wyposażony w klimatyzację"
+          },
+          {
+            "name": "komGlosWewnatrz",
+            "type": "String",
+            "description": "Komunikat głosowy wewnętrzny"
+          },
+          {
+            "name": "komGlosZewnatrz",
+            "type": "String",
+            "description": "Komunikat głosowy zewnętrzny"
+          },
+          {
+            "name": "liczMiejscSiedzacychTab",
+            "type": "String",
+            "description": "Liczba miejsc siedzących tabliczka znamionowa"
+          },
+          {
+            "name": "liczMiejscSpec",
+            "type": "Int",
+            "description": "Liczba miejsc specjalnych"
+          },
+          {
+            "name": "liczMiejscStojacychTab",
+            "type": "Int",
+            "description": "Liczba miejsc stojących tabliczka znamionowa"
+          },
+          {
+            "name": "liczMiejscTab",
+            "type": "Int",
+            "description": "Liczba miejsc tabliczka znamionowa"
+          },
+          {
+            "name": "liczMiejscWozekDziec",
+            "type": "Int",
+            "description": "Liczba miejsc dla wózka dziecięcego"
+          },
+          {
+            "name": "liczMiejscWozekInwalid",
+            "type": "Int",
+            "description": "Liczba miejsc dla wózka inwalidzkiego"
+          },
+          {
+            "name": "marka",
+            "type": "String",
+            "description": "Nazwa marki"
+          },
+          {
+            "name": "operator",
+            "type": "String",
+            "description": "Operator"
+          },
+          {
+            "name": "operatorSkrot",
+            "type": "String",
+            "description": "Operator skrót"
+          },
+          {
+            "name": "platnosc",
+            "type": "String",
+            "description": "Metody płatności w biletomacie"
+          },
+          {
+            "name": "podloga",
+            "type": "Numeric",
+            "description": "Rodzaj podłogi"
+          },
+          {
+            "name": "posiadaSSB",
+            "type": "String",
+            "description": "Posiada system sprzedaży biletów"
+          },
+          {
+            "name": "powierzchniaPodlogi",
+            "type": "Numeric",
+            "description": "Powierzchnia podłogi"
+          },
+          {
+            "name": "producent",
+            "type": "String",
+            "description": "Producent"
+          },
+          {
+            "name": "rodzajZasilania",
+            "type": "String",
+            "description": "Rodzaj zasilania"
+          },
+          {
+            "name": "szerokość",
+            "type": "Int",
+            "description": "Szerokość pojazdu w mm"
+          },
+          {
+            "name": "typ",
+            "type": "String",
+            "description": "Typ"
+          },
+          {
+            "name": "ukladSiedzen",
+            "type": "String",
+            "description": "Układ siedzeń"
+          },
+          {
+            "name": "wariant",
+            "type": "String",
+            "description": "Wariant"
+          },
+          {
+            "name": "wersja",
+            "type": "String",
+            "description": "Wersja"
+          },
+          {
+            "name": "wysokoscCalkowita",
+            "type": "Int",
+            "description": "Wysokość całkowita w mm"
+          },
+          {
+            "name": "zasilanie",
+            "type": "String",
+            "description": "Rodzaj zasilania"
+          }
+        ]
+      },
+      {
+        "name": "markiMetro",
+        "description": "Informacje o markach pojazdów metra",
+        "type": "tablica",
+        "nested_elements": [
+          {
+            "name": "dlugosc",
+            "type": "Int",
+            "description": "Długość pojazdu w mm"
+          },
+          {
+            "name": "dlugoscPrzedzialu",
+            "type": "String",
+            "description": "Długość przedziału"
+          },
+          {
+            "name": "efektywnaSzerWejscia",
+            "type": "Int",
+            "description": "Efektywna szerokość wejścia w mm"
+          },
+          {
+            "name": "idMarki",
+            "type": "Int",
+            "description": "Identyfikator marki"
+          },
+          {
+            "name": "katWielkosci",
+            "type": "String",
+            "description": "Kategoria wielkości"
+          },
+          {
+            "name": "klimatyzacja",
+            "type": "String",
+            "description": "Wyposażony w klimatyzację"
+          },
+          {
+            "name": "komGlosWewnatrz",
+            "type": "String",
+            "description": "Komunikat głosowy wewnętrzny"
+          },
+          {
+            "name": "komGlosZewnatrz",
+            "type": "String",
+            "description": "Komunikat głosowy zewnętrzny"
+          },
+          {
+            "name": "liczMiejscSiedzacychTab",
+            "type": "Int",
+            "description": "Liczba miejsc siedzących tabliczka znamionowa"
+          },
+          {
+            "name": "liczMiejscSpec",
+            "type": "Int",
+            "description": "Liczba miejsc specjalnych"
+          },
+          {
+            "name": "liczMiejscStojacychTab",
+            "type": "Int",
+            "description": "Liczba miejsc stojących tabliczka znamionowa"
+          },
+          {
+            "name": "liczMiejscTab",
+            "type": "Int",
+            "description": "Liczba miejsc tabliczka znamionowa"
+          },
+          {
+            "name": "liczMiejscWozekDziec",
+            "type": "Int",
+            "description": "Liczba miejsc dla wózka dziecięcego"
+          },
+          {
+            "name": "liczMiejscWozekInwalid",
+            "type": "Int",
+            "description": "Liczba miejsc dla wózka inwalidzkiego"
+          },
+          {
+            "name": "marka",
+            "type": "String",
+            "description": "Nazwa marki"
+          },
+          {
+            "name": "operator",
+            "type": "String",
+            "description": "Operator"
+          },
+          {
+            "name": "operatorSkrot",
+            "type": "String",
+            "description": "Operator skrót"
+          },
+          {
+            "name": "platnosc",
+            "type": "String",
+            "description": "Metody płatności w biletomacie"
+          },
+          {
+            "name": "podloga",
+            "type": "Numeric",
+            "description": "Rodzaj podłogi"
+          },
+          {
+            "name": "posiadaSSB",
+            "type": "String",
+            "description": "Posiada system sprzedaży biletów"
+          },
+          {
+            "name": "powierzchniaPodlogi",
+            "type": "Numeric",
+            "description": "Powierzchnia podłogi"
+          },
+          {
+            "name": "producent",
+            "type": "String",
+            "description": "Producent"
+          },
+          {
+            "name": "szerokość",
+            "type": "Int",
+            "description": "Szerokość pojazdu w mm"
+          },
+          {
+            "name": "typ",
+            "type": "String",
+            "description": "Typ"
+          },
+          {
+            "name": "ukladSiedzen",
+            "type": "String",
+            "description": "Układ siedzeń"
+          },
+          {
+            "name": "wariant",
+            "type": "String",
+            "description": "Wariant"
+          },
+          {
+            "name": "wersja",
+            "type": "String",
+            "description": "Wersja"
+          },
+          {
+            "name": "wysokoscCalkowita",
+            "type": "Int",
+            "description": "Wysokość całkowita w mm"
+          }
+        ]
+      },
+      {
+        "name": "markiKolej",
+        "description": "Informacje o markach pojazdów kolejowych",
+        "type": "tablica",
+        "nested_elements": [
+          {
+            "name": "dlugosc",
+            "type": "String",
+            "description": "Długość pojazdu w mm"
+          },
+          {
+            "name": "dlugoscPrzedzialu",
+            "type": "String",
+            "description": "Długość przedziału"
+          },
+          {
+            "name": "efektywnaSzerWejscia",
+            "type": "Int",
+            "description": "Efektywna szerokość wejścia w mm"
+          },
+          {
+            "name": "idMarki",
+            "type": "Int",
+            "description": "Identyfikator marki"
+          },
+          {
+            "name": "katWielkosci",
+            "type": "String",
+            "description": "Kategoria wielkości"
+          },
+          {
+            "name": "klimatyzacja",
+            "type": "String",
+            "description": "Wyposażony w klimatyzację"
+          },
+          {
+            "name": "komGlosWewnatrz",
+            "type": "String",
+            "description": "Komunikaty głosowe wewnętrzne"
+          },
+          {
+            "name": "komGlosZewnatrz",
+            "type": "String",
+            "description": "Komunikaty głosowe zewnętrzne"
+          },
+          {
+            "name": "liczMiejscSiedzacychTab",
+            "type": "Int",
+            "description": "Liczba miejsc siedzących wg tabliczki"
+          },
+          {
+            "name": "liczMiejscSpec",
+            "type": "Int",
+            "description": "Liczba siedzeń specjalnych"
+          },
+          {
+            "name": "liczMiejscStojacychTab",
+            "type": "String",
+            "description": "Liczba miejsc stojących wg tabliczki"
+          },
+          {
+            "name": "liczMiejscTab",
+            "type": "Int",
+            "description": "Liczba miejsc wg tabliczki"
+          },
+          {
+            "name": "liczMiejscWozekDziec",
+            "type": "Int",
+            "description": "Liczba miejsc dla wózków dziecięcych"
+          },
+          {
+            "name": "liczMiejscWozekInwalid",
+            "type": "Int",
+            "description": "Liczba miejsc dla wózków inwalidzkich"
+          },
+          {
+            "name": "marka",
+            "type": "String",
+            "description": "Marka"
+          },
+          {
+            "name": "operator",
+            "type": "String",
+            "description": "Szybka Kolej Miejska Sp. z o.o."
+          },
+          {
+            "name": "operatorSkrot",
+            "type": "String",
+            "description": "Operator skrót"
+          },
+          {
+            "name": "platnosc",
+            "type": "String",
+            "description": "Metody płatności w biletomacie"
+          },
+          {
+            "name": "posiadaSSB",
+            "type": "String",
+            "description": "Posiada system sprzedaży biletów"
+          },
+          {
+            "name": "powierzchniaPodlogi",
+            "type": "Numeric",
+            "description": "Powierzchnia podłogi"
+          },
+          {
+            "name": "producent",
+            "type": "String",
+            "description": "Producent"
+          },
+          {
+            "name": "szerokosc",
+            "type": "Int",
+            "description": "Szerokość pojazdu w mm"
+          },
+          {
+            "name": "typ",
+            "type": "String",
+            "description": "Typ"
+          },
+          {
+            "name": "ukladSiedzen",
+            "type": "String",
+            "description": "Układ siedzeń"
+          },
+          {
+            "name": "wariant",
+            "type": "String",
+            "description": "Wariant"
+          },
+          {
+            "name": "wersja",
+            "type": "String",
+            "description": "Wersja"
+          },
+          {
+            "name": "wysokoscCalkowita",
+            "type": "Int",
+            "description": "Wysokość całkowita"
+          }
+        ]
+      },
+      {
+        "name": "markiTramwaje",
+        "description": "Informacje o markach tramwajów",
+        "type": "tablica",
+        "nested_elements": [
+          {
+            "name": "dlugosc",
+            "type": "Int",
+            "description": "Długość pojazdu w mm"
+          },
+          {
+            "name": "idMarki",
+            "type": "Int",
+            "description": "Identyfikator marki"
+          },
+          {
+            "name": "katWielkosci",
+            "type": "String",
+            "description": "Kategoria wielkości"
+          },
+          {
+            "name": "kierunkowosc",
+            "type": "String",
+            "description": "Kierunkowość pojazdu"
+          },
+          {
+            "name": "klimatyzacja",
+            "type": "String",
+            "description": "Wyposażony w klimatyzację"
+          },
+          {
+            "name": "komGlosWewnatrz",
+            "type": "String",
+            "description": "Komunikat głosowy wewnętrzny"
+          },
+          {
+            "name": "komGlosZewnatrz",
+            "type": "String",
+            "description": "Komunikat głosowy zewnętrzny"
+          },
+          {
+            "name": "liczMiejscSiedzacychTab",
+            "type": "Int",
+            "description": "Liczba miejsc siedzących tabliczka znamionowa"
+          },
+          {
+            "name": "liczMiejscSpec",
+            "type": "Int",
+            "description": "Liczba miejsc specjalnych"
+          },
+          {
+            "name": "liczMiejscStojacychTab",
+            "type": "Int",
+            "description": "Liczba miejsc stojących tabliczka znamionowa"
+          },
+          {
+            "name": "liczMiejscTab",
+            "type": "Int",
+            "description": "Liczba miejsc tabliczka znamionowa"
+          },
+          {
+            "name": "liczMiejscWozekDziec",
+            "type": "Int",
+            "description": "Liczba miejsc dla wózka dziecięcego"
+          },
+          {
+            "name": "liczMiejscWozekInwalid",
+            "type": "Int",
+            "description": "Liczba miejsc dla wózka inwalidzkiego"
+          },
+          {
+            "name": "marka",
+            "type": "String",
+            "description": "Nazwa marki"
+          },
+          {
+            "name": "operator",
+            "type": "String",
+            "description": "Operator"
+          },
+          {
+            "name": "operatorSkrot",
+            "type": "String",
+            "description": "Operator skrót"
+          },
+          {
+            "name": "platnosc",
+            "type": "String",
+            "description": "Metody płatności w biletomacie"
+          },
+          {
+            "name": "podloga",
+            "type": "Numeric",
+            "description": "Rodzaj podłogi"
+          },
+          {
+            "name": "posiadaSSB",
+            "type": "String",
+            "description": "Posiada system sprzedaży biletów"
+          },
+          {
+            "name": "powierzchniaPodlogi",
+            "type": "Numeric",
+            "description": "Powierzchnia podłogi"
+          },
+          {
+            "name": "producent",
+            "type": "String",
+            "description": "Producent"
+          },
+          {
+            "name": "szerokosc",
+            "type": "Int",
+            "description": "Szerokość pojazdu w mm"
+          },
+          {
+            "name": "typ",
+            "type": "String",
+            "description": "Typ"
+          },
+          {
+            "name": "ukladSiedzen",
+            "type": "String",
+            "description": "Układ siedzeń"
+          },
+          {
+            "name": "wariant",
+            "type": "String",
+            "description": "Wariant"
+          },
+          {
+            "name": "wersja",
+            "type": "String",
+            "description": "Wersja"
+          },
+          {
+            "name": "wysokoscCalkowita",
+            "type": "Int",
+            "description": "Wysokość całkowita w mm"
+          }
+        ]
+      }
+    ]
+  }
+]

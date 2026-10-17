@@ -1,0 +1,130 @@
+[
+  {
+    "section_name": "Parametry wywołania",
+    "section_elements": [
+      {
+        "name": "token_uzytkownika",
+        "type": "token",
+        "description": "Token API - obowiązkowy"
+      }
+    ]
+  },
+  {
+    "section_name": "Parametry odpowiedzi",
+    "section_elements": [
+    {
+      "name": "address",
+      "type": "tablica słowników",
+      "description": "Adresy zajęć",
+      "nested_elements": [
+        {
+          "name": "name",
+          "type": "String",
+          "description": "Nazwa obiektu"
+        },
+        {
+          "name": "street",
+          "type": "String",
+          "description": "Ulica obiektu"
+        }
+      ]
+    },    
+    {
+      "name": "kategoria",
+      "type": "tablica słowników",
+      "description": "Kategorie zajęć",
+      "nested_elements": [
+        {
+          "name": "id",
+          "type": "String",
+          "description": "Identyfikator kategorii"
+        },
+        {
+          "name": "name",
+          "type": "String",
+          "description": "Nazwa kategorii"
+        }
+      ]
+    },
+    {
+      "name": "date",
+      "type": "Tablica String",
+      "description": "Daty zajęć sportowych"
+    },
+    
+    {
+      "name": "day",
+      "type": "tablica słowników",
+      "description": "Adresy zajęć",
+      "nested_elements": [
+        {
+          "name": "id",
+          "type": "String",
+          "description": "Identyfikator dnia wydarzenia"
+        },
+        {
+          "name": "name",
+          "type": "String",
+          "description": "Nazwa dnia wydarzenia"
+        }
+      ]
+    },
+
+    {
+      "name": "dedicated",
+      "type": "tablica słowników",
+      "description": "Adresaci oferty",
+      "nested_elements": [
+        {
+          "name": "id",
+          "type": "String",
+          "description": "Identyfikator grupy adresatów"
+        },
+        {
+          "name": "name",
+          "type": "String",
+          "description": "Adresaci oferty"
+        }
+      ]
+    },
+
+    {
+      "name": "localization",
+      "type": "tablica słowników",
+      "description": "Dzielnica wydarzenia",
+      "nested_elements": [
+        {
+          "name": "id",
+          "type": "String",
+          "description": "Identyfikator dzielnicy wydarzenia"
+        },
+        {
+          "name": "name",
+          "type": "String",
+          "description": "Nazwa dzielnicy wydarzenia"
+        }
+      ]
+    },
+    {
+      "name": "text",
+      "type": "String",
+      "description": "Treść"
+    },
+    {
+      "name": "time",
+      "type": "String",
+      "description": "Godzina wydarzenia"
+    },
+    {
+      "name": "title",
+      "type": "String",
+      "description": "Tytuł wydarzenia"
+    },
+    {
+      "name": "url",
+      "type": "String",
+      "description": "Adres URL wydarzenia"
+    }
+    ]
+  }
+]

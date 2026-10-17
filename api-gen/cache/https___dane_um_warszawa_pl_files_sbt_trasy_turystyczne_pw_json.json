@@ -1,0 +1,20 @@
+[
+  {
+    "section_name": "Przykład wywołania",
+    "section_elements": [
+      {
+        "title": "Przykład zapytania dla pobrania zasobu trasy turystyczne",
+        "content": "curl --location --request POST 'https://dane.um.warszawa.pl/api/action/get_sbt_trasy_turystyczne' --header 'Authorization: token_uzytkownika'"
+      }
+    ]
+  },
+  {
+    "section_name": "Przykład odpowiedzi",
+    "section_elements": [
+      {
+        "title": "Przykład odpowiedzi dla zasobu trasy turystyczne",
+        "content": "{\n\t\"title\": \"Trakt Królewski cz. 2\",\n\t\"length\": \"3.23\",\n\t\"description\": \"Ulica Nowy Świat i Aleje Ujazdowskie to kolejny odcinek\\nTraktu Królewskiego, który zaprowadzi Cię do najwspanialszych warszawskich\\nparków. Swój spacer zacznij na Rondzie de Gaulle’a, gdzie stoi słynna\\nsztuczna palma – zaskakujący i malowniczy element naszego miasta. Po\\nminięciu placu Trzech Krzyży dotrzesz do Parku Ujazdowskiego i Ogrodu\\nBotanicznego, będzie to przedsmak zieleni i architektury, które zaskoczą\\nCię w słynnym Parku Łazienkowskim, znajdującym się na końcu tego etapu\\nzwiedzania Traktu Królewskiego.\",\n\t\"traces\": [\n\t\t[\n\t\t\t52.2317949,\n\t\t\t21.0208465\n\t\t],\n\t\t[\n\t\t\t52.231948,\n\t\t\t21.020786\n\t\t]\n\t],\n\t\"tourist_points\": [\n\t\t{\n\t\t\t\"id_point\": 1147,\n\t\t\t\"name\": \"Palma na rondzie de Gaulle’a\",\n\t\t\t\"city\": \"Warszawa\",\n\t\t\t\"latlng\": {\n\t\t\t\t\"lat\": \"52.2317949\",\n\t\t\t\t\"lng\": \"21.0208465\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"id_point\": 1148,\n\t\t\t\"name\": \"Pomnik Charlesa de Gaulle’a\",\n\t\t\t\"city\": \"Warszawa\",\n\t\t\t\"latlng\": {\n\t\t\t\t\"lat\": \"52.2315563\",\n\t\t\t\t\"lng\": \"21.0215246\"\n\t\t\t}\n\t\t}\n\t]\n}"
+      }
+    ]
+  }
+]

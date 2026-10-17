@@ -1,0 +1,112 @@
+[
+  {
+    "section_name": "Parametry wywołania",
+    "section_elements": [
+      {
+        "name": "token_uzytkownika",
+        "type": "token",
+        "description": "Token API - obowiązkowy"
+      },
+      {
+        "name": "defibrillator_id",
+        "type": "identyfikator numeryczny",
+        "description": "id  defibrylatora - parametr opcjonalny"
+      }
+    ]
+  },
+  {
+    "section_name": "Parametry odpowiedzi",
+    "section_elements": [
+      {
+      "name": "geometry",
+        "description": "Informacja o lokalizacji",
+        "type": "słownik",
+        "nested_elements": [
+            {
+                "name": "coordinates",
+                "type": "tablica",
+                "description": "Współrzędne defibrylatora"
+            },
+            {
+              "name": "type",
+              "type": "String",
+              "description": "typ obiektu na mapie"
+            }
+        ]
+      },
+
+      {
+        "name": "properties",
+          "description": "Informacja o defibrylatorze",
+          "type": "słownik",
+          "nested_elements": [            
+            {
+              "name": "defibrillator_id",
+              "type": "String",
+              "description": "identyfikator defibrylatora"
+            },
+            {
+              "name": "device_access_description",
+              "type": "String",
+              "description": "opis dostępności urządzenia"
+            },
+            {
+              "name": "device_availability",
+              "type": "String",
+              "description": "informacja czy urządzenie jest dostępne 24/7"
+            },
+            {
+              "name": "device_location",
+              "type": "String",
+              "description": "lokalizacja urządzenia"
+            },
+            {
+              "name": "device_manufacturer",
+              "type": "String",
+              "description": "nazwa producenta urządzenia"
+            },
+            {
+              "name": "device_public_access",
+              "type": "String",
+              "description": "informacja o publicznym dostępie do urządzenia"
+            },
+            {
+              "name": "location_building",
+              "type": "String",
+              "description": "lokalizacja numer budynku"
+            },
+            {
+              "name": "location_city",
+              "type": "String",
+              "description": "lokalizacja miasto"
+            },
+            {
+              "name": "location_description",
+              "type": "String",
+              "description": "Opis lokalizacji"
+            },
+            {
+              "name": "location_object_name",
+              "type": "String",
+              "description": "Nazwa obiektu"
+            },
+            {
+              "name": "location_postcode",
+              "type": "String",
+              "description": "Kod pocztowy lokalizacji"
+            },
+            {
+              "name": "location_street",
+              "type": "String",
+              "description": "Ulica na której znajduje się obiekt"
+            },
+            {
+              "name": "attachment",
+              "type": "String",
+              "description": "zdjęcie defibrylatora zakodowane w formacie Base64 (parametr dostępny jedynie w"
+            }
+          ]
+        }      
+    ]
+  }
+]

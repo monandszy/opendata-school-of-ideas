@@ -1,0 +1,23 @@
+[
+    {
+        "section_name": "Przykład wywołania",
+        "section_elements": [
+            {
+                "title": "Przykład wywołania dla zapytania o transakcje nieruchomości lokalowej rynku pierwotnego w dzielnicy Bemowo w roku 2022",
+                "content": "curl --location 'https://dane.um.warszawa.pl/api/action/get_bgk_rcn' --header 'Authorization: token_uzytkownika' --header 'Content-Type: application/json' --data '{\"dzielnica\": \"Bemowo\", \"rodzajNieruchomosci\": \"nieruchomoscLokalowa\", \"rodzajRynku\": \"rynekPierwotny\", \"rok\": \"2022\"}'"
+
+            }
+        ]
+    },
+    {
+        "section_name": "Odpowiedź",
+        "section_elements": [
+            {
+                "title": "Odpowiedź",
+                "content": "Obiekt typu GeoJSON uwzględniający w atrybucie properties dane opisane w zaprezentowanym modelu pojęciowym danych rejestru cen nieruchomości w  pkt. 1 załącznika nr 9 do Rozporządzenia Ministra Rozwoju, Pracy i Technologii z dnia 27 lipca 2021 r. w sprawie ewidencji gruntów i budynków (t.j. Dz. U. z 2024 r. poz. 219 z późn. zm.)."
+
+            }
+        ]
+    }
+]
+

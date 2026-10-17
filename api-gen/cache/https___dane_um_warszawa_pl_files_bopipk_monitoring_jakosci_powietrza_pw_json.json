@@ -1,0 +1,22 @@
+[
+    {
+        "section_name": "Przykład wywołania",
+        "section_elements": [
+            {
+                "title": "Przykład wywołania dla zapytania o jakość powietrza",
+                "content": "curl --location --request POST 'https://dane.um.warszawa.pl/api/action/get_bopipk_monitoring_jakosci_powietrza' --header 'Authorization: token_uzytkownika'"
+
+            }
+        ]
+    },
+    {
+        "section_name": "Przykład odpowiedzi",
+        "section_elements": [
+            {
+                "title": "Przykład odpowiedzi zwracający dane o jakości powietrza",
+                "content": "[{\n\t\"ijp\": {\n   \t\"name\": \"Bardzo dobry\",\n\t\t\"recommendations\": \"Jakość powietrza jest bardzo dobra, zanieczyszczenie powietrza nie stanowi zagrożenia dla zdrowia, warunki bardzo sprzyjające do wszelkich aktywności na wolnym powietrzu, bez ograniczeń.\"\n\t},\n\t\"data_source\": \"Urząd m.st. Warszawy\",\n\t\"name\": \"Warszawa-Grochowska\",\n\t\"station_type\": \"Stacja monitoringu\",\n\t\"lon\": 21.080555,\n\t\"owner\": \"Urząd m.st. Warszawy\",\n\t\"station\": \"ul. Grochowska\",\n\t\"address\": {\n\t\t\"city\": \"Warszawa\",\n\t\t\"street\": \"Grochowska 244\",\n\t\t\"zip_code\": \"04-368\",\n\t\t\"district\": \"Praga-Południe\",\n\t\t\"commune\": \"Warszawa\"\n\t},\n\t\"lat\": 52.245703,\n\t\"data\": [\n\t\t{\n\t\t\t\"ijp\": {\n\t\t\t\t\"name\": \"Bardzo dobry\"\n\t\t\t},\n\t\t\t\"param_name\": \"pył zawieszony PM10\",\n\t\t\t\"param_code\": \"PM10\",\n\t\t\t\"value\": 7.88278,\n\t\t\t\"time\": \"2025-07-30 05:00:00\",\n\t\t\t\"unit\": \"µg/m3\"\n\t\t},\n\t\t{\n\t\t\t\"ijp\": {\n\t\t\t\t\"name\": \"Bardzo dobry\"\n\t\t\t},\n\t\t\t\"param_name\": \"pył zawieszony PM2.5\",\n\t\t\t\"param_code\": \"PM25\",\n\t\t\t\"value\": 5.70948,\n\t\t\t\"time\": \"2025-07-30 05:00:00\",\n\t\t\t\"unit\": \"µg/m3\"\n\t\t},\n\t\t{\n\t\t\t\"ijp\": {\n\t\t\t\t\"name\": \"Bardzo dobry\"\n\t\t\t},\n\t\t\t\"param_name\": \"dwutlenek azotu\",\n\t\t\t\"param_code\": \"NO2\",\n\t\t\t\"value\": 15.7512,\n\t\t\t\"time\": \"2025-07-30 05:00:00\",\n\t\t\t\"unit\": \"µg/m3\"\n\t\t},\n\t\t{\n\t\t\t\"ijp\": {\n\t\t\t\t\"name\": \"Bardzo dobry\"\n\t\t\t},\n\t\t\t\"param_name\": \"tlenek węgla\",\n\t\t\t\"param_code\": \"CO\",\n\t\t\t\"value\": 0.0427396,\n\t\t\t\"time\": \"2025-07-30 05:00:00\",\n\t\t\t\"unit\": \"mg/m3\"\n\t\t}\n\t]\n},...]"
+
+            }
+        ]
+    }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "section_name": "Przykład wywołania",
+    "section_elements": [
+      {
+        "title": "Przykład zapytania dla pobrania zasobu toalet",
+        "content": "curl --location --request POST 'https://dane.um.warszawa.pl/api/action/get_m_toalety' --header 'Authorization: token_uzytkownika'"
+      }
+    ]
+  },
+  {
+    "section_name": "Przykład odpowiedzi",
+    "section_elements": [
+      {
+        "title": "Przykład odpowiedzi dla zasobu toalety",
+        "content": "{\n\t\"type\": \"Feature\",\n\t\"geometry\": {\n\t\t\"type\": \"Point\",\n\t\t\"coordinates\": [\n\t\t\t20.9989139996769,\n\t\t\t52.2387509992657\n\t\t]\n\t},\n\t\"properties\": {\n\t\t\"zarzadca\": \"Urząd Dzielnicy Śródmieście\",\n\t\t\"typ\": \"toaleta stacjonarna\",\n\t\t\"lokalizacja\": \"Mirowski, Hale Mirowskie\",\n\t\t\"dzielnica\": \"Śródmieście\",\n\t\t\"dostepnosc\": 0,\n\t\t\"platnosc\": 0,\n\t\t\"przewijak\": 0,\n\t\t\"aktu_dan\": \"Kwiecień 2026\",\n\t\t\"poch_dan\": \"Centrum Komunikacji Społecznej\",\n\t\t\"godziny\": \"Poniedziałek: 07:00 - 19:00; Wtorek: 07:00 - 19:00; Środa: 07:00 - 19:00; Czwartek: 07:00 - 19:00; Piątek: 07:00 - 19:00; Sobota: nieczynne; Niedziela: nieczynne\",\n\t\t\"uwagi\": null\n\t}\n},"
+      }
+    ]
+  }
+]

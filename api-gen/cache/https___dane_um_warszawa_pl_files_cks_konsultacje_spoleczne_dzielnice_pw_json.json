@@ -1,0 +1,20 @@
+[
+  {
+    "section_name": "Przykład wywołania",
+    "section_elements": [
+      {
+        "title": "Przykład zapytania dla pobrania Konsultacje społeczne - dzielnice",
+        "content": "curl --location --request POST 'https://dane.um.warszawa.pl/api/action/get_cks_konsultacje_spoleczne_dzielnice' --header 'Authorization: token_uzytkownika'"
+      }
+    ]
+  },
+  {
+    "section_name": "Przykład odpowiedzi",
+    "section_elements": [
+      {
+        "title": "Przykład odpowiedzi dla pobrania Konsultacje społeczne - dzielnice",
+        "content": "[\n\t{\n\t\t\"id\": 1,\n\t\t\"name\": \"Bemowo\",\n\t\t\"address\": \"Urząd Dzielnicy Bemowo, 70, Powstańców Śląskich, Stare Jelonki, Jelonki Północne, Bemowo, Warszawa, województwo mazowieckie, 01-381, Polska\"\n\t}, (...)\n]\n"
+      }
+    ]
+  }
+]

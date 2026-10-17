@@ -1,0 +1,28 @@
+[
+  {
+    "section_name": "Przykład wywołania",
+    "section_elements": [
+      {
+        "title": "Przykład zapytania dla pobrania dostępność defibratorów",
+        "content": "curl --location --request POST 'https://dane.um.warszawa.pl/api/action/get_scb_lokalizacja_defibrylatorow' --header 'Authorization: token_uzytkownika'"
+      },
+      {
+        "title": "Przykład zapytania dla pobrania Konkretnego defibrylatora",
+        "content": "curl --location --request POST 'https://dane.um.warszawa.pl/api/action/get_scb_lokalizacja_defibrylatorow' --header 'Content-Type: application/json' --data '{\"defibrillator_id\": \"622\"}"
+      }
+    ]
+  },
+  {
+    "section_name": "Przykład odpowiedzi",
+    "section_elements": [
+      {
+        "title": "Przykład odpowiedzi dla pobrania dostępność defibratorów",
+        "content": "[ { \"geometry\": { \n\t\"coordinates\": [\n\t\t [ 21.0148748892902,\n\t\t 52.2086170695684 ]\n\t ],\n\t\"type\": \"Point\"\n},\n \"properties\": {\n\t \"defibrillator_id\": \"622\",\n\t \"device_access_description\": \"Poniedziałek: godz. 8:00-18:00; Wtorek-Piątek: godz. 8:00-16:00\",\n\t \"device_availability\": \"Ograniczona\",\n\t \"device_location\": \"Wewnątrz budynku\",\n\t \"device_manufacturer\": \"Medtronic\",\n\t \"device_public_access\": \"Publiczny\",\n\t \"location_building\": \"25/27\",\n\t \"location_city\": \"Warszawa\",\n\t \"location_description\": \"Przy wejściu na półpiętrze.\",\n\t \"location_object_name\": \"Urząd Dzielnicy Mokotów m.st. Warszawy\",\n\t \"location_postcode\": \"02-517\",\n\t \"location_street\": \"Rakowiecka\"\n\t }\n}, ...\n]"
+      },
+      {
+        "title": "Przykład odpowiedzi dla pobrania dostępność konkretnego defibratora (zwracane zdjęcie)",
+        "content": "[ { \"geometry\": { \n\t\"coordinates\": [\n\t\t [ 21.0148748892902,\n\t\t 52.2086170695684 ]\n\t ],\n\t\"type\": \"Point\"\n},\n \"properties\": {\n\t \"defibrillator_id\": \"622\",\n\t \"device_access_description\": \"Poniedziałek: godz. 8:00-18:00; Wtorek-Piątek: godz. 8:00-16:00\",\n\t \"device_availability\": \"Ograniczona\",\n\t \"device_location\": \"Wewnątrz budynku\",\n\t \"device_manufacturer\": \"Medtronic\",\n\t \"device_public_access\": \"Publiczny\",\n\t \"location_building\": \"25/27\",\n\t \"location_city\": \"Warszawa\",\n\t \"location_description\": \"Przy wejściu na półpiętrze.\",\n\t \"location_object_name\": \"Urząd Dzielnicy Mokotów m.st. Warszawy\",\n\t \"location_postcode\": \"02-517\",\n\t \"location_street\": \"Rakowiecka\"\n\t, \"attachment\": \"/9j/4AAQSkZJRgABAQEASABIAAD/4RLKRXhpZ.....\n\t\"}\n}, ...\n]"
+      }
+    ]
+  }
+]

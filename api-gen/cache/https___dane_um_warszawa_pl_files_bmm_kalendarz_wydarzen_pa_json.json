@@ -1,0 +1,127 @@
+[
+  {
+    "section_name": "Parametry wywołania",
+    "section_elements": [      
+      {
+        "name": "token_uzytkownika",
+        "type": "token",
+        "description": "Token API - obowiązkowy"
+      }
+    ]
+  },
+  {
+    "section_name": "Parametry odpowiedzi",
+    "section_elements": [
+
+      {
+        "name": "address",
+        "description": "Informacja o lokalizacji",
+        "type": "słownik",
+        "nested_elements": [
+          {
+              "name": "name",
+              "type": "String",
+              "description": "Nazwa lokalizacji"
+          },
+          {
+            "name": "street",
+            "type": "String",
+            "description": "Adres lokalizacji"
+          }
+        ]
+      },
+
+      {
+        "name": "language",
+        "type": "String",
+        "description": "Język"
+      },
+
+
+
+      {
+        "name": "map",
+        "description": "Informacja o obiekcie",
+        "type": "slownik",
+        "nested_elements": [
+
+
+
+          {
+            "name": "features",
+            "description": "Właściwości obiektu",
+            "type": "słownik",
+            "nested_elements": [
+
+
+              {
+                "name": "geometry",
+                "description": "Informacja o lokalizacji",
+                "type": "słownik",
+                "nested_elements": [
+                    {
+                        "name": "coordinates",
+                        "type": "tablica",
+                        "description": "Współrzędne defibrylatora"
+                    },
+                    {
+                      "name": "type",
+                      "type": "String",
+                      "description": "typ obiektu na mapie"
+                    }
+                ]
+              },
+              {
+                "name": "properties",
+                "description": "Właściwości lokalizacji",
+                "type": "słownik",
+                "nested_elements": [
+                    {
+                        "name": "district",
+                        "type": "String",
+                        "description": "Dzielnica"
+                    },
+                    {
+                      "name": "fullStreetName",
+                      "type": "String",
+                      "description": "Pełna nazwa ulicy"
+                    },            
+                    {
+                      "name": "shortStreetName",
+                      "type": "String",
+                      "description": "Nazwa ulicy"
+                    },            
+                    {
+                      "name": "street number",
+                      "type": "String",
+                      "description": "Numer ulicy"
+                    }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "occurence",
+        "type": "Tablica słowników",
+        "description": "Informacja o wystąpieniach wydarzenia"
+      },
+      {
+        "name": "text",
+        "type": "String",
+        "description": "Informacje o wydarzeniu"
+      },
+      {
+        "name": "title",
+        "type": "String",
+        "description": "tytuł wydarzenia"
+      },
+      {
+        "name": "url",
+        "type": "String",
+        "description": "adres URL informmujący o wydarzeniu"
+      }
+    ]
+  }
+]

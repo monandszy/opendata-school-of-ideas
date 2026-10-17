@@ -1,0 +1,20 @@
+[
+  {
+    "section_name": "Przykład wywołania",
+    "section_elements": [
+      {
+        "title": "Przykład zapytania dla pobrania Zajęcia sportowe",
+        "content": "curl --location --request POST 'https://dane.um.warszawa.pl/api/action/get_bmm_zajecia_sportowe' --header 'Authorization: token_uzytkownika'"
+      }
+    ]
+  },
+  {
+    "section_name": "Przykład odpowiedzi",
+    "section_elements": [
+      {
+        "title": "Przykład odpowiedzi dla pobrania Zajęcia sportowe",
+        "content": "[{ \n\"category\": [ \n\t{ \n\t\"id\": \"category_37\", \n\t\"name\": \"Jazda na rolkach/rolki\" \n\t}, \n\t{ \n\t\"id\": \"category_120\", \n\t\"name\": \"Nartorolki\" \n\t} \n], \n\"date\": [ \n        \"2022-06-16\" \n], \n\"day\": [ \n        { \n          \"id\": \"thursday\", \n          \"name\": \"Czwartek\" \n        } \n      ], \n      \"dedicated\": [ \n        { \n          \"id\": \"value_1\", \n          \"name\": \"Kobiety\" \n        }, \n        { \n          \"id\": \"value_2\", \n          \"name\": \"Mężczyźni\" \n        }, \n        { \n          \"id\": \"value_4\", \n          \"name\": \"Młodzież\" \n        }, \n        { \n          \"id\": \"value_5\", \n          \"name\": \"Seniorzy\" \n        } \n], \n\"image\": { \n        \"small\": { \n          \"path\": \"http://um.warszawa.pl/documents/55624/6743173/ns_rolki.jpg/1d90643b-4b28-\n1e7d-b91c-2504e64583e5?t=1634499026391&imagePreview=1\" \n        } \n      }, \n\"language\": \"pl_PL\", \n\"localization\": [ \n\t{ \n\t\t\"id\": \"wesola\", \n\t\t\"name\": \"Wesoła\" \n\t} \n ], \n\"text\": \"<p>TN \"Biegówki\" zaprasza na bezpłatne zajęcia na rolkach/nartrorolkach \n terenowych (FT). Miesjce zbiórki: róg ul. Fabrycznej i Jana Pawła II w Starej Miłośnie. \n Zajęcia te prowadzone są w formie szkoleniowych wycieczek w terenie urozmaiconym (miasto/las). \n Zajęcia te nie są cykliczne. Zajęcia organizawane są dla dorosłych i młodzieży. Szczegółowe \n informacje dostępne są pod numerem telefonu <a href=\"tel:697 052 296\">697 052 296</a> oraz \n na stronie internetowej: <a href=\"http://www.facebook.com/tnbiegowkiwesola\" \n target=\"_blank\">www.facebook.com/tnbiegowkiwesola</a><a href=\"http://www.tnbiegowski.pl\" target=\"_blank\">www.tnbiegowski.pl</a> &nbsp; Zapisy \n prowadzi: Katarzyna Witek</p>\", \"time\": \"11:00\", \n\"title\": \"Zajęcia na rolkach/nartorolkach terenowych (zaawansowani)\", \n\"url\": \"https://sport.um.warszawa.pl/-/zajecia-na-rolkach-nartorolkach-\nterenowychzaawansowani\" \n},..\n]"
+      }
+    ]
+  }
+]

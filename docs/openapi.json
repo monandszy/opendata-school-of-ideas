@@ -1,0 +1,2456 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Warsaw Open Data API (Otwarte Dane m.st. Warszaw)",
+    "version": "1.0.0",
+    "description": "Official OpenAPI 3.1.0 specification auto-generated from dane.um.warszawa.pl metadata catalog.",
+    "contact": {
+      "name": "Urząd m.st. Warszawy",
+      "url": "https://dane.um.warszawa.pl"
+    },
+    "license": {
+      "name": "Creative Commons Attribution",
+      "url": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://dane.um.warszawa.pl",
+      "description": "Main Portal API Gateway"
+    },
+    {
+      "url": "https://api.um.warszawa.pl",
+      "description": "Legacy / Real-time API Gateway"
+    }
+  ],
+  "paths": {
+    "/api/action/get_bopipk_monitoring_jakosci_powietrza": {
+      "post": {
+        "summary": "Monitoring jakości powietrza",
+        "description": "Poziom jakości powietrza na terenie Warszawy i gmin ościennych.",
+        "tags": [
+          "Środowisko"
+        ],
+        "operationId": "getMonitoringJakosciPowietrza",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MonitoringJakosciPowietrzaResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/get_m_parkingi_wolne_miejsca": {
+      "post": {
+        "summary": "Wolne miejsca parkingowe",
+        "description": "Wolne miejsca na parkingach zarządzanych przez Zarząd Terenów Publicznych, Zarząd Dróg Miejskich, Zarząd Pałacu Kultury i Nauki.",
+        "tags": [
+          "Transport"
+        ],
+        "operationId": "getWolneMiejscaParkingowe",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WolneMiejscaParkingoweResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/get_bin_utrudnienia_drogowe": {
+      "post": {
+        "summary": "Utrudnienia w ruchu drogowym",
+        "description": "Utrudnienia w ruchu drogowym.",
+        "tags": [
+          "Transport"
+        ],
+        "operationId": "getUtrudnieniaWRuchuDrogowym",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UtrudnieniaWRuchuDrogowymResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/get_bmm_zajecia_sportowe": {
+      "post": {
+        "summary": "Zajęcia sportowe",
+        "description": "Zajęcia sportowe pochodzą z kalenarza zajęć sportowych umieszczonych na stronie internetowej miasta https://sport.um.warszawa.pl.",
+        "tags": [
+          "Sport"
+        ],
+        "operationId": "getZajeciaSportowe",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ZajeciaSportoweResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/get_lokalizacja_pojazdow_komunikacji_miejskiej": {
+      "get": {
+        "summary": "Lokalizacja pojazdów komunikacji miejskiej",
+        "description": "Lokalizacja pojazdów komunikacji miejskiej.",
+        "tags": [
+          "Transport"
+        ],
+        "operationId": "getLokalizacjaPojazdowKomunikacjiMiejskiej",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LokalizacjaPojazdowKomunikacjiMiejskiejResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "typ",
+            "in": "query",
+            "description": "typ pojazdu (1-autobus, 2-tramwaj)",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/api/action/get_bgk_rcn": {
+      "post": {
+        "summary": "Rejestr Cen Nieruchomości",
+        "description": "Zbiór zawiera dane transakcyjne z Rejestru Cen Nieruchomości prowadzonego przez Biuro Geodezji i Katastru m.st. Warszawy, oparte na aktach notarialnych. Dla każdej transakcji dostępne są: cena, data zawarcia umowy, rodzaj nieruchomości, lokalizacja oraz podstawowe parametry techniczne. Warunki wykorzystania: https://mapa.um.warszawa.pl/warunki.html.",
+        "tags": [
+          "Nieruchomości"
+        ],
+        "operationId": "getRejestrCenNieruchomosci",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RejestrCenNieruchomosciResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "dzielnica",
+            "in": "query",
+            "description": "Dzielnica - pisana bez polskich znaków, pisane łącznie np. pragapolnoc",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rodzajNieruchomosci",
+            "in": "query",
+            "description": "Zgodne z zaprezentowanym modelem pojęciowym danych rejestru cen nieruchomości w  pkt. 1 załącznika nr 9 do Rozporządzenia Ministra Rozwoju, Pracy i Technologii z dnia 27 lipca 2021 r. w sprawie ewidencji gruntów i budynków (t.j. Dz. U. z 2024 r. poz. 219 z późn. zm.).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rodzajRynku",
+            "in": "query",
+            "description": "Zgodne z zaprezentowanym modelem pojęciowym danych rejestru cen nieruchomości w  pkt. 1 załącznika nr 9 do Rozporządzenia Ministra Rozwoju, Pracy i Technologii z dnia 27 lipca 2021 r. w sprawie ewidencji gruntów i budynków (t.j. Dz. U. z 2024 r. poz. 219 z późn. zm.).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rok",
+            "in": "query",
+            "description": "Rok sporządzenia dokumentu",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Query parameters for dataset filtering",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dzielnica": {
+                    "type": "string"
+                  },
+                  "rodzajNieruchomosci": {
+                    "type": "string"
+                  },
+                  "rodzajRynku": {
+                    "type": "string"
+                  },
+                  "rok": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "dzielnica": "Bemowo",
+                "rodzajNieruchomosci": "nieruchomoscLokalowa",
+                "rodzajRynku": "rynekPierwotny",
+                "rok": "2022"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/get_ztm_lista_linii_na_przystanku": {
+      "post": {
+        "summary": "Linie dostepne na przystanku",
+        "description": "Lista linii dostępnych na przystanku. Dane powiązane ze zbiorami \"Lokalizacja przystanków komunikacji miejskiej\" oraz \"Odjazdy linii z przystanku\".",
+        "tags": [
+          "Transport"
+        ],
+        "operationId": "getLinieDostepneNaPrzystanku",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LinieDostepneNaPrzystankuResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "busstopId",
+            "in": "query",
+            "description": "Inentyfikator przystanku",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "busstopNr",
+            "in": "query",
+            "description": "Inentyfikator słupka przystankowego",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Query parameters for dataset filtering",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "busstopId": {
+                    "type": "string"
+                  },
+                  "busstopNr": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "busstopId": "5070",
+                "busstopNr": "03"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/get_ztm_pojazdy": {
+      "post": {
+        "summary": "Pojazdy transportu publicznego",
+        "description": "Informacje o pojazdach transportu publicznego w Warszawie.",
+        "tags": [
+          "Transport"
+        ],
+        "operationId": "getPojazdyTransportuPublicznego",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PojazdyTransportuPublicznegoResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/get_scb_lokalizacja_defibrylatorow": {
+      "post": {
+        "summary": "Lokalizacja defibrylatorów (AED)",
+        "description": "Aktywne urządzenia AED na terenie Warszawy.",
+        "tags": [
+          "Zdrowie"
+        ],
+        "operationId": "getLokalizacjaDefibryzatorowAed",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LokalizacjaDefibryzatorowAedResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "defibrillator_id",
+            "in": "query",
+            "description": "id  defibrylatora - parametr opcjonalny",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/action/get_ztm_odjazdy_linii_z_przystanku": {
+      "post": {
+        "summary": "Odjazdy linii z przystanku",
+        "description": "Lista linii dostępnych na przystanku. Dane powiązane ze zbiorami \"Lokalizacja przystanków komunikacji miejskiej\" oraz \"Linie dostępne na przystanku\".",
+        "tags": [
+          "Transport"
+        ],
+        "operationId": "getOdjazdyDlaLiniiZPrzystanku",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OdjazdyDlaLiniiZPrzystankuResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "busstopId",
+            "in": "query",
+            "description": "Inentyfikator przystanku",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "busstopNr",
+            "in": "query",
+            "description": "Inentyfikator słupka przystankowego",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "line",
+            "in": "query",
+            "description": "Numer linii",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Query parameters for dataset filtering",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "busstopId": {
+                    "type": "string"
+                  },
+                  "busstopNr": {
+                    "type": "string"
+                  },
+                  "line": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "busstopId": "5070",
+                "busstopNr": "03",
+                "line": "20"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/get_zom_pogoda": {
+      "post": {
+        "summary": "Pogoda",
+        "description": "Dane meteo pochodzące ze stacji meterologocznych Zarządu Oczyszczania Miasta.",
+        "tags": [
+          "Środowisko"
+        ],
+        "operationId": "getPogoda",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PogodaResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/get_cks_konsultacje_spoleczne": {
+      "post": {
+        "summary": "Konsultacje społeczne",
+        "description": "Zbiór zawiera informacje o konsultacjach społecznych prowadzonych przez Urząd m.st. Warszawy. Dane pochodzą z serwisu konsultacje.um.warszawa.pl. Zbiór obejmuje m.in. opisy inicjatyw, terminy, kategorie, grupy odbiorców oraz lokalizację spotkań.",
+        "tags": [
+          "Aktywni mieszkańcy"
+        ],
+        "operationId": "getKonsultacjeSpoleczne",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KonsultacjeSpoleczneResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/get_ztm_przystanki_komunikacji_miejskiej": {
+      "post": {
+        "summary": "Lokalizacja przystanków komunikacji miejskiej",
+        "description": "Lokalizacja przystanków komunikacji miejskiej. Dane powiązane ze zbiorem \"Linie dostępne na przystanku\".",
+        "tags": [
+          "Transport"
+        ],
+        "operationId": "getLokalizacjaPrzystanowKomunikacjiMiejskiej",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LokalizacjaPrzystanowKomunikacjiMiejskiejResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "apikey",
+            "in": "query",
+            "description": "Klucz api - obowiązkowy",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/action/get_be_otwarte_boiska": {
+      "post": {
+        "summary": "Otwarte boiska",
+        "description": "Baza oświatowych terenów sportowych, w tym między innymi: boisk, bieżni, kortów tenisowych, siłowni zewnętrznych udostępnianych mieszkańcom bezpłatnie w określonych godzinach.",
+        "tags": [
+          "Sport"
+        ],
+        "operationId": "getOtwarteBoiska",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OtwarteBoiskaResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/get_bmm_segregacja_odpadow": {
+      "post": {
+        "summary": "Segregacja odpadów",
+        "description": "Zasady segregacji odpadów w Warszawie. Dane pochodzą z serwisu https://segregujna5.um.warszawa.pl/.",
+        "tags": [
+          "Środowisko"
+        ],
+        "operationId": "getSegregacjaOdpadow",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SegregacjaOdpadowResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/get_bmm_typy_odpadow": {
+      "post": {
+        "summary": "Typy odpadów",
+        "description": "Zasady segregacji typów odpadów w Warszawie. Dane pochodzą z serwisu https://segregujna5.um.warszawa.pl/.",
+        "tags": [
+          "Środowisko"
+        ],
+        "operationId": "getTypyOdpadow",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TypyOdpadowResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/get_sbt_trasy_turystyczne": {
+      "post": {
+        "summary": "Trasy turystyczne",
+        "description": "Zbiór zawiera dane na temat wybranych tras turystycznych w Warszawie.",
+        "tags": [
+          "Aktywni mieszkańcy"
+        ],
+        "operationId": "getTrasyTurystyczne",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrasyTurystyczneResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/get_bos_ekopunkty": {
+      "post": {
+        "summary": "Eko punkty",
+        "description": "Miejsca gdzie można oddać przeterminowane leki oraz zbędny sprzęt AGD",
+        "tags": [
+          "Środowisko"
+        ],
+        "operationId": "getEkoPunkty",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EkoPunktyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/get_m_toalety": {
+      "post": {
+        "summary": "Toalety",
+        "description": "Aktualne informacje o dostępności i rozmieszczeniu toalet w Warszawie.",
+        "tags": [
+          "Środowisko"
+        ],
+        "operationId": "getToalety",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ToaletyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/get_cks_konsultacje_spoleczne_kategorie": {
+      "post": {
+        "summary": "Konsultacje społeczne kategorie",
+        "description": "Zbiór stanowi słownik kategorii tematycznych wykorzystywanych w systemie konsultacje.um.warszawa.pl. Jest to zbiór uzupełniający dane ze zbioru głównego dotyczącego konsultacji społecznych. Zawiera identyfikatory oraz nazwy poszczególnych kategorii.",
+        "tags": [
+          "Aktywni mieszkańcy"
+        ],
+        "operationId": "getKonsultacjeSpoleczneKategorie",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KonsultacjeSpoleczneKategorieResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/get_cks_konsultacje_spoleczne_dzielnice": {
+      "post": {
+        "summary": "Konsultacje społeczne dzielnice",
+        "description": "Zbiór stanowi słownik dzielnic Warszawy wykorzystywany w systemie konsultacji społecznych. Jest to zbiór uzupełniający dane ze zbioru głównego dotyczącego serwisu konsultacje.um.warszawa.pl. Zawiera identyfikatory, nazwy oraz adresy urzędów poszczególnych dzielnic.",
+        "tags": [
+          "Aktywni mieszkańcy"
+        ],
+        "operationId": "getKonsultacjeSpoleczneDzielnice",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KonsultacjeSpoleczneDzielniceResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/get_cks_budzet_obywatelski": {
+      "post": {
+        "summary": "Budżet obywatelski",
+        "description": "Zbiór zawiera dane dotyczące projektów Budżetu Obywatelskiego w Warszawie. Obejmuje projekty będące w trakcie realizacji, jak i zrealizowane. Zbiór zawiera m.in. opisy projektów, ich lokalizację, wstępne kosztorysy, statusy oraz wyniki głosowania.",
+        "tags": [
+          "Aktywni mieszkańcy"
+        ],
+        "operationId": "getBudzetObywatelski",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BudzetObywatelskiResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "token_uzytkownika",
+            "in": "query",
+            "description": "Token API - obowiązkowy",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rok",
+            "in": "query",
+            "description": "Rok edycji budżetu",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Status projektu (zrealizowane lub w_realizacji)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Query parameters for dataset filtering",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "rok": {
+                    "type": "integer"
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "rok": 2020,
+                "status": "zrealizowane"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/get_bmm_kalendarz_wydarzen": {
+      "post": {
+        "summary": "Kalendarz wydarzeń",
+        "description": "Zbiór zawiera dane o wydarzeniach miejskich opublikowanych w kalendarzu w oficjalnym portalu m.st. Warszawy (https://um.warszawa.pl). Obejmuje m.in. tytuły, opisy, terminy wydarzeń oraz ich lokalizację.",
+        "tags": [
+          "Wydarzenia"
+        ],
+        "operationId": "getKalendarzWydarzen",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KalendarzWydarzenResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "query",
+        "name": "apikey",
+        "description": "API Key obtained from registration on api.um.warszawa.pl"
+      },
+      "BearerTokenAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization",
+        "description": "User token passed in Authorization header"
+      }
+    },
+    "schemas": {
+      "MonitoringJakosciPowietrzaResponse": {
+        "type": "object",
+        "properties": {
+          "ijp": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Słowny sumaryczny indeks jakości powietrza"
+                },
+                "recommendations": {
+                  "type": "string",
+                  "description": "Rekomendacje związane z indeksem jakości powietrza"
+                }
+              }
+            },
+            "description": "Sumaryczny indeks jakości powietrza wyzanaczany zgodnie z Polskim Indeksem Jakości Powietrza"
+          },
+          "data_source": {
+            "type": "string",
+            "description": "Źródło pomiaru"
+          },
+          "Name": {
+            "type": "string",
+            "description": "Nazwa stacji"
+          },
+          "lon": {
+            "type": "integer",
+            "description": "długość geograficzna"
+          },
+          "lat": {
+            "type": "integer",
+            "description": "Szerokość geograficzna"
+          },
+          "adres": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "city": {
+                  "type": "string",
+                  "description": "Miejscowość"
+                },
+                "street": {
+                  "type": "string",
+                  "description": "ulicaa"
+                },
+                "zip_code": {
+                  "type": "string",
+                  "description": "kod pocztowy"
+                },
+                "commune": {
+                  "type": "string",
+                  "description": "Gmina"
+                }
+              }
+            },
+            "description": "adres stacji"
+          },
+          "pomiary": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "index": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "słowny indeks jakości powietrza dla pomiaru"
+                      }
+                    }
+                  },
+                  "description": "Indeks jakości powietrza dla pomiru"
+                },
+                "param_name": {
+                  "type": "string",
+                  "description": "Nazwa zanieczyszczenia"
+                },
+                "param_code": {
+                  "type": "string",
+                  "description": "Kod zanieczyszczenia"
+                },
+                "value": {
+                  "type": "string",
+                  "description": "Wartość pomiaru"
+                },
+                "time": {
+                  "type": "string",
+                  "description": "Czas pomiaru"
+                },
+                "unit": {
+                  "type": "string",
+                  "description": "Jednostka"
+                }
+              }
+            },
+            "description": "pomiary"
+          }
+        }
+      },
+      "WolneMiejscaParkingoweResponse": {
+        "type": "object",
+        "properties": {
+          "start_date": {
+            "type": "string",
+            "description": "Nazwa Parkingu"
+          },
+          "latitude": {
+            "type": "integer",
+            "description": "Szerokość geograficzna"
+          },
+          "longitude": {
+            "type": "integer",
+            "description": "Długość geograficzna"
+          },
+          "adress": {
+            "type": "string",
+            "description": "Adres parkingu"
+          },
+          "opening_hours": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Godziny otwarcia parkingu"
+          },
+          "tariffs": {
+            "type": "string",
+            "description": "Cennik parkingu"
+          },
+          "levels": {
+            "type": "integer",
+            "description": "Liczba poziomów parkingu"
+          },
+          "total_places": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Wolne miejsca w podziale na poziomy"
+          },
+          "free_places_total": {
+            "type": "string",
+            "description": "Wolne miejsca"
+          },
+          "dimensions": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Wymiary pojazdów"
+          },
+          "acceptedPaymentMethod": {
+            "type": "string",
+            "description": "Wymiary pojazdów"
+          },
+          "allowedVehicleType": {
+            "type": "string",
+            "description": "Wymiary pojazdów"
+          },
+          "additionalSecurity": {
+            "type": "string",
+            "description": "Wymiary pojazdów"
+          },
+          "manager": {
+            "type": "string",
+            "description": "Wymiary pojazdów"
+          },
+          "managerEmail": {
+            "type": "string",
+            "description": "Wymiary pojazdów"
+          },
+          "managerTelephone": {
+            "type": "string",
+            "description": "Wymiary pojazdów"
+          },
+          "operatorTelephone": {
+            "type": "string",
+            "description": "Numer telefonu operatora"
+          },
+          "parkingCategory": {
+            "type": "string",
+            "description": "Kategoria parkingu"
+          }
+        }
+      },
+      "UtrudnieniaWRuchuDrogowymResponse": {
+        "type": "object",
+        "properties": {
+          "start_date": {
+            "type": "string",
+            "description": "Początek utrudnienia"
+          },
+          "end_date": {
+            "type": "string",
+            "description": "Godzina wydarzenia"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Lista tekstowej treści akapitów"
+          },
+          "id": {
+            "type": "integer",
+            "description": "Numer identyfikacyjny postu w serwisie infoulice https://infoulice.um.warszawa.pl/?page_id={id}"
+          },
+          "geo": {
+            "type": "string",
+            "description": "Obiekt zawierający dane geometryczne. geomType z wartością równą 1 odpowiada linii gdzie kolekcja latlngs wyznacza współrzędne wierzchołków linii. geomType z wartością równą 0 oznacza punkt a jedynym elementen kolekcji latlngs to współrzędne tego punktu."
+          }
+        }
+      },
+      "ZajeciaSportoweResponse": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "Adresy zajęć"
+          },
+          "kategoria": {
+            "type": "string",
+            "description": "Kategorie zajęć"
+          },
+          "date": {
+            "type": "string",
+            "description": "Daty zajęć sportowych"
+          },
+          "day": {
+            "type": "string",
+            "description": "Adresy zajęć"
+          },
+          "dedicated": {
+            "type": "string",
+            "description": "Adresaci oferty"
+          },
+          "localization": {
+            "type": "string",
+            "description": "Dzielnica wydarzenia"
+          },
+          "text": {
+            "type": "string",
+            "description": "Treść"
+          },
+          "time": {
+            "type": "string",
+            "description": "Godzina wydarzenia"
+          },
+          "title": {
+            "type": "string",
+            "description": "Tytuł wydarzenia"
+          },
+          "url": {
+            "type": "string",
+            "description": "Adres URL wydarzenia"
+          }
+        }
+      },
+      "LokalizacjaPojazdowKomunikacjiMiejskiejResponse": {
+        "type": "object",
+        "properties": {
+          "Lat": {
+            "type": "integer",
+            "description": "Szerokość geograficzna"
+          },
+          "Lon": {
+            "type": "integer",
+            "description": "Długość geograficzna"
+          },
+          "Time": {
+            "type": "string",
+            "description": "Czas wysłania sygnału GPS"
+          },
+          "Lines": {
+            "type": "string",
+            "description": "Numer linii autobusowej lub tramwajowej"
+          },
+          "Brigade": {
+            "type": "string",
+            "description": "Numer brygady pojazdu"
+          },
+          "VehicleNumber": {
+            "type": "string",
+            "description": "Numet taborowy pojazdu"
+          }
+        }
+      },
+      "RejestrCenNieruchomosciResponse": {
+        "type": "object",
+        "description": "Generic response payload"
+      },
+      "LinieDostepneNaPrzystankuResponse": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "description": "numer linii dostępnej na przystanku"
+                },
+                "key": {
+                  "type": "string",
+                  "description": "stała waertość \"linia\""
+                }
+              }
+            },
+            "description": "tablica waartości dostępnych linii na przystanku"
+          }
+        }
+      },
+      "PojazdyTransportuPublicznegoResponse": {
+        "type": "object",
+        "properties": {
+          "busy": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "idMarki": {
+                  "type": "integer",
+                  "description": "Klucz obcy z gałęzi markiBus (idMarki)"
+                },
+                "kolorPojazdu": {
+                  "type": "string",
+                  "description": "Kolor pojazdu"
+                },
+                "kolorPoreczy": {
+                  "type": "string",
+                  "description": "Kolor poręczy"
+                },
+                "kolorTapicerki": {
+                  "type": "string",
+                  "description": "Kolor tapicerki"
+                },
+                "nazwaOperatora": {
+                  "type": "string",
+                  "description": "Nazwa operatora"
+                },
+                "nazwaSkroconaOperatora": {
+                  "type": "string",
+                  "description": "Skrócona nazwa operatora"
+                },
+                "nazwaZajezdni": {
+                  "type": "string",
+                  "description": "Nazwa zajezdni"
+                },
+                "numerRejestracyjny": {
+                  "type": "string",
+                  "description": "Numer rejestracyjny"
+                },
+                "numerTaborowy": {
+                  "type": "string",
+                  "description": "Numer taborowy"
+                },
+                "rokProdukcji": {
+                  "type": "integer",
+                  "description": "Rok produkcji"
+                },
+                "schematMalowania": {
+                  "type": "string",
+                  "description": "Schemat malowania"
+                },
+                "trakcja": {
+                  "type": "string",
+                  "description": "Trakcja"
+                }
+              }
+            },
+            "description": "Informacje o taborze autobusowym"
+          },
+          "metro": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "idMarki": {
+                  "type": "integer",
+                  "description": "Klucz obcy z gałęzi Marki metro (idMarki)"
+                },
+                "kolorPojazdu": {
+                  "type": "string",
+                  "description": "Kolor pojazdu"
+                },
+                "kolorPoreczy": {
+                  "type": "string",
+                  "description": "Kolor poręczy"
+                },
+                "kolorTapicerki": {
+                  "type": "string",
+                  "description": "Kolor tapicerki"
+                },
+                "nazwaOperatora": {
+                  "type": "string",
+                  "description": "Nazwa operatora"
+                },
+                "nazwaSkroconaOperatora": {
+                  "type": "string",
+                  "description": "Skrócona nazwa operatora"
+                },
+                "nazwaZajezdni": {
+                  "type": "string",
+                  "description": "Nazwa zajezdni"
+                },
+                "numerTaborowy": {
+                  "type": "string",
+                  "description": "Numer taborowy"
+                },
+                "rokProdukcji": {
+                  "type": "integer",
+                  "description": "Rok produkcji"
+                },
+                "schematMalowania": {
+                  "type": "string",
+                  "description": "Schemat malowania"
+                },
+                "trakcja": {
+                  "type": "string",
+                  "description": "Trakcja"
+                }
+              }
+            },
+            "description": "Informacje o taborze metra"
+          },
+          "tramwaje": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "idMarki": {
+                  "type": "integer",
+                  "description": "Klucz obcy z gałęzi marki tramwaje (idMarki)"
+                },
+                "kolorPojazdu": {
+                  "type": "string",
+                  "description": "Kolor pojazdu"
+                },
+                "kolorPoreczy": {
+                  "type": "string",
+                  "description": "Kolor poręczy"
+                },
+                "kolorTapicerki": {
+                  "type": "string",
+                  "description": "Kolor tapicerki"
+                },
+                "nazwaOperatora": {
+                  "type": "string",
+                  "description": "Nazwa operatora"
+                },
+                "nazwaSkroconaOperatora": {
+                  "type": "string",
+                  "description": "Skrócona nazwa operatora"
+                },
+                "nazwaZajezdni": {
+                  "type": "string",
+                  "description": "Nazwa zajezdni"
+                },
+                "numerTaborowy": {
+                  "type": "string",
+                  "description": "Numer taborowy"
+                },
+                "rokProdukcji": {
+                  "type": "integer",
+                  "description": "Rok produkcji"
+                },
+                "schematMalowania": {
+                  "type": "string",
+                  "description": "Schemat malowania"
+                },
+                "trakcja": {
+                  "type": "string",
+                  "description": "Trakcja"
+                }
+              }
+            },
+            "description": "Informacje o taborze tramwajowym"
+          },
+          "kolej": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "evn": {
+                  "type": "string",
+                  "description": "European Vehicle Number"
+                },
+                "idMarki": {
+                  "type": "integer",
+                  "description": "Klucz obcy z gałęzi Marki kolej (idMarki)"
+                },
+                "kolorPojazdu": {
+                  "type": "string",
+                  "description": "Kolor pojazdu"
+                },
+                "kolorPoreczy": {
+                  "type": "string",
+                  "description": "Kolor poręczy"
+                },
+                "kolorTapicerki": {
+                  "type": "string",
+                  "description": "Kolor tapicerki"
+                },
+                "nazwaOperatora": {
+                  "type": "string",
+                  "description": "Nazwa operatora"
+                },
+                "nazwaSkroconaOperatora": {
+                  "type": "string",
+                  "description": "Skrócona nazwa operatora"
+                },
+                "nazwaZajezdni": {
+                  "type": "string",
+                  "description": "Nazwa zajezdni"
+                },
+                "numerTaborowy": {
+                  "type": "string",
+                  "description": "Numer taborowy"
+                },
+                "rokProdukcji": {
+                  "type": "integer",
+                  "description": "Rok produkcji"
+                },
+                "schematMalowania": {
+                  "type": "string",
+                  "description": "Schemat malowania"
+                },
+                "trakcja": {
+                  "type": "string",
+                  "description": "Trakcja"
+                }
+              }
+            },
+            "description": "Informacje o taborze kolejowym"
+          },
+          "markiBus": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "dlugosc": {
+                  "type": "integer",
+                  "description": "Długość pojazdu w mm"
+                },
+                "idMarki": {
+                  "type": "integer",
+                  "description": "Identyfikator marki"
+                },
+                "katWielkosci": {
+                  "type": "string",
+                  "description": "Kategoria wielkości"
+                },
+                "klimatyzacja": {
+                  "type": "string",
+                  "description": "Wyposażony w klimatyzację"
+                },
+                "komGlosWewnatrz": {
+                  "type": "string",
+                  "description": "Komunikat głosowy wewnętrzny"
+                },
+                "komGlosZewnatrz": {
+                  "type": "string",
+                  "description": "Komunikat głosowy zewnętrzny"
+                },
+                "liczMiejscSiedzacychTab": {
+                  "type": "string",
+                  "description": "Liczba miejsc siedzących tabliczka znamionowa"
+                },
+                "liczMiejscSpec": {
+                  "type": "integer",
+                  "description": "Liczba miejsc specjalnych"
+                },
+                "liczMiejscStojacychTab": {
+                  "type": "integer",
+                  "description": "Liczba miejsc stojących tabliczka znamionowa"
+                },
+                "liczMiejscTab": {
+                  "type": "integer",
+                  "description": "Liczba miejsc tabliczka znamionowa"
+                },
+                "liczMiejscWozekDziec": {
+                  "type": "integer",
+                  "description": "Liczba miejsc dla wózka dziecięcego"
+                },
+                "liczMiejscWozekInwalid": {
+                  "type": "integer",
+                  "description": "Liczba miejsc dla wózka inwalidzkiego"
+                },
+                "marka": {
+                  "type": "string",
+                  "description": "Nazwa marki"
+                },
+                "operator": {
+                  "type": "string",
+                  "description": "Operator"
+                },
+                "operatorSkrot": {
+                  "type": "string",
+                  "description": "Operator skrót"
+                },
+                "platnosc": {
+                  "type": "string",
+                  "description": "Metody płatności w biletomacie"
+                },
+                "podloga": {
+                  "type": "string",
+                  "description": "Rodzaj podłogi"
+                },
+                "posiadaSSB": {
+                  "type": "string",
+                  "description": "Posiada system sprzedaży biletów"
+                },
+                "powierzchniaPodlogi": {
+                  "type": "string",
+                  "description": "Powierzchnia podłogi"
+                },
+                "producent": {
+                  "type": "string",
+                  "description": "Producent"
+                },
+                "rodzajZasilania": {
+                  "type": "string",
+                  "description": "Rodzaj zasilania"
+                },
+                "szerokość": {
+                  "type": "integer",
+                  "description": "Szerokość pojazdu w mm"
+                },
+                "typ": {
+                  "type": "string",
+                  "description": "Typ"
+                },
+                "ukladSiedzen": {
+                  "type": "string",
+                  "description": "Układ siedzeń"
+                },
+                "wariant": {
+                  "type": "string",
+                  "description": "Wariant"
+                },
+                "wersja": {
+                  "type": "string",
+                  "description": "Wersja"
+                },
+                "wysokoscCalkowita": {
+                  "type": "integer",
+                  "description": "Wysokość całkowita w mm"
+                },
+                "zasilanie": {
+                  "type": "string",
+                  "description": "Rodzaj zasilania"
+                }
+              }
+            },
+            "description": "Informacje o markach autobusów"
+          },
+          "markiMetro": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "dlugosc": {
+                  "type": "integer",
+                  "description": "Długość pojazdu w mm"
+                },
+                "dlugoscPrzedzialu": {
+                  "type": "string",
+                  "description": "Długość przedziału"
+                },
+                "efektywnaSzerWejscia": {
+                  "type": "integer",
+                  "description": "Efektywna szerokość wejścia w mm"
+                },
+                "idMarki": {
+                  "type": "integer",
+                  "description": "Identyfikator marki"
+                },
+                "katWielkosci": {
+                  "type": "string",
+                  "description": "Kategoria wielkości"
+                },
+                "klimatyzacja": {
+                  "type": "string",
+                  "description": "Wyposażony w klimatyzację"
+                },
+                "komGlosWewnatrz": {
+                  "type": "string",
+                  "description": "Komunikat głosowy wewnętrzny"
+                },
+                "komGlosZewnatrz": {
+                  "type": "string",
+                  "description": "Komunikat głosowy zewnętrzny"
+                },
+                "liczMiejscSiedzacychTab": {
+                  "type": "integer",
+                  "description": "Liczba miejsc siedzących tabliczka znamionowa"
+                },
+                "liczMiejscSpec": {
+                  "type": "integer",
+                  "description": "Liczba miejsc specjalnych"
+                },
+                "liczMiejscStojacychTab": {
+                  "type": "integer",
+                  "description": "Liczba miejsc stojących tabliczka znamionowa"
+                },
+                "liczMiejscTab": {
+                  "type": "integer",
+                  "description": "Liczba miejsc tabliczka znamionowa"
+                },
+                "liczMiejscWozekDziec": {
+                  "type": "integer",
+                  "description": "Liczba miejsc dla wózka dziecięcego"
+                },
+                "liczMiejscWozekInwalid": {
+                  "type": "integer",
+                  "description": "Liczba miejsc dla wózka inwalidzkiego"
+                },
+                "marka": {
+                  "type": "string",
+                  "description": "Nazwa marki"
+                },
+                "operator": {
+                  "type": "string",
+                  "description": "Operator"
+                },
+                "operatorSkrot": {
+                  "type": "string",
+                  "description": "Operator skrót"
+                },
+                "platnosc": {
+                  "type": "string",
+                  "description": "Metody płatności w biletomacie"
+                },
+                "podloga": {
+                  "type": "string",
+                  "description": "Rodzaj podłogi"
+                },
+                "posiadaSSB": {
+                  "type": "string",
+                  "description": "Posiada system sprzedaży biletów"
+                },
+                "powierzchniaPodlogi": {
+                  "type": "string",
+                  "description": "Powierzchnia podłogi"
+                },
+                "producent": {
+                  "type": "string",
+                  "description": "Producent"
+                },
+                "szerokość": {
+                  "type": "integer",
+                  "description": "Szerokość pojazdu w mm"
+                },
+                "typ": {
+                  "type": "string",
+                  "description": "Typ"
+                },
+                "ukladSiedzen": {
+                  "type": "string",
+                  "description": "Układ siedzeń"
+                },
+                "wariant": {
+                  "type": "string",
+                  "description": "Wariant"
+                },
+                "wersja": {
+                  "type": "string",
+                  "description": "Wersja"
+                },
+                "wysokoscCalkowita": {
+                  "type": "integer",
+                  "description": "Wysokość całkowita w mm"
+                }
+              }
+            },
+            "description": "Informacje o markach pojazdów metra"
+          },
+          "markiKolej": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "dlugosc": {
+                  "type": "string",
+                  "description": "Długość pojazdu w mm"
+                },
+                "dlugoscPrzedzialu": {
+                  "type": "string",
+                  "description": "Długość przedziału"
+                },
+                "efektywnaSzerWejscia": {
+                  "type": "integer",
+                  "description": "Efektywna szerokość wejścia w mm"
+                },
+                "idMarki": {
+                  "type": "integer",
+                  "description": "Identyfikator marki"
+                },
+                "katWielkosci": {
+                  "type": "string",
+                  "description": "Kategoria wielkości"
+                },
+                "klimatyzacja": {
+                  "type": "string",
+                  "description": "Wyposażony w klimatyzację"
+                },
+                "komGlosWewnatrz": {
+                  "type": "string",
+                  "description": "Komunikaty głosowe wewnętrzne"
+                },
+                "komGlosZewnatrz": {
+                  "type": "string",
+                  "description": "Komunikaty głosowe zewnętrzne"
+                },
+                "liczMiejscSiedzacychTab": {
+                  "type": "integer",
+                  "description": "Liczba miejsc siedzących wg tabliczki"
+                },
+                "liczMiejscSpec": {
+                  "type": "integer",
+                  "description": "Liczba siedzeń specjalnych"
+                },
+                "liczMiejscStojacychTab": {
+                  "type": "string",
+                  "description": "Liczba miejsc stojących wg tabliczki"
+                },
+                "liczMiejscTab": {
+                  "type": "integer",
+                  "description": "Liczba miejsc wg tabliczki"
+                },
+                "liczMiejscWozekDziec": {
+                  "type": "integer",
+                  "description": "Liczba miejsc dla wózków dziecięcych"
+                },
+                "liczMiejscWozekInwalid": {
+                  "type": "integer",
+                  "description": "Liczba miejsc dla wózków inwalidzkich"
+                },
+                "marka": {
+                  "type": "string",
+                  "description": "Marka"
+                },
+                "operator": {
+                  "type": "string",
+                  "description": "Szybka Kolej Miejska Sp. z o.o."
+                },
+                "operatorSkrot": {
+                  "type": "string",
+                  "description": "Operator skrót"
+                },
+                "platnosc": {
+                  "type": "string",
+                  "description": "Metody płatności w biletomacie"
+                },
+                "posiadaSSB": {
+                  "type": "string",
+                  "description": "Posiada system sprzedaży biletów"
+                },
+                "powierzchniaPodlogi": {
+                  "type": "string",
+                  "description": "Powierzchnia podłogi"
+                },
+                "producent": {
+                  "type": "string",
+                  "description": "Producent"
+                },
+                "szerokosc": {
+                  "type": "integer",
+                  "description": "Szerokość pojazdu w mm"
+                },
+                "typ": {
+                  "type": "string",
+                  "description": "Typ"
+                },
+                "ukladSiedzen": {
+                  "type": "string",
+                  "description": "Układ siedzeń"
+                },
+                "wariant": {
+                  "type": "string",
+                  "description": "Wariant"
+                },
+                "wersja": {
+                  "type": "string",
+                  "description": "Wersja"
+                },
+                "wysokoscCalkowita": {
+                  "type": "integer",
+                  "description": "Wysokość całkowita"
+                }
+              }
+            },
+            "description": "Informacje o markach pojazdów kolejowych"
+          },
+          "markiTramwaje": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "dlugosc": {
+                  "type": "integer",
+                  "description": "Długość pojazdu w mm"
+                },
+                "idMarki": {
+                  "type": "integer",
+                  "description": "Identyfikator marki"
+                },
+                "katWielkosci": {
+                  "type": "string",
+                  "description": "Kategoria wielkości"
+                },
+                "kierunkowosc": {
+                  "type": "string",
+                  "description": "Kierunkowość pojazdu"
+                },
+                "klimatyzacja": {
+                  "type": "string",
+                  "description": "Wyposażony w klimatyzację"
+                },
+                "komGlosWewnatrz": {
+                  "type": "string",
+                  "description": "Komunikat głosowy wewnętrzny"
+                },
+                "komGlosZewnatrz": {
+                  "type": "string",
+                  "description": "Komunikat głosowy zewnętrzny"
+                },
+                "liczMiejscSiedzacychTab": {
+                  "type": "integer",
+                  "description": "Liczba miejsc siedzących tabliczka znamionowa"
+                },
+                "liczMiejscSpec": {
+                  "type": "integer",
+                  "description": "Liczba miejsc specjalnych"
+                },
+                "liczMiejscStojacychTab": {
+                  "type": "integer",
+                  "description": "Liczba miejsc stojących tabliczka znamionowa"
+                },
+                "liczMiejscTab": {
+                  "type": "integer",
+                  "description": "Liczba miejsc tabliczka znamionowa"
+                },
+                "liczMiejscWozekDziec": {
+                  "type": "integer",
+                  "description": "Liczba miejsc dla wózka dziecięcego"
+                },
+                "liczMiejscWozekInwalid": {
+                  "type": "integer",
+                  "description": "Liczba miejsc dla wózka inwalidzkiego"
+                },
+                "marka": {
+                  "type": "string",
+                  "description": "Nazwa marki"
+                },
+                "operator": {
+                  "type": "string",
+                  "description": "Operator"
+                },
+                "operatorSkrot": {
+                  "type": "string",
+                  "description": "Operator skrót"
+                },
+                "platnosc": {
+                  "type": "string",
+                  "description": "Metody płatności w biletomacie"
+                },
+                "podloga": {
+                  "type": "string",
+                  "description": "Rodzaj podłogi"
+                },
+                "posiadaSSB": {
+                  "type": "string",
+                  "description": "Posiada system sprzedaży biletów"
+                },
+                "powierzchniaPodlogi": {
+                  "type": "string",
+                  "description": "Powierzchnia podłogi"
+                },
+                "producent": {
+                  "type": "string",
+                  "description": "Producent"
+                },
+                "szerokosc": {
+                  "type": "integer",
+                  "description": "Szerokość pojazdu w mm"
+                },
+                "typ": {
+                  "type": "string",
+                  "description": "Typ"
+                },
+                "ukladSiedzen": {
+                  "type": "string",
+                  "description": "Układ siedzeń"
+                },
+                "wariant": {
+                  "type": "string",
+                  "description": "Wariant"
+                },
+                "wersja": {
+                  "type": "string",
+                  "description": "Wersja"
+                },
+                "wysokoscCalkowita": {
+                  "type": "integer",
+                  "description": "Wysokość całkowita w mm"
+                }
+              }
+            },
+            "description": "Informacje o markach tramwajów"
+          }
+        }
+      },
+      "LokalizacjaDefibryzatorowAedResponse": {
+        "type": "object",
+        "properties": {
+          "geometry": {
+            "type": "string",
+            "description": "Informacja o lokalizacji"
+          },
+          "properties": {
+            "type": "string",
+            "description": "Informacja o defibrylatorze"
+          }
+        }
+      },
+      "OdjazdyDlaLiniiZPrzystankuResponse": {
+        "type": "object",
+        "properties": {
+          "czas": {
+            "type": "string",
+            "description": "Godzina odjazdu"
+          },
+          "brygada": {
+            "type": "string",
+            "description": "Identyfikator brygady obsługującej przejazd"
+          },
+          "kierunek": {
+            "type": "string",
+            "description": "Kierunek realizowanego kursu"
+          },
+          "trasa": {
+            "type": "string",
+            "description": "Realizowana trasa"
+          },
+          "symbol_1": {
+            "type": "string",
+            "description": "Dodatkowe informacje"
+          },
+          "symbol_2": {
+            "type": "string",
+            "description": "Dodatkowe informacje"
+          }
+        }
+      },
+      "PogodaResponse": {
+        "type": "object",
+        "properties": {
+          "Lokalizacja": {
+            "type": "string",
+            "description": "Nazwa lokalizacji stacji"
+          },
+          "lat": {
+            "type": "integer",
+            "description": "Szerokość geograficzna"
+          },
+          "lon": {
+            "type": "integer",
+            "description": "długość geograficzna"
+          },
+          "czas": {
+            "type": "string",
+            "description": "Czas pomiaru"
+          },
+          "temp_pow": {
+            "type": "string",
+            "description": "Temperatura powietrza"
+          },
+          "temp_naw": {
+            "type": "string",
+            "description": "Temperatura nawierzchni"
+          },
+          "wilg_pow": {
+            "type": "string",
+            "description": "Wilgotność powietrza"
+          },
+          "pred_wiatru": {
+            "type": "string",
+            "description": "Prędkość wiatru"
+          },
+          "kier_wiatru": {
+            "type": "string",
+            "description": "Kierunek wiatru"
+          },
+          "int_opadu": {
+            "type": "string",
+            "description": "Intensywność opadu"
+          }
+        }
+      },
+      "KonsultacjeSpoleczneResponse": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "description": "identyfikator"
+          },
+          "title": {
+            "type": "string",
+            "description": "tytuł"
+          },
+          "subtitle": {
+            "type": "string",
+            "description": "krótki opis"
+          },
+          "descriiption": {
+            "type": "string",
+            "description": "opis"
+          },
+          "short_description": {
+            "type": "string",
+            "description": "opis"
+          },
+          "category_id": {
+            "type": "string",
+            "description": "identyfikator kategorii"
+          },
+          "district_id": {
+            "type": "string",
+            "description": "identyfikator dzielnicy"
+          },
+          "start_date": {
+            "type": "string",
+            "description": "data rozpoczęcia"
+          },
+          "end_date": {
+            "type": "string",
+            "description": "data zakończenia"
+          },
+          "zip_code": {
+            "type": "string",
+            "description": "kod pocztowy"
+          },
+          "longitude": {
+            "type": "number",
+            "description": "długość geograficzna"
+          },
+          "latitude": {
+            "type": "number",
+            "description": "szerokość geograficzna"
+          },
+          "banner_image": {
+            "type": "string",
+            "description": "zdjęcie małe"
+          },
+          "hero_image": {
+            "type": "string",
+            "description": "zdjęcie duże"
+          },
+          "slug": {
+            "type": "string",
+            "description": "tytul w przyjaznym formacie do url"
+          },
+          "url": {
+            "type": "string",
+            "description": "URL do zdjęcia"
+          },
+          "recipients": {
+            "type": "string",
+            "description": "grupa odbiorców"
+          },
+          "tags": {
+            "type": "string",
+            "description": "tagi"
+          }
+        }
+      },
+      "LokalizacjaPrzystanowKomunikacjiMiejskiejResponse": {
+        "type": "object",
+        "properties": {
+          "zespol": {
+            "type": "string",
+            "description": "Zespół przystankowy"
+          },
+          "slupek": {
+            "type": "string",
+            "description": "Słupek zespołu przystankowego"
+          },
+          "nazwa_zespolu": {
+            "type": "string",
+            "description": "Nazwa zespołu przystankowego"
+          },
+          "szer_geo": {
+            "type": "string",
+            "description": "Szerokość geograficzna słupka przystankowego"
+          },
+          "dlug_geo": {
+            "type": "string",
+            "description": "Długość geograficzna słupka przystankowego"
+          }
+        }
+      },
+      "OtwarteBoiskaResponse": {
+        "type": "object",
+        "properties": {
+          "Dzielnica": {
+            "type": "string",
+            "description": "Dzielnica"
+          },
+          "Adres obiektu": {
+            "type": "string",
+            "description": "Adres obiektu"
+          },
+          "Nazwa placówki oświatowej": {
+            "type": "string",
+            "description": "Nazwa placówki oświatowej"
+          },
+          "Typ obiektu": {
+            "type": "string",
+            "description": "Typ obiektu"
+          },
+          "Boisk uniwersalne zawiera": {
+            "type": "string",
+            "description": "Wyposażenie boiska uniwersalnego"
+          },
+          "Rodzaj nawierzchni": {
+            "type": "string",
+            "description": "Rodzaj nawierzchni"
+          },
+          "Obiekt wyposażony w trybuny": {
+            "type": "string",
+            "description": "Czy obiekt jest wyposażony w trybuny"
+          },
+          "Obiekt wyposażony w piłkochwyty": {
+            "type": "string",
+            "description": "Czy obiekt jest wyposażony w piłkochwyty"
+          },
+          "Poniedziałek": {
+            "type": "string",
+            "description": "Godziny dostępności w ponidziałek"
+          },
+          "Wtorek": {
+            "type": "string",
+            "description": "Godziny dostępności we wtorek"
+          },
+          "Środa": {
+            "type": "string",
+            "description": "Godziny dostępności w środę"
+          },
+          "Czwartek": {
+            "type": "string",
+            "description": "Godziny dostępności w czwartek"
+          },
+          "Piątek": {
+            "type": "string",
+            "description": "Godziny dostępności w piątek"
+          },
+          "Sobota": {
+            "type": "string",
+            "description": "Godziny dostępności w sobotę"
+          },
+          "Niedziela": {
+            "type": "string",
+            "description": "Godziny dostępności w niedzielę"
+          },
+          "Uwagi": {
+            "type": "string",
+            "description": "Uwagi"
+          },
+          "Data aktualizacji": {
+            "type": "string",
+            "description": "Data aktualizacji danych"
+          }
+        }
+      },
+      "SegregacjaOdpadowResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identyfikator odpadu"
+          },
+          "title": {
+            "type": "string",
+            "description": "Nazwa odpadu"
+          },
+          "url": {
+            "type": "string",
+            "description": "Adres do strony z informacją o odpadzie"
+          },
+          "synonyms_list": {
+            "type": "string",
+            "description": "Tablica synonimów dla odpadu"
+          },
+          "additional_info": {
+            "type": "string",
+            "description": "Informacje dodatkowe związane z segregacją odpadu"
+          },
+          "type_name": {
+            "type": "string",
+            "description": "Nazwa typu odpadu"
+          }
+        }
+      },
+      "TypyOdpadowResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identyfikator"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nazwa typu odpadu"
+          },
+          "czym_sa": {
+            "type": "string",
+            "description": "Opis odpadu"
+          },
+          "synonyms_list": {
+            "type": "string",
+            "description": "Synonimy typu odpadu"
+          },
+          "additional_info": {
+            "type": "string",
+            "description": "Dodatkowe informacje"
+          },
+          "nalezy": {
+            "type": "string",
+            "description": "Informacja do należy do typu odpadów"
+          },
+          "nie_nalezy": {
+            "type": "string",
+            "description": "Co nie należy do typu odpadu"
+          },
+          "recykling": {
+            "type": "string",
+            "description": "Informacje związane z recyklingiem odpadu"
+          },
+          "co_sie_dzieje": {
+            "type": "string",
+            "description": "Przebieg procesu recyklingu oapadu"
+          }
+        }
+      },
+      "TrasyTurystyczneResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Nazwa trasy"
+          },
+          "length": {
+            "type": "string",
+            "description": "Długość trasy w kilometrach"
+          },
+          "description": {
+            "type": "string",
+            "description": "Krótki opis trasy"
+          },
+          "traces": {
+            "type": "string",
+            "description": "Lista punktów geograficznych położonych na trasie"
+          },
+          "tourist_points": {
+            "type": "string",
+            "description": "Lista obiektów turystycznych do zwiedzenia na trasie"
+          }
+        }
+      },
+      "EkoPunktyResponse": {
+        "type": "object",
+        "properties": {
+          "typ_punktu": {
+            "type": "string",
+            "description": "Tablica zawierająca typ i identyfikator kategorii punktu."
+          },
+          "nazwa": {
+            "type": "string",
+            "description": "Nazwa punktu lub podmiotu"
+          },
+          "dzielnica": {
+            "type": "string",
+            "description": "Nazwa dzielnicy Warszawy, w której znajduje się punkt."
+          },
+          "ulica": {
+            "type": "string",
+            "description": "Nazwa ulicy lub numer działki ewidencyjnej."
+          },
+          "ulica_numer": {
+            "type": "string",
+            "description": "Numer budynku lub numeracja pomocnicza na działce."
+          },
+          "ulica_lokal": {
+            "type": "string",
+            "description": "Numer lokalu"
+          },
+          "opis_lokalizacji": {
+            "type": "string",
+            "description": "Dodatkowy opis ułatwiający zlokalizowanie punktu w terenie."
+          },
+          "dlugosc": {
+            "type": "string",
+            "description": "Współrzędna geograficzna: długość geograficzna (Longitude) w układzie WGS84."
+          },
+          "szerokosc": {
+            "type": "string",
+            "description": "Współrzędna geograficzna: szerokość geograficzna (Latitude) w układzie WGS84."
+          },
+          "telefon": {
+            "type": "string",
+            "description": "Numer(y) telefonu kontaktowego do punktu."
+          },
+          "mail": {
+            "type": "string",
+            "description": "Adres e-mail kontaktowy."
+          },
+          "dni_pracy": {
+            "type": "string",
+            "description": "Tablica zawierająca jeden obiekt z harmonogramem otwarcia na każdy dzień tygodnia"
+          }
+        }
+      },
+      "ToaletyResponse": {
+        "type": "object",
+        "properties": {
+          "geometry": {
+            "type": "string",
+            "description": "Lokalizacja toalety"
+          },
+          "properties": {
+            "type": "string",
+            "description": "Właściwości obiektu"
+          }
+        }
+      },
+      "KonsultacjeSpoleczneKategorieResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "identyfikator"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nazwa kategorii"
+          }
+        }
+      },
+      "KonsultacjeSpoleczneDzielniceResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "identyfikator"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nazwa dzielnicy"
+          },
+          "address": {
+            "type": "string",
+            "description": "Adres urzędy dzielnicy"
+          }
+        }
+      },
+      "BudzetObywatelskiResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identyfikator projektu"
+          },
+          "number": {
+            "type": "integer",
+            "description": "Numer projektu"
+          },
+          "editionName": {
+            "type": "string",
+            "description": "Nazwa edycji"
+          },
+          "title": {
+            "type": "string",
+            "description": "Tytuł"
+          },
+          "description": {
+            "type": "string",
+            "description": "Opis projektu"
+          },
+          "shortDescription": {
+            "type": "string",
+            "description": "Skrócony opis projektu"
+          },
+          "status": {
+            "type": "integer",
+            "description": "Status"
+          },
+          "submitted": {
+            "type": "string",
+            "description": "Data i godzina złożenia"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Imię autora"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Nazwisko autora"
+          },
+          "classifications": {
+            "type": "string",
+            "description": "Kategorie projektu"
+          },
+          "recipients": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Odbiorcy projektu"
+          },
+          "taskLevel": {
+            "type": "integer",
+            "description": "Poziom projektu"
+          },
+          "localization": {
+            "type": "string",
+            "description": "Lokalizacja projektu - opis"
+          },
+          "localizationExtra": {
+            "type": "string",
+            "description": "Istotne informacje o lokalizacji"
+          },
+          "pins": {
+            "type": "string",
+            "description": "Lokalizacja projektu - koordynaty GPS"
+          },
+          "availabilityDescription": {
+            "type": "string",
+            "description": "Zasady korzystania z efektu realizacji projektu przez ogół mieszkańców"
+          },
+          "argumentation": {
+            "type": "string",
+            "description": "Uzasadnienie dla realizacji projektu"
+          },
+          "costSummary": {
+            "type": "string",
+            "description": "Wstępny kosztorys projektu wraz z wyszczególnieniem jego składowych"
+          },
+          "universalDesign": {
+            "type": "integer",
+            "description": "Projektowanie uniwersalne. 0-nie, 1-tak, 2-brak odopowiedzi"
+          },
+          "cost": {
+            "type": "string",
+            "description": "Całkowity koszt projektu"
+          },
+          "mainRegionName": {
+            "type": "string",
+            "description": "Nazwa dzielnicy projektu wypełniana dla projektów dzielnicowych i lokalnych"
+          },
+          "localName": {
+            "type": "string",
+            "description": "Nazwa obszaru projektu wypełniona dla projektów lokalnych"
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Historia edycji projektu"
+          },
+          "cocreators": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Dane współautorów"
+          },
+          "attachments": {
+            "type": "string",
+            "description": "Odnośniki do załączników"
+          },
+          "url": {
+            "type": "string",
+            "description": "url"
+          },
+          "verification": {
+            "type": "object",
+            "description": "Weryfikacja"
+          },
+          "votes": {
+            "type": "integer",
+            "description": "Głosy"
+          },
+          "comments": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Komentarze do projektu"
+          }
+        }
+      },
+      "KalendarzWydarzenResponse": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "Informacja o lokalizacji"
+          },
+          "language": {
+            "type": "string",
+            "description": "Język"
+          },
+          "map": {
+            "type": "string",
+            "description": "Informacja o obiekcie"
+          },
+          "occurence": {
+            "type": "string",
+            "description": "Informacja o wystąpieniach wydarzenia"
+          },
+          "text": {
+            "type": "string",
+            "description": "Informacje o wydarzeniu"
+          },
+          "title": {
+            "type": "string",
+            "description": "tytuł wydarzenia"
+          },
+          "url": {
+            "type": "string",
+            "description": "adres URL informmujący o wydarzeniu"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerTokenAuth": []
+    },
+    {
+      "ApiKeyAuth": []
+    }
+  ]
+}

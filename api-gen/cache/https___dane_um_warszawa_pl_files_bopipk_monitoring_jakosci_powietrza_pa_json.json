@@ -1,0 +1,125 @@
+[
+    {
+        "section_name": "Parametry wywołania",
+        "section_elements": [            
+            {
+                "name": "token_uzytkownika",
+                "type": "token",
+                "description": "Token API - obowiązkowy"
+            }
+        ]
+    },
+    {
+        "section_name": "Parametry odpowiedzi",
+        "section_elements": [
+            {
+				"name": "ijp",
+                "description": "Sumaryczny indeks jakości powietrza wyzanaczany zgodnie z Polskim Indeksem Jakości Powietrza",
+                "type": "tablica",
+                "nested_elements": [
+                    {
+                        "name": "name",
+                        "type": "String",
+                        "description": "Słowny sumaryczny indeks jakości powietrza"
+                    },
+                    {
+                        "name": "recommendations",
+                        "type": "String",
+                        "description": "Rekomendacje związane z indeksem jakości powietrza"
+                    }
+                ]
+            },
+            {
+                "name": "data_source",
+                "type": "String",
+                "description": "Źródło pomiaru"
+            },
+            {
+                "name": "Name",
+                "type": "String",
+                "description": "Nazwa stacji"
+            },
+            {
+                "name": "lon",
+                "type": "Number",
+                "description": "długość geograficzna"
+            },
+            {
+                "name": "lat",
+                "type": "Number",
+                "description": "Szerokość geograficzna"
+            },
+            {
+                "name": "adres",
+                "description": "adres stacji",
+                "type": "tablica",
+                "nested_elements": [
+                    {
+                        "name": "city",
+                        "type": "String",
+                        "description": "Miejscowość"
+                    },
+                    {
+                        "name": "street",
+                        "type": "String",
+                        "description": "ulicaa"
+                    },
+                    {
+                        "name": "zip_code",
+                        "type": "String",
+                        "description": "kod pocztowy"
+                    },
+                    {
+                        "name": "commune",
+                        "type": "String",
+                        "description": "Gmina"
+                    }
+                ]
+            },
+            {
+				"name": "pomiary",      
+                "description": "pomiary",
+                "type": "tablica",
+                "nested_elements": [
+                    {
+						"name": "index",
+                        "description": "Indeks jakości powietrza dla pomiru",
+                        "type": "tablica",
+                        "nested_elements": [
+                            {
+                                "name": "name",
+                                "type": "String",
+                                "description": "słowny indeks jakości powietrza dla pomiaru"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "param_name",
+                        "type": "String",
+                        "description": "Nazwa zanieczyszczenia"
+                    },
+                    {
+                        "name": "param_code",
+                        "type": "String",
+                        "description": "Kod zanieczyszczenia"
+                    },
+                    {
+                        "name": "value",
+                        "type": "String",
+                        "description": "Wartość pomiaru"
+                    },
+                    {
+                        "name": "time",
+                        "type": "String",
+                        "description": "Czas pomiaru"
+                    },
+                    {
+                        "name": "unit",
+                        "type": "String",
+                        "description": "Jednostka"
+                    }
+                ]
+            }
+        ]
+    }
+]

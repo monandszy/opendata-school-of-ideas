@@ -1,0 +1,13 @@
+[
+    {
+        "section_name": "Przykład wywołania",
+        "section_elements": [
+            {
+                "title": "Przykład wywołania dla zapytania o segregacje typów odpadów",
+                "content": "curl --location --request POST 'https://dane.um.warszawa.pl/api/action/get_bmm_typy_odpadow' --header 'Authorization: token_uzytkownika'"
+            }
+        ]
+    }
+    
+]
+

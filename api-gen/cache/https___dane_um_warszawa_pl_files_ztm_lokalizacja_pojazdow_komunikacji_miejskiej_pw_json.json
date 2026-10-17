@@ -1,0 +1,31 @@
+[    
+    {
+
+        "section_name": "Przykłady wywołań",
+        "section_elements": [
+            {
+                "title": "Przykład zapytania dla pobrania lokalizacji autobusów",
+                "content": "curl --location 'https://dane.um.warszawa.pl/api/action/get_ztm_lokalizacja_pojazdow' \\ \n --header 'Authorization: token uzytkownika' \\ \n --header 'Content-Type: application/json' \\ \n --data '{\n \t\"type\": 1\n}'"
+
+            },
+            {
+                "title": "Przykład zapytania dla pobrania lokalizacji tramwajów",
+                "content": "curl --location 'https://dane.um.warszawa.pl/api/action/get_ztm_lokalizacja_pojazdow' \\ \n --header 'Authorization: token uzytkownika' \\ \n --header 'Content-Type: application/json' \\ \n --data '{\n \t\"type\": 2\n}'"
+
+            }
+        ]
+    },
+    {
+        "section_name": "Przykład odpowiedzi",
+        "section_elements": [
+            {
+                "title": "Przykład zwracający dane lokalizacji pojazdów komuniakcji miejskiej",
+                "content": "\"result\": [\n\t{\n\t\t \"Brigade\": \"1\",\n\t\t \"Lines\": \"161\",\n\t\t \"Lat\": 52.186646,\n\t\t \"Lon\": 21.22471,\n\t\t \"Time\": \"2025-08-12 14:15:47\",\n\t\t \"VehicleNumber\": \"1001\"\n\t},\n\t...\n]\n"
+
+            }
+        ]
+    }
+]
+
+
+

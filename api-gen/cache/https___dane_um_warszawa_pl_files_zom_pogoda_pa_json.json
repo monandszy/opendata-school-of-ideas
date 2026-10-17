@@ -1,0 +1,67 @@
+[
+    {
+        "section_name": "Parametry wywołania",
+        "section_elements": [            
+            {
+                "name": "token_uzytkownika",
+                "type": "token",
+                "description": "Token API - obowiązkowy"
+            }
+        ]
+    },
+    {
+        "section_name": "Parametry odpowiedzi",
+        "section_elements": [            
+            {
+                "name": "Lokalizacja",
+                "type": "String",
+                "description": "Nazwa lokalizacji stacji"
+            },
+            {
+                "name": "lat",
+                "type": "Number",
+                "description": "Szerokość geograficzna"
+            },
+            {
+                "name": "lon",
+                "type": "Number",
+                "description": "długość geograficzna"
+            },
+            {
+                "name": "czas",
+                "type": "Data czas",
+                "description": "Czas pomiaru"
+            },
+            {
+                "name": "temp_pow",
+                "type": "Numeric",
+                "description": "Temperatura powietrza"
+            },
+            {
+                "name": "temp_naw",
+                "type": "Numeric",
+                "description": "Temperatura nawierzchni"
+            },
+            {
+                "name": "wilg_pow",
+                "type": "Numeric",
+                "description": "Wilgotność powietrza"
+            },
+            {
+                "name": "pred_wiatru",
+                "type": "Numeric",
+                "description": "Prędkość wiatru"
+            },
+            {
+                "name": "kier_wiatru",
+                "type": "Numeric",
+                "description": "Kierunek wiatru"
+            },
+            {
+                "name": "int_opadu",
+                "type": "Numeric",
+                "description": "Intensywność opadu"
+            }            
+        ]
+    }
+]

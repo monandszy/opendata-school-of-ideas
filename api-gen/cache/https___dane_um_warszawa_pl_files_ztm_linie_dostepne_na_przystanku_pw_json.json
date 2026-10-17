@@ -1,0 +1,22 @@
+[
+    {
+        "section_name": "Przykład wywołania",
+        "section_elements": [
+            {
+                "title": "Przykład wywołania dla zapytania o linie dostępne na przystanku",
+                "content": "curl --location 'http://dane.um.warszawa.pl/api/action/get_ztm_lista_linii_na_przystanku' --header 'Authorization:  token_uzytkownika' --header 'Content-Type: application/json' --data '{\"busstopId\": \"5070\", \"busstopNr\": \"03\" }'"
+
+            }
+        ]
+    },
+    {
+        "section_name": "Przykład odpowiedzi",
+        "section_elements": [
+            {
+                "title": "Przykład odpowiedzi zwracający linie dostępne na przystanku",
+                "content": "[\n\t{\n\t\t\"values\": [\n\t\t\t{\n\t\t\t\t\"value\": \"23\",\n\t\t\t\t\"key\": \"linia\"\n\t\t\t}\n\t\t]\n\t},\n\t{\n\t\t\"values\": [\n\t\t\t{\n\t\t\t\t\"value\": \"20\",\n\t\t\t\t\"key\": \"linia\"\n\t\t\t}\n\t\t]\n\t},\n\t{\n\t\t\"values\": [\n\t\t\t{\n\t\t\t\t\"value\": \"24\",\n\t\t\t\t\"key\": \"linia\"\n\t\t\t}\n\t\t]\n\t}\n]\n"
+
+            }
+        ]
+    }
+]

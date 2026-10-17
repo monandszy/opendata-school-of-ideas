@@ -1,0 +1,23 @@
+[
+    {
+        "section_name": "Przykład wywołania",
+        "section_elements": [
+            {
+                "title": "Przykład wywołania dla zapytania o odjazdy linii z przystanku",
+                "content": "curl --location 'https://dane.um.warszawa.pl/api/action/get_ztm_odjazdy_linii_z_przystanku' --header 'Authorization: token_uzytkownika' --header 'Content-Type: application/json' --data '{\"busstopId\": \"5070\", \"busstopNr\": \"03\", \"line\": \"20\"}'"
+
+            }
+        ]
+    },
+    {
+        "section_name": "Przykład odpowiedzi",
+        "section_elements": [
+            {
+                "title": "Przykład odpowiedzi dla zapytania o odjazdy linii z przystanku",
+                "content": "[\n\t[\n\t\t{\n\t\t\t\"value\": null,\n\t\t\t\"key\": \"symbol_2\"\n\t\t},\n\t\t{\n\t\t\t\"value\": null,\n\t\t\t\"key\": \"symbol_1\"\n\t\t},\n\t\t{\n\t\t\t\"value\": \"012\",\n\t\t\t\"key\": \"brygada\"\n\t\t},\n\t\t{\n\t\t\t\"value\": \"Żerań FSO\",\n\t\t\t\"key\": \"kierunek\"\n\t\t},\n\t\t{\n\t\t\t\"value\": \"TP-FSO\",\n\t\t\t\"key\": \"trasa\"\n\t\t},\n\t\t{\n\t\t\t\"value\": \"06:46:00\",\n\t\t\t\"key\": \"czas\"\n\t\t}\n\t],...\n"
+
+            }
+        ]
+    }
+]
+

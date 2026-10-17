@@ -1,0 +1,79 @@
+[
+  {
+    "section_name": "Parametry wywołania",
+    "section_elements": [
+      {
+        "name": "token_uzytkownika",
+        "type": "token",
+        "description": "Token API - obowiązkowy"
+      }
+    ]
+  },
+  {
+    "section_name": "Parametry odpowiedzi",
+    "section_elements": [    
+      {
+        "name": "typ_punktu",
+        "type": "Array (Object)",
+        "description": "Tablica zawierająca typ i identyfikator kategorii punktu."
+      },
+      {
+        "name": "nazwa",
+        "type": "String",
+        "description": "Nazwa punktu lub podmiotu"
+      },
+      {
+        "name": "dzielnica",
+        "type": "String",
+        "description": "Nazwa dzielnicy Warszawy, w której znajduje się punkt."
+      },
+
+      {
+        "name": "ulica",
+        "type": "String",
+        "description": "Nazwa ulicy lub numer działki ewidencyjnej."
+      },
+      {
+        "name": "ulica_numer",
+        "type": "String",
+        "description": "Numer budynku lub numeracja pomocnicza na działce."
+      },
+      {
+        "name": "ulica_lokal",
+        "type": "String",
+        "description": "Numer lokalu"
+      },
+      {
+        "name": "opis_lokalizacji",
+        "type": "String",
+        "description": "Dodatkowy opis ułatwiający zlokalizowanie punktu w terenie."
+      },
+      {
+        "name": "dlugosc",
+        "type": "String",
+        "description": "Współrzędna geograficzna: długość geograficzna (Longitude) w układzie WGS84."
+      },
+      {
+        "name": "szerokosc",
+        "type": "String",
+        "description": "Współrzędna geograficzna: szerokość geograficzna (Latitude) w układzie WGS84."
+      },
+
+      {
+        "name": "telefon",
+        "type": "String",
+        "description": "Numer(y) telefonu kontaktowego do punktu."
+      },
+      {
+        "name": "mail",
+        "type": "String",
+        "description": "Adres e-mail kontaktowy."
+      },
+      {
+        "name": "dni_pracy",
+        "type": "String",
+        "description": "Tablica zawierająca jeden obiekt z harmonogramem otwarcia na każdy dzień tygodnia"
+      }      
+    ]
+  }
+]

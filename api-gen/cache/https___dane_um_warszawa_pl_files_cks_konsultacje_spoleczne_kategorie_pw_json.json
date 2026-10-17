@@ -1,0 +1,20 @@
+[
+  {
+    "section_name": "Przykład wywołania",
+    "section_elements": [
+      {
+        "title": "Przykład zapytania dla pobrania Konsultacje społeczne - kategorie",
+        "content": "curl --location --request POST 'https://dane.um.warszawa.pl/api/action/get_cks_konsultacje_spoleczne_kategorie' --header 'Authorization: token_uzytkownika'"
+      }
+    ]
+  },
+  {
+    "section_name": "Przykład odpowiedzi",
+    "section_elements": [
+      {
+        "title": "Przykład odpowiedzi dla pobrania Konsultacje społeczne - kategorie",
+        "content": "[\n\t{\n\t\t\"id\": 1,\n\t\t\"name\": \"Dokumenty\"\n\t},(...)\n]"
+      }
+    ]
+  }
+]

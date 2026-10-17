@@ -1,0 +1,84 @@
+[
+  {
+    "section_name": "Parametry wywołania",
+    "section_elements": [
+      {
+        "name": "token_uzytkownika",
+        "type": "token",
+        "description": "Token API - obowiązkowy"
+      }
+    ]
+  },
+  {
+    "section_name": "Parametry odpowiedzi",
+    "section_elements": [
+    {
+      "name": "geometry",
+      "type": "Dictionaty",
+      "description": "Lokalizacja toalety"      
+    },    
+    {
+      "name": "properties",
+      "type": "Dictionaty",
+      "description": "Właściwości obiektu",
+      "nested_elements": [
+        {
+          "name": "zarzadca",
+          "type": "String",
+          "description": "Zarządca toalety"
+        },
+        {
+          "name": "typ",
+          "type": "String",
+          "description": "Rodzaj toalety"
+        },
+        {
+          "name": "lokalizacja",
+          "type": "String",
+          "description": "Informaje o lokalizacji"
+        },
+        {
+          "name": "dzielnica",
+          "type": "String",
+          "description": "Dzielnica w której znajduje się obiekt"
+        },
+        {
+          "name": "Dostępność",
+          "type": "Int",
+          "description": "1 - dostępna dla wszystkich, 0 - bariery architektoniczne"
+        },
+        {
+          "name": "Płatność",
+          "type": "Int",
+          "description": "1 - toaleta płatna, 0 - toaleta bezpłatna"
+        },
+        {
+          "name": "Przewijak",
+          "type": "Int",
+          "description": "1 - dostępny przewijak, 0 - brak przewijaka"
+        },
+        {
+          "name": "aktu_dan",
+          "type": "Staing",
+          "description": "Data aktualizacji danych"
+        },
+        {
+          "name": "poch_dan",
+          "type": "Staing",
+          "description": "Pochodzenie danych"
+        },
+        {
+          "name": "godziny",
+          "type": "Staing",
+          "description": "Godziny dostępności obiektu"
+        },
+        {
+          "name": "uwagi",
+          "type": "Staing",
+          "description": "Uwagi"
+        }
+      ]
+    }      
+    ]
+  }
+]

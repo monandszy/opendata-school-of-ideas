@@ -1,0 +1,63 @@
+[
+    {
+        "section_name": "Parametry wywołania",
+        "section_elements": [            
+            {
+                "name": "token_uzytkownika",
+                "type": "token",
+                "description": "Token API - obowiązkowy"
+            },
+            {
+                "name": "busstopId",
+                "type": "string",
+                "description": "Inentyfikator przystanku"
+            },
+            {
+                "name": "busstopNr",
+                "type": "string",
+                "description": "Inentyfikator słupka przystankowego"
+            },
+            {
+                "name": "line",
+                "type": "string",
+                "description": "Numer linii"
+            }
+        ]
+    },
+    {
+        "section_name": "Parametry odpowiedzi",
+        "section_elements": [            
+            {
+                "name": "czas",
+                "type": "Godzina",
+                "description": "Godzina odjazdu"
+            },
+            {
+                "name": "brygada",
+                "type": "String",
+                "description": "Identyfikator brygady obsługującej przejazd"
+            },
+            {
+                "name": "kierunek",
+                "type": "String",
+                "description": "Kierunek realizowanego kursu"
+            },           
+            
+            {
+                "name": "trasa",
+                "type": "String",
+                "description": "Realizowana trasa"
+            },            
+            {
+                "name": "symbol_1",
+                "type": "String",
+                "description": "Dodatkowe informacje"
+            },
+            {
+                "name": "symbol_2",
+                "type": "String",
+                "description": "Dodatkowe informacje"
+            }
+        ]
+    }
+]

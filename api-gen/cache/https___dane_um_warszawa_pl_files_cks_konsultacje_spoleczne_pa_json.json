@@ -1,0 +1,107 @@
+[
+  {
+    "section_name": "Parametry wywołania",
+    "section_elements": [
+      {
+        "name": "token_uzytkownika",
+        "type": "token",
+        "description": "Token API - obowiązkowy"
+      }
+    ]
+  },
+  {
+    "section_name": "Parametry odpowiedzi",
+    "section_elements": [
+      {
+        "name": "Id",
+        "type": "Identyfikator numeryczny",
+        "description": "identyfikator"
+      },      
+      {
+        "name": "title",
+        "type": "string",
+        "description": "tytuł"
+      },
+      {
+        "name": "subtitle",
+        "type": "String (moze zawierać kod html",
+        "description": "krótki opis"
+      },
+      {
+        "name": "descriiption",
+        "type": "String (moze zawierać kod html",
+        "description": "opis"
+      },
+      {
+        "name": "short_description",
+        "type": "String (moze zawierać kod html",
+        "description": "opis"
+      },
+      {
+        "name": "category_id",
+        "type": "Identyfikator numeryczny",
+        "description": "identyfikator kategorii"
+      },
+      {
+        "name": "district_id",
+        "type": "Identyfikator numeryczny",
+        "description": "identyfikator dzielnicy"
+      },
+      {
+        "name": "start_date",
+        "type": "Date",
+        "description": "data rozpoczęcia"
+      },
+      {
+        "name": "end_date",
+        "type": "Date",
+        "description": "data zakończenia"
+      },
+      {
+        "name": "zip_code",
+        "type": "String",
+        "description": "kod pocztowy"
+      },
+      {
+        "name": "longitude",
+        "type": "Float",
+        "description": "długość geograficzna"
+      },
+      {
+        "name": "latitude",
+        "type": "Float",
+        "description": "szerokość geograficzna"
+      },
+      {
+        "name": "banner_image",
+        "type": "URL do zdjęcia",
+        "description": "zdjęcie małe"
+      },
+      {
+        "name": "hero_image",
+        "type": "URL do zdjęcia na Decidim",
+        "description": "zdjęcie duże"
+      },
+      {
+        "name": "slug",
+        "type": "String",
+        "description": "tytul w przyjaznym formacie do url"
+      },
+      {
+        "name": "url",
+        "type": "URL do zdjęcia na Decidim",
+        "description": "URL do zdjęcia"
+      },
+      {
+        "name": "recipients",
+        "type": "String",
+        "description": "grupa odbiorców"
+      },
+      {
+        "name": "tags",
+        "type": "Lista wartości",
+        "description": "tagi"
+      }
+    ]
+  }
+]

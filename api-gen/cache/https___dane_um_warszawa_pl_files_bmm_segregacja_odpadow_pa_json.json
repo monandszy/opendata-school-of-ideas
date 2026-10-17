@@ -1,0 +1,47 @@
+[
+    {
+      "section_name": "Parametry wywołania",
+      "section_elements": [
+        {
+          "name": "token_uzytkownika",
+          "type": "token",
+          "description": "Token API - obowiązkowy"
+        }
+      ]
+    },
+    {
+      "section_name": "Parametry odpowiedzi",
+      "section_elements": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "description": "Identyfikator odpadu"
+        },
+        {
+          "name": "title",
+          "type": "String",
+          "description": "Nazwa odpadu"
+        },
+        {
+          "name": "url",
+          "type": "String",
+          "description": "Adres do strony z informacją o odpadzie"
+        },
+        {
+          "name": "synonyms_list",
+          "type": "Array<String>",
+          "description": "Tablica synonimów dla odpadu"
+        },
+        {
+          "name": "additional_info",
+          "type": "String",
+          "description": "Informacje dodatkowe związane z segregacją odpadu"
+        },
+        {
+          "name": "type_name",
+          "type": "String",
+          "description": "Nazwa typu odpadu"
+        }
+      ]
+    }
+  ]

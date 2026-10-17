@@ -1,0 +1,27 @@
+[
+  {
+    "section_name": "Parametry wywołania",
+    "section_elements": [
+      {
+        "name": "token_uzytkownika",
+        "type": "token",
+        "description": "Token API - obowiązkowy"
+      }
+    ]
+  },
+  {
+    "section_name": "Parametry odpowiedzi",
+    "section_elements": [
+      {
+        "name": "id",
+        "type": "Identyfikator numeryczny",
+        "description": "identyfikator"
+      },      
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Nazwa kategorii"
+      }      
+    ]
+  }
+]

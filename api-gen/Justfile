@@ -1,0 +1,23 @@
+# api-gen Justfile
+
+set windows-shell := ["pwsh.exe", "-NoProfile", "-Command"]
+
+# Default recipe: show available api-gen commands
+default:
+    @just --list --justfile {{justfile()}}
+
+# Setup virtual environment and install dependencies
+setup:
+    python -m venv .venv
+    .venv/Scripts/pip install -r requirements.txt
+
+# Run the generator to create openapi.yaml and openapi.json
+generate:
+    .venv/Scripts/python generate_openapi.py
+
+# Clear cached metadata
+clean-cache:
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue cache/
+
+# Re-download metadata and regenerate specs from scratch
+refresh: clean-cache generate

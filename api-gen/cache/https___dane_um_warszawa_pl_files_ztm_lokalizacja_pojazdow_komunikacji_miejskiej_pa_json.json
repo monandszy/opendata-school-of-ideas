@@ -1,0 +1,54 @@
+[
+    {
+        "section_name": "Parametry wywołania",
+        "section_elements": [            
+            {
+                "name": "token_uzytkownika",
+                "type": "token",
+                "description": "Token API - obowiązkowy"
+            },
+            {
+                "name": "typ",
+                "type": "int",
+                "description": "typ pojazdu (1-autobus, 2-tramwaj)"
+            }
+        ]
+    },
+    {
+        "section_name": "Parametry odpowiedzi",
+        "section_elements": [
+            
+            {
+                "name": "Lat",
+                "type": "Number",
+                "description": "Szerokość geograficzna"
+            },
+            {
+                "name": "Lon",
+                "type": "Number",
+                "description": "Długość geograficzna"
+            },
+            {
+                "name": "Time",
+                "type": "Data godzina",
+                "description": "Czas wysłania sygnału GPS"
+            },
+            {
+                "name": "Lines",
+                "type": "String",
+                "description": "Numer linii autobusowej lub tramwajowej"
+            },
+            {
+                "name": "Brigade",
+                "type": "String",
+                "description": "Numer brygady pojazdu"
+            },
+            {
+                "name": "VehicleNumber",
+                "type": "String",
+                "description": "Numet taborowy pojazdu"
+            }
+
+        ]
+    }
+]

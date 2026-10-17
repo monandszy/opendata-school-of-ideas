@@ -1,0 +1,42 @@
+[
+    {
+        "section_name": "Parametry wywołania",
+        "section_elements": [            
+            {
+                "name": "apikey",
+                "type": "GUID",
+                "description": "Klucz api - obowiązkowy"
+            }
+        ]
+    },
+    {
+        "section_name": "Parametry odpowiedzi",
+        "section_elements": [            
+            {
+                "name": "zespol",
+                "type": "String",
+                "description": "Zespół przystankowy"
+            },
+            {
+                "name": "slupek",
+                "type": "String",
+                "description": "Słupek zespołu przystankowego"
+            },
+            {
+                "name": "nazwa_zespolu",
+                "type": "String",
+                "description": "Nazwa zespołu przystankowego"
+            },
+            {
+                "name": "szer_geo",
+                "type": "String",
+                "description": "Szerokość geograficzna słupka przystankowego"
+            },
+            {
+                "name": "dlug_geo",
+                "type": "String",
+                "description": "Długość geograficzna słupka przystankowego"
+            }            
+        ]
+    }
+]
