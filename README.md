@@ -1,8 +1,19 @@
 # Spacerownik Warszawski Prototype
 
-![alt text](docs/chrome_AVRd8evvGo.png)
+Sprawdź temperaturę w dowolnym miejscu w Warszawie. Na podstawie danych z sieci sensorów IoT Warszawy
 
-![alt text](docs/chrome_gwBwsBcoBR.png)
+## Mapa Ciepła Warszawy
+![alt text](docs/mapa_ciepła.png)
+
+
+## Znaczniki czujników pomiarowych
+![alt text](docs/mapa_czujników.png)
+
+## Wizualizacja temperautry 3D
+![alt text](docs/chrome_6ARHs404OY.png)
+
+## Znaczniki Miejsc Chłodu
+![alt text](docs/miejsca_chłodu.png)
 
 Repository for working with **Warsaw Open Data** (`dane.um.warszawa.pl`).
 ---
