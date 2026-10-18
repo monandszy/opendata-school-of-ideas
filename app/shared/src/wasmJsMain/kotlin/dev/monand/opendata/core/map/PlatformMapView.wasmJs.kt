@@ -388,7 +388,7 @@ actual fun PlatformMapView(
                                     if (isDragging) {
                                         isDragging = false
                                         val totalDist = (change.position - downPos).getDistance()
-                                        if (totalDist < 6f && !isOrbitDrag) {
+                                        if (totalDist < 12f && !isOrbitDrag) {
                                             val posX = change.position.x.toDouble()
                                             val posY = change.position.y.toDouble()
                                             val stationName = jsQueryStationAt(posX, posY)

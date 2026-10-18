@@ -73,6 +73,58 @@
                 return el;
             }
 
+            function getOrCreateSquareBadge(map, hexColor, iconSymbol, isSelected) {
+                const badgeId = 'badge_' + hexColor.replace('#', '') + '_' + iconSymbol + '_' + (isSelected ? 'sel' : 'norm');
+                if (map.hasImage(badgeId)) {
+                    return badgeId;
+                }
+                const size = isSelected ? 40 : 30;
+                const padding = 3;
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+
+                const cornerRadius = 6;
+                const drawSize = size - padding * 2;
+                const x = padding;
+                const y = padding;
+
+                ctx.beginPath();
+                ctx.moveTo(x + cornerRadius, y);
+                ctx.arcTo(x + drawSize, y, x + drawSize, y + drawSize, cornerRadius);
+                ctx.arcTo(x + drawSize, y + drawSize, x, y + drawSize, cornerRadius);
+                ctx.arcTo(x, y + drawSize, x, y, cornerRadius);
+                ctx.arcTo(x, y, x + drawSize, y, cornerRadius);
+                ctx.closePath();
+
+                ctx.fillStyle = hexColor;
+                ctx.fill();
+
+                ctx.lineWidth = isSelected ? 2.5 : 1.5;
+                ctx.strokeStyle = '#FFFFFF';
+                ctx.stroke();
+
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.font = (isSelected ? '18px' : '13px') + ' sans-serif';
+                ctx.fillText(iconSymbol, size / 2, size / 2 + 1);
+
+                const imageData = ctx.getImageData(0, 0, size, size);
+                map.addImage(badgeId, imageData);
+                return badgeId;
+            }
+
+            function processGeoJsonBadges(map, geojson) {
+                if (!geojson || !geojson.features) return;
+                for (let i = 0; i < geojson.features.length; i++) {
+                    const props = geojson.features[i].properties;
+                    if (props && props.color && props.icon) {
+                        getOrCreateSquareBadge(map, props.color, props.icon, !!props.selected);
+                    }
+                }
+            }
+
             function applyOverlaysToMap() {
                 const map = state.map;
                 if (!map || !state.styleLoaded) return;
@@ -176,6 +228,7 @@
                 if (state.stationsGeoJsonStr) {
                     try {
                         const geojson = JSON.parse(state.stationsGeoJsonStr);
+                        processGeoJsonBadges(map, geojson);
                         const existingStations = map.getSource('stations-source');
                         if (existingStations) {
                             existingStations.setData(geojson);
@@ -186,48 +239,25 @@
                             });
                         }
 
-                        if (!map.getLayer('stations-circle-layer')) {
+                        if (!map.getLayer('stations-square-layer')) {
                             map.addLayer({
-                                id: 'stations-circle-layer',
-                                type: 'circle',
-                                source: 'stations-source',
-                                paint: {
-                                    'circle-color': ['get', 'color'],
-                                    'circle-radius': ['get', 'radius'],
-                                    'circle-stroke-color': '#ffffff',
-                                    'circle-stroke-width': ['get', 'strokeWidth'],
-                                    'circle-pitch-alignment': 'map'
-                                },
-                                layout: {
-                                    visibility: state.showStations ? 'visible' : 'none'
-                                }
-                            });
-                            map.addLayer({
-                                id: 'stations-symbol-layer',
+                                id: 'stations-square-layer',
                                 type: 'symbol',
                                 source: 'stations-source',
                                 layout: {
-                                    'text-field': ['get', 'icon'],
-                                    'text-size': 11,
-                                    'text-allow-overlap': true,
-                                    'text-ignore-placement': true,
-                                    'text-pitch-alignment': 'map',
+                                    'icon-image': ['get', 'badgeImage'],
+                                    'icon-allow-overlap': true,
+                                    'icon-ignore-placement': true,
+                                    'icon-pitch-alignment': 'map',
                                     'visibility': state.showStations ? 'visible' : 'none'
                                 }
                             });
                         } else {
                             map.setLayoutProperty(
-                                'stations-circle-layer',
+                                'stations-square-layer',
                                 'visibility',
                                 state.showStations ? 'visible' : 'none'
                             );
-                            if (map.getLayer('stations-symbol-layer')) {
-                                map.setLayoutProperty(
-                                    'stations-symbol-layer',
-                                    'visibility',
-                                    state.showStations ? 'visible' : 'none'
-                                );
-                            }
                         }
                     } catch (e) {
                         console.error('Failed to parse stations GeoJSON', e);
@@ -237,6 +267,7 @@
                 if (state.toaletyGeoJsonStr) {
                     try {
                         const geojson = JSON.parse(state.toaletyGeoJsonStr);
+                        processGeoJsonBadges(map, geojson);
                         const existingToalety = map.getSource('toalety-source');
                         if (existingToalety) {
                             existingToalety.setData(geojson);
@@ -247,48 +278,25 @@
                             });
                         }
 
-                        if (!map.getLayer('toalety-circle-layer')) {
+                        if (!map.getLayer('toalety-square-layer')) {
                             map.addLayer({
-                                id: 'toalety-circle-layer',
-                                type: 'circle',
-                                source: 'toalety-source',
-                                paint: {
-                                    'circle-color': ['get', 'color'],
-                                    'circle-radius': ['get', 'radius'],
-                                    'circle-stroke-color': '#ffffff',
-                                    'circle-stroke-width': ['get', 'strokeWidth'],
-                                    'circle-pitch-alignment': 'map'
-                                },
-                                layout: {
-                                    visibility: state.showToilets ? 'visible' : 'none'
-                                }
-                            });
-                            map.addLayer({
-                                id: 'toalety-symbol-layer',
+                                id: 'toalety-square-layer',
                                 type: 'symbol',
                                 source: 'toalety-source',
                                 layout: {
-                                    'text-field': ['get', 'icon'],
-                                    'text-size': 11,
-                                    'text-allow-overlap': true,
-                                    'text-ignore-placement': true,
-                                    'text-pitch-alignment': 'map',
+                                    'icon-image': ['get', 'badgeImage'],
+                                    'icon-allow-overlap': true,
+                                    'icon-ignore-placement': true,
+                                    'icon-pitch-alignment': 'map',
                                     'visibility': state.showToilets ? 'visible' : 'none'
                                 }
                             });
                         } else {
                             map.setLayoutProperty(
-                                'toalety-circle-layer',
+                                'toalety-square-layer',
                                 'visibility',
                                 state.showToilets ? 'visible' : 'none'
                             );
-                            if (map.getLayer('toalety-symbol-layer')) {
-                                map.setLayoutProperty(
-                                    'toalety-symbol-layer',
-                                    'visibility',
-                                    state.showToilets ? 'visible' : 'none'
-                                );
-                            }
                         }
                     } catch (e) {
                         console.error('Failed to parse toalety GeoJSON', e);
@@ -298,6 +306,7 @@
                 if (state.miejscaChloduGeoJsonStr) {
                     try {
                         const geojson = JSON.parse(state.miejscaChloduGeoJsonStr);
+                        processGeoJsonBadges(map, geojson);
                         const existingMiejsca = map.getSource('miejsca-chlodu-source');
                         if (existingMiejsca) {
                             existingMiejsca.setData(geojson);
@@ -308,48 +317,25 @@
                             });
                         }
 
-                        if (!map.getLayer('miejsca-chlodu-circle-layer')) {
+                        if (!map.getLayer('miejsca-chlodu-square-layer')) {
                             map.addLayer({
-                                id: 'miejsca-chlodu-circle-layer',
-                                type: 'circle',
-                                source: 'miejsca-chlodu-source',
-                                paint: {
-                                    'circle-color': ['get', 'color'],
-                                    'circle-radius': ['get', 'radius'],
-                                    'circle-stroke-color': '#ffffff',
-                                    'circle-stroke-width': ['get', 'strokeWidth'],
-                                    'circle-pitch-alignment': 'map'
-                                },
-                                layout: {
-                                    visibility: state.showMiejscaChlodu ? 'visible' : 'none'
-                                }
-                            });
-                            map.addLayer({
-                                id: 'miejsca-chlodu-symbol-layer',
+                                id: 'miejsca-chlodu-square-layer',
                                 type: 'symbol',
                                 source: 'miejsca-chlodu-source',
                                 layout: {
-                                    'text-field': ['get', 'icon'],
-                                    'text-size': 12,
-                                    'text-allow-overlap': true,
-                                    'text-ignore-placement': true,
-                                    'text-pitch-alignment': 'map',
+                                    'icon-image': ['get', 'badgeImage'],
+                                    'icon-allow-overlap': true,
+                                    'icon-ignore-placement': true,
+                                    'icon-pitch-alignment': 'map',
                                     'visibility': state.showMiejscaChlodu ? 'visible' : 'none'
                                 }
                             });
                         } else {
                             map.setLayoutProperty(
-                                'miejsca-chlodu-circle-layer',
+                                'miejsca-chlodu-square-layer',
                                 'visibility',
                                 state.showMiejscaChlodu ? 'visible' : 'none'
                             );
-                            if (map.getLayer('miejsca-chlodu-symbol-layer')) {
-                                map.setLayoutProperty(
-                                    'miejsca-chlodu-symbol-layer',
-                                    'visibility',
-                                    state.showMiejscaChlodu ? 'visible' : 'none'
-                                );
-                            }
                         }
                     } catch (e) {
                         console.error('Failed to parse miejsca chlodu GeoJSON', e);
@@ -558,12 +544,12 @@
 
                 queryStationAt: function(xPhysical, yPhysical) {
                     const map = state.map;
-                    if (!map || !state.styleLoaded || !map.getLayer('stations-circle-layer')) return '';
+                    if (!map || !state.styleLoaded || !map.getLayer('stations-square-layer')) return '';
                     const dpr = window.devicePixelRatio || 1;
                     const x = xPhysical / dpr;
                     const y = yPhysical / dpr;
-                    const bbox = [[x - 14, y - 14], [x + 14, y + 14]];
-                    const features = map.queryRenderedFeatures(bbox, { layers: ['stations-circle-layer', 'stations-symbol-layer'] });
+                    const bbox = [[x - 24, y - 24], [x + 24, y + 24]];
+                    const features = map.queryRenderedFeatures(bbox, { layers: ['stations-square-layer'] });
                     if (features && features.length > 0 && features[0].properties) {
                         return features[0].properties.lokalizacja || '';
                     }
@@ -572,12 +558,12 @@
 
                 queryToaletaAt: function(xPhysical, yPhysical) {
                     const map = state.map;
-                    if (!map || !state.styleLoaded || !map.getLayer('toalety-circle-layer')) return '';
+                    if (!map || !state.styleLoaded || !map.getLayer('toalety-square-layer')) return '';
                     const dpr = window.devicePixelRatio || 1;
                     const x = xPhysical / dpr;
                     const y = yPhysical / dpr;
-                    const bbox = [[x - 14, y - 14], [x + 14, y + 14]];
-                    const features = map.queryRenderedFeatures(bbox, { layers: ['toalety-circle-layer', 'toalety-symbol-layer'] });
+                    const bbox = [[x - 24, y - 24], [x + 24, y + 24]];
+                    const features = map.queryRenderedFeatures(bbox, { layers: ['toalety-square-layer'] });
                     if (features && features.length > 0 && features[0].properties) {
                         return features[0].properties.id != null ? String(features[0].properties.id) : '';
                     }
@@ -586,12 +572,12 @@
 
                 queryMiejsceChloduAt: function(xPhysical, yPhysical) {
                     const map = state.map;
-                    if (!map || !state.styleLoaded || !map.getLayer('miejsca-chlodu-circle-layer')) return '';
+                    if (!map || !state.styleLoaded || !map.getLayer('miejsca-chlodu-square-layer')) return '';
                     const dpr = window.devicePixelRatio || 1;
                     const x = xPhysical / dpr;
                     const y = yPhysical / dpr;
-                    const bbox = [[x - 14, y - 14], [x + 14, y + 14]];
-                    const features = map.queryRenderedFeatures(bbox, { layers: ['miejsca-chlodu-circle-layer', 'miejsca-chlodu-symbol-layer'] });
+                    const bbox = [[x - 24, y - 24], [x + 24, y + 24]];
+                    const features = map.queryRenderedFeatures(bbox, { layers: ['miejsca-chlodu-square-layer'] });
                     if (features && features.length > 0 && features[0].properties) {
                         return features[0].properties.id != null ? String(features[0].properties.id) : '';
                     }

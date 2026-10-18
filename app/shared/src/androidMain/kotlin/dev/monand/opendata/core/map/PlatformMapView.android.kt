@@ -51,10 +51,17 @@ import org.maplibre.android.style.layers.PropertyFactory.fillExtrusionBase
 import org.maplibre.android.style.layers.PropertyFactory.fillExtrusionColor
 import org.maplibre.android.style.layers.PropertyFactory.fillExtrusionHeight
 import org.maplibre.android.style.layers.PropertyFactory.fillExtrusionOpacity
+import org.maplibre.android.style.layers.PropertyFactory.iconAllowOverlap
+import org.maplibre.android.style.layers.PropertyFactory.iconIgnorePlacement
+import org.maplibre.android.style.layers.PropertyFactory.iconImage
+import org.maplibre.android.style.layers.PropertyFactory.iconPitchAlignment
 import org.maplibre.android.style.layers.PropertyFactory.rasterOpacity
 import org.maplibre.android.style.layers.PropertyFactory.rasterResampling
 import org.maplibre.android.style.layers.PropertyFactory.textAllowOverlap
+import org.maplibre.android.style.layers.PropertyFactory.textColor
 import org.maplibre.android.style.layers.PropertyFactory.textField
+import org.maplibre.android.style.layers.PropertyFactory.textHaloColor
+import org.maplibre.android.style.layers.PropertyFactory.textHaloWidth
 import org.maplibre.android.style.layers.PropertyFactory.textIgnorePlacement
 import org.maplibre.android.style.layers.PropertyFactory.textPitchAlignment
 import org.maplibre.android.style.layers.PropertyFactory.textSize
@@ -67,14 +74,11 @@ private const val IDW_SOURCE_ID = "idw-heatmap-source"
 private const val IDW_LAYER_ID = "idw-heatmap-layer"
 private const val BUILDINGS_3D_LAYER_ID = "warsaw-3d-buildings-layer"
 private const val STATIONS_SOURCE_ID = "stations-source"
-private const val STATIONS_LAYER_ID = "stations-circle-layer"
-private const val STATIONS_SYMBOL_LAYER_ID = "stations-symbol-layer"
+private const val STATIONS_SQUARE_LAYER_ID = "stations-square-layer"
 private const val TOILETS_SOURCE_ID = "toalety-source"
-private const val TOILETS_LAYER_ID = "toalety-circle-layer"
-private const val TOILETS_SYMBOL_LAYER_ID = "toalety-symbol-layer"
+private const val TOILETS_SQUARE_LAYER_ID = "toalety-square-layer"
 private const val MIEJSCA_CHLODU_SOURCE_ID = "miejsca-chlodu-source"
-private const val MIEJSCA_CHLODU_LAYER_ID = "miejsca-chlodu-circle-layer"
-private const val MIEJSCA_CHLODU_SYMBOL_LAYER_ID = "miejsca-chlodu-symbol-layer"
+private const val MIEJSCA_CHLODU_SQUARE_LAYER_ID = "miejsca-chlodu-square-layer"
 private const val INSPECTION_SOURCE_ID = "inspection-source"
 private const val INSPECTION_LAYER_ID = "inspection-circle-layer"
 
@@ -278,13 +282,13 @@ actual fun PlatformMapView(
                                     screenPoint.y + 24f,
                                 )
 
-                            val stationFeatures = map.queryRenderedFeatures(hitRect, STATIONS_LAYER_ID)
+                            val stationFeatures = map.queryRenderedFeatures(hitRect, STATIONS_SQUARE_LAYER_ID)
                             val clickedStationName = stationFeatures.firstOrNull()?.getStringProperty("lokalizacja")
 
-                            val toiletFeatures = map.queryRenderedFeatures(hitRect, TOILETS_LAYER_ID)
+                            val toiletFeatures = map.queryRenderedFeatures(hitRect, TOILETS_SQUARE_LAYER_ID)
                             val clickedToiletId = toiletFeatures.firstOrNull()?.getStringProperty("id")
 
-                            val coolingFeatures = map.queryRenderedFeatures(hitRect, MIEJSCA_CHLODU_LAYER_ID)
+                            val coolingFeatures = map.queryRenderedFeatures(hitRect, MIEJSCA_CHLODU_SQUARE_LAYER_ID)
                             val clickedCoolingId = coolingFeatures.firstOrNull()?.getStringProperty("id")
 
                             when {
@@ -375,100 +379,59 @@ private fun setupOverlayLayers(
         style.addLayer(extrusionLayer)
     }
 
+    processGeoJsonBadgesAndroid(style, stationsGeoJson)
+    processGeoJsonBadgesAndroid(style, toaletyGeoJson)
+    processGeoJsonBadgesAndroid(style, miejscaChloduGeoJson)
+
     if (style.getSource(STATIONS_SOURCE_ID) == null) {
         style.addSource(GeoJsonSource(STATIONS_SOURCE_ID, stationsGeoJson))
     }
 
-    if (style.getLayer(STATIONS_LAYER_ID) == null) {
-        val circleLayer =
-            CircleLayer(STATIONS_LAYER_ID, STATIONS_SOURCE_ID)
+    if (style.getLayer(STATIONS_SQUARE_LAYER_ID) == null) {
+        val squareLayer =
+            SymbolLayer(STATIONS_SQUARE_LAYER_ID, STATIONS_SOURCE_ID)
                 .withProperties(
-                    circleColor(toColor(get("color"))),
-                    circleRadius(toNumber(get("radius"))),
-                    circleStrokeColor(Color.WHITE),
-                    circleStrokeWidth(toNumber(get("strokeWidth"))),
-                    circlePitchAlignment(Property.CIRCLE_PITCH_ALIGNMENT_MAP),
+                    iconImage(get("badgeImage")),
+                    iconAllowOverlap(true),
+                    iconIgnorePlacement(true),
+                    iconPitchAlignment(Property.ICON_PITCH_ALIGNMENT_MAP),
                     visibility(if (showStations) Property.VISIBLE else Property.NONE),
                 )
-        style.addLayer(circleLayer)
-    }
-
-    if (style.getLayer(STATIONS_SYMBOL_LAYER_ID) == null) {
-        val symbolLayer =
-            SymbolLayer(STATIONS_SYMBOL_LAYER_ID, STATIONS_SOURCE_ID)
-                .withProperties(
-                    textField(get("icon")),
-                    textSize(11f),
-                    textAllowOverlap(true),
-                    textIgnorePlacement(true),
-                    textPitchAlignment(Property.TEXT_PITCH_ALIGNMENT_MAP),
-                    visibility(if (showStations) Property.VISIBLE else Property.NONE),
-                )
-        style.addLayer(symbolLayer)
+        style.addLayer(squareLayer)
     }
 
     if (style.getSource(TOILETS_SOURCE_ID) == null) {
         style.addSource(GeoJsonSource(TOILETS_SOURCE_ID, toaletyGeoJson))
     }
 
-    if (style.getLayer(TOILETS_LAYER_ID) == null) {
-        val circleLayer =
-            CircleLayer(TOILETS_LAYER_ID, TOILETS_SOURCE_ID)
+    if (style.getLayer(TOILETS_SQUARE_LAYER_ID) == null) {
+        val squareLayer =
+            SymbolLayer(TOILETS_SQUARE_LAYER_ID, TOILETS_SOURCE_ID)
                 .withProperties(
-                    circleColor(toColor(get("color"))),
-                    circleRadius(toNumber(get("radius"))),
-                    circleStrokeColor(Color.WHITE),
-                    circleStrokeWidth(toNumber(get("strokeWidth"))),
-                    circlePitchAlignment(Property.CIRCLE_PITCH_ALIGNMENT_MAP),
+                    iconImage(get("badgeImage")),
+                    iconAllowOverlap(true),
+                    iconIgnorePlacement(true),
+                    iconPitchAlignment(Property.ICON_PITCH_ALIGNMENT_MAP),
                     visibility(if (showToilets) Property.VISIBLE else Property.NONE),
                 )
-        style.addLayer(circleLayer)
-    }
-
-    if (style.getLayer(TOILETS_SYMBOL_LAYER_ID) == null) {
-        val symbolLayer =
-            SymbolLayer(TOILETS_SYMBOL_LAYER_ID, TOILETS_SOURCE_ID)
-                .withProperties(
-                    textField(get("icon")),
-                    textSize(11f),
-                    textAllowOverlap(true),
-                    textIgnorePlacement(true),
-                    textPitchAlignment(Property.TEXT_PITCH_ALIGNMENT_MAP),
-                    visibility(if (showToilets) Property.VISIBLE else Property.NONE),
-                )
-        style.addLayer(symbolLayer)
+        style.addLayer(squareLayer)
     }
 
     if (style.getSource(MIEJSCA_CHLODU_SOURCE_ID) == null) {
         style.addSource(GeoJsonSource(MIEJSCA_CHLODU_SOURCE_ID, miejscaChloduGeoJson))
     }
 
-    if (style.getLayer(MIEJSCA_CHLODU_LAYER_ID) == null) {
-        val circleLayer =
-            CircleLayer(MIEJSCA_CHLODU_LAYER_ID, MIEJSCA_CHLODU_SOURCE_ID)
+    if (style.getLayer(MIEJSCA_CHLODU_SQUARE_LAYER_ID) == null) {
+        val squareLayer =
+            SymbolLayer(MIEJSCA_CHLODU_SQUARE_LAYER_ID, MIEJSCA_CHLODU_SOURCE_ID)
                 .withProperties(
-                    circleColor(toColor(get("color"))),
-                    circleRadius(toNumber(get("radius"))),
-                    circleStrokeColor(Color.WHITE),
-                    circleStrokeWidth(toNumber(get("strokeWidth"))),
-                    circlePitchAlignment(Property.CIRCLE_PITCH_ALIGNMENT_MAP),
+                    iconImage(get("badgeImage")),
+                    iconAllowOverlap(true),
+                    iconIgnorePlacement(true),
+                    iconPitchAlignment(Property.ICON_PITCH_ALIGNMENT_MAP),
                     visibility(if (showMiejscaChlodu) Property.VISIBLE else Property.NONE),
                 )
-        style.addLayer(circleLayer)
-    }
-
-    if (style.getLayer(MIEJSCA_CHLODU_SYMBOL_LAYER_ID) == null) {
-        val symbolLayer =
-            SymbolLayer(MIEJSCA_CHLODU_SYMBOL_LAYER_ID, MIEJSCA_CHLODU_SOURCE_ID)
-                .withProperties(
-                    textField(get("icon")),
-                    textSize(12f),
-                    textAllowOverlap(true),
-                    textIgnorePlacement(true),
-                    textPitchAlignment(Property.TEXT_PITCH_ALIGNMENT_MAP),
-                    visibility(if (showMiejscaChlodu) Property.VISIBLE else Property.NONE),
-                )
-        style.addLayer(symbolLayer)
+        style.addLayer(squareLayer)
     }
 
     if (style.getSource(INSPECTION_SOURCE_ID) == null) {
@@ -521,31 +484,106 @@ private fun updateOverlayLayers(
         fillExtrusionOpacity(buildingOpacity),
     )
 
+    processGeoJsonBadgesAndroid(style, stationsGeoJson)
+    processGeoJsonBadgesAndroid(style, toaletyGeoJson)
+    processGeoJsonBadgesAndroid(style, miejscaChloduGeoJson)
+
     (style.getSourceAs<GeoJsonSource>(STATIONS_SOURCE_ID))?.setGeoJson(stationsGeoJson)
-    style.getLayer(STATIONS_LAYER_ID)?.setProperties(
-        visibility(if (showStations) Property.VISIBLE else Property.NONE),
-    )
-    style.getLayer(STATIONS_SYMBOL_LAYER_ID)?.setProperties(
+    style.getLayer(STATIONS_SQUARE_LAYER_ID)?.setProperties(
         visibility(if (showStations) Property.VISIBLE else Property.NONE),
     )
 
     (style.getSourceAs<GeoJsonSource>(TOILETS_SOURCE_ID))?.setGeoJson(toaletyGeoJson)
-    style.getLayer(TOILETS_LAYER_ID)?.setProperties(
-        visibility(if (showToilets) Property.VISIBLE else Property.NONE),
-    )
-    style.getLayer(TOILETS_SYMBOL_LAYER_ID)?.setProperties(
+    style.getLayer(TOILETS_SQUARE_LAYER_ID)?.setProperties(
         visibility(if (showToilets) Property.VISIBLE else Property.NONE),
     )
 
     (style.getSourceAs<GeoJsonSource>(MIEJSCA_CHLODU_SOURCE_ID))?.setGeoJson(miejscaChloduGeoJson)
-    style.getLayer(MIEJSCA_CHLODU_LAYER_ID)?.setProperties(
-        visibility(if (showMiejscaChlodu) Property.VISIBLE else Property.NONE),
-    )
-    style.getLayer(MIEJSCA_CHLODU_SYMBOL_LAYER_ID)?.setProperties(
+    style.getLayer(MIEJSCA_CHLODU_SQUARE_LAYER_ID)?.setProperties(
         visibility(if (showMiejscaChlodu) Property.VISIBLE else Property.NONE),
     )
 
     (style.getSourceAs<GeoJsonSource>(INSPECTION_SOURCE_ID))?.setGeoJson(inspectionGeoJson)
+}
+
+private fun getOrCreateAndroidSquareBadge(
+    style: Style,
+    hexColor: String,
+    iconSymbol: String,
+    isSelected: Boolean,
+): String {
+    val badgeId = "badge_${hexColor.replace("#", "")}_${iconSymbol}_${if (isSelected) "sel" else "norm"}"
+    if (style.getImage(badgeId) != null) {
+        return badgeId
+    }
+
+    val density = 2.0f
+    val sizePx = ((if (isSelected) 40 else 30) * density).toInt()
+    val padding = (3 * density).toInt()
+    val cornerRadius = 6f * density
+
+    val bitmap = Bitmap.createBitmap(sizePx, sizePx, Bitmap.Config.ARGB_8888)
+    val canvas = android.graphics.Canvas(bitmap)
+
+    val colorInt = try {
+        Color.parseColor(hexColor)
+    } catch (e: Exception) {
+        Color.GRAY
+    }
+
+    val bgPaint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
+        this.style = android.graphics.Paint.Style.FILL
+        color = colorInt
+    }
+
+    val strokePaint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
+        this.style = android.graphics.Paint.Style.STROKE
+        color = Color.WHITE
+        strokeWidth = (if (isSelected) 2.5f else 1.5f) * density
+    }
+
+    val drawRect = RectF(
+        padding.toFloat(),
+        padding.toFloat(),
+        (sizePx - padding).toFloat(),
+        (sizePx - padding).toFloat(),
+    )
+
+    canvas.drawRoundRect(drawRect, cornerRadius, cornerRadius, bgPaint)
+    canvas.drawRoundRect(drawRect, cornerRadius, cornerRadius, strokePaint)
+
+    val textPaint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
+        textSize = (if (isSelected) 18f else 13f) * density
+        textAlign = android.graphics.Paint.Align.CENTER
+    }
+
+    val fontMetrics = textPaint.fontMetrics
+    val centerY = (sizePx / 2f) - (fontMetrics.descent + fontMetrics.ascent) / 2f
+
+    canvas.drawText(iconSymbol, sizePx / 2f, centerY, textPaint)
+
+    style.addImage(badgeId, bitmap)
+    return badgeId
+}
+
+private fun processGeoJsonBadgesAndroid(style: Style, geoJsonStr: String) {
+    if (geoJsonStr.isEmpty()) return
+    try {
+        val root = org.json.JSONObject(geoJsonStr)
+        val features = root.optJSONArray("features") ?: return
+        for (i in 0 until features.length()) {
+            val feat = features.optJSONObject(i) ?: continue
+            val props = feat.optJSONObject("properties") ?: continue
+            val hexColor = props.optString("color", "")
+            val icon = props.optString("icon", "")
+            val isSelected = props.optBoolean("selected", false)
+            if (hexColor.isNotEmpty() && icon.isNotEmpty()) {
+                getOrCreateAndroidSquareBadge(style, hexColor, icon, isSelected)
+            }
+        }
+    } catch (e: Exception) {
+        // ignore parse errors
+    }
 }
 
 private fun textureToBitmap(texture: IdwHeatmapTexture): Bitmap {
