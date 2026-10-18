@@ -124,6 +124,10 @@ object MapOverlayGeoJson {
                                     put("lokalizacja", s.lokalizacja)
                                     put("tempPow", s.tempPow)
                                     put("color", hexColor)
+                                    put("icon", "🌡️")
+                                    put("selected", isSelected)
+                                    put("squareSize", if (isSelected) 32.0 else 24.0)
+                                    put("badgeImage", "badge_${hexColor.replace("#", "")}_🌡️_${if (isSelected) "sel" else "norm"}")
                                     put("radius", if (isSelected) 10.0 else 7.0)
                                     put("strokeWidth", if (isSelected) 3.0 else 2.0)
                                 }
@@ -170,6 +174,104 @@ object MapOverlayGeoJson {
                             }
                         },
                     )
+                }
+            }
+        return featureCollection.toString()
+    }
+
+    fun buildToaletyGeoJson(
+        toilets: List<dev.monand.opendata.api.model.ToaletaFeature>,
+        selectedToaletaId: String?,
+    ): String {
+        val featureCollection =
+            buildJsonObject {
+                put("type", "FeatureCollection")
+                putJsonArray("features") {
+                    for (t in toilets) {
+                        val lat = t.geometry.latitude ?: continue
+                        val lon = t.geometry.longitude ?: continue
+                        val isSelected = t.id == selectedToaletaId
+                        val type = t.properties.typ.orEmpty().lowercase()
+                        val hexColor = when {
+                            "metro" in type -> "#2A9D8F"
+                            "automatyczna" in type -> "#F4A261"
+                            "stacjonarna" in type -> "#264653"
+                            else -> "#8D99AE"
+                        }
+                        add(
+                            buildJsonObject {
+                                put("type", "Feature")
+                                putJsonObject("geometry") {
+                                    put("type", "Point")
+                                    put(
+                                        "coordinates",
+                                        buildJsonArray {
+                                            add(kotlinx.serialization.json.JsonPrimitive(lon))
+                                            add(kotlinx.serialization.json.JsonPrimitive(lat))
+                                        },
+                                    )
+                                }
+                                putJsonObject("properties") {
+                                    put("id", t.id)
+                                    put("lokalizacja", t.properties.lokalizacja.orEmpty())
+                                    put("dzielnica", t.properties.dzielnica.orEmpty())
+                                    put("typ", t.properties.typ.orEmpty())
+                                    put("color", hexColor)
+                                    put("icon", "🚻")
+                                    put("selected", isSelected)
+                                    put("squareSize", if (isSelected) 32.0 else 24.0)
+                                    put("badgeImage", "badge_${hexColor.replace("#", "")}_🚻_${if (isSelected) "sel" else "norm"}")
+                                    put("radius", if (isSelected) 10.0 else 6.5)
+                                    put("strokeWidth", if (isSelected) 3.0 else 1.5)
+                                }
+                            },
+                        )
+                    }
+                }
+            }
+        return featureCollection.toString()
+    }
+
+    fun buildMiejscaChloduGeoJson(
+        places: List<dev.monand.opendata.api.model.MiejsceChloduItem>,
+        selectedPlaceId: String?,
+    ): String {
+        val featureCollection =
+            buildJsonObject {
+                put("type", "FeatureCollection")
+                putJsonArray("features") {
+                    for (p in places) {
+                        val isSelected = p.id == selectedPlaceId
+                        val hexColor = "#00B4D8"
+                        add(
+                            buildJsonObject {
+                                put("type", "Feature")
+                                putJsonObject("geometry") {
+                                    put("type", "Point")
+                                    put(
+                                        "coordinates",
+                                        buildJsonArray {
+                                            add(kotlinx.serialization.json.JsonPrimitive(p.lon))
+                                            add(kotlinx.serialization.json.JsonPrimitive(p.lat))
+                                        },
+                                    )
+                                }
+                                putJsonObject("properties") {
+                                    put("id", p.id)
+                                    put("nazwa", p.nazwa)
+                                    put("adres", p.adres)
+                                    put("dzielnica", p.dzielnica)
+                                    put("color", hexColor)
+                                    put("icon", "❄️")
+                                    put("selected", isSelected)
+                                    put("squareSize", if (isSelected) 32.0 else 24.0)
+                                    put("badgeImage", "badge_${hexColor.replace("#", "")}_❄️_${if (isSelected) "sel" else "norm"}")
+                                    put("radius", if (isSelected) 11.0 else 7.5)
+                                    put("strokeWidth", if (isSelected) 3.0 else 2.0)
+                                }
+                            },
+                        )
+                    }
                 }
             }
         return featureCollection.toString()

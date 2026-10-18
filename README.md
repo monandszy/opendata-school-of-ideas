@@ -1,11 +1,10 @@
-# OpenData Warsaw
-
-Repository for working with **Warsaw Open Data** (`dane.um.warszawa.pl`).
-
+# Spacerownik Warszawski Prototype
 
 ![alt text](docs/chrome_AVRd8evvGo.png)
 
 ![alt text](docs/chrome_gwBwsBcoBR.png)
+
+Repository for working with **Warsaw Open Data** (`dane.um.warszawa.pl`).
 ---
 
 ## Submodules Linktree

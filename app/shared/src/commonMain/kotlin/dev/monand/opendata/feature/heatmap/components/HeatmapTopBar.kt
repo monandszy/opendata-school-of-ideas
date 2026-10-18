@@ -32,11 +32,15 @@ fun HeatmapTopBar(
     tileSource: MapTileSource,
     showHeatmap: Boolean,
     showStations: Boolean = true,
+    showToilets: Boolean = true,
+    showMiejscaChlodu: Boolean = true,
     filterOutliers: Boolean = false,
     is3dMode: Boolean,
     onSelectTileSource: (MapTileSource) -> Unit,
     onToggleHeatmap: () -> Unit,
     onToggleStationsVisibility: () -> Unit = {},
+    onToggleToiletsVisibility: () -> Unit = {},
+    onToggleMiejscaChloduVisibility: () -> Unit = {},
     onToggleFilterOutliers: () -> Unit = {},
     onToggle3dMode: () -> Unit,
     onRefreshStations: () -> Unit,
@@ -60,7 +64,7 @@ fun HeatmapTopBar(
             ) {
                 Column(modifier = Modifier.weight(1f).padding(end = 8.dp)) {
                     Text(
-                        text = "Warszawa – Temp. Powietrza (API)",
+                        text = "Warszawa – Temp. Powietrza, Toalety & Chłód",
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1,
@@ -106,6 +110,18 @@ fun HeatmapTopBar(
                         selectedContainerColor = MaterialTheme.colorScheme.primary,
                         selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
                     )
+                FilterChip(
+                    selected = showToilets,
+                    onClick = onToggleToiletsVisibility,
+                    label = { Text(if (showToilets) "🚻 Toalety: ON" else "🚻 Toalety: OFF") },
+                    colors = chipColors,
+                )
+                FilterChip(
+                    selected = showMiejscaChlodu,
+                    onClick = onToggleMiejscaChloduVisibility,
+                    label = { Text(if (showMiejscaChlodu) "❄️ Chłód: ON" else "❄️ Chłód: OFF") },
+                    colors = chipColors,
+                )
                 FilterChip(
                     selected = is3dMode,
                     onClick = onToggle3dMode,
