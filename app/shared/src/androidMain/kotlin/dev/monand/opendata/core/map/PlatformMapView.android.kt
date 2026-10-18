@@ -20,6 +20,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import dev.monand.opendata.api.model.MiejsceChloduItem
+import dev.monand.opendata.api.model.ToaletaFeature
 import dev.monand.opendata.data.model.LocationInspection
 import dev.monand.opendata.data.model.PogodaStation
 import dev.monand.opendata.feature.heatmap.HeatmapUiState
@@ -60,6 +62,10 @@ private const val IDW_LAYER_ID = "idw-heatmap-layer"
 private const val BUILDINGS_3D_LAYER_ID = "warsaw-3d-buildings-layer"
 private const val STATIONS_SOURCE_ID = "stations-source"
 private const val STATIONS_LAYER_ID = "stations-circle-layer"
+private const val TOILETS_SOURCE_ID = "toalety-source"
+private const val TOILETS_LAYER_ID = "toalety-circle-layer"
+private const val MIEJSCA_CHLODU_SOURCE_ID = "miejsca-chlodu-source"
+private const val MIEJSCA_CHLODU_LAYER_ID = "miejsca-chlodu-circle-layer"
 private const val INSPECTION_SOURCE_ID = "inspection-source"
 private const val INSPECTION_LAYER_ID = "inspection-circle-layer"
 
@@ -67,6 +73,10 @@ private const val INSPECTION_LAYER_ID = "inspection-circle-layer"
 actual fun PlatformMapView(
     stations: List<PogodaStation>,
     selectedStation: PogodaStation?,
+    toilets: List<ToaletaFeature>,
+    selectedToaleta: ToaletaFeature?,
+    miejscaChlodu: List<MiejsceChloduItem>,
+    selectedMiejsceChlodu: MiejsceChloduItem?,
     activeInspection: LocationInspection?,
     tileSource: MapTileSource,
     centerLat: Double,
@@ -77,11 +87,15 @@ actual fun PlatformMapView(
     is3dMode: Boolean,
     showHeatmap: Boolean,
     showStations: Boolean,
+    showToilets: Boolean,
+    showMiejscaChlodu: Boolean,
     minTemp: Double,
     maxTemp: Double,
     cameraCommandId: Int,
     onCameraMoved: (lat: Double, lon: Double, zoom: Double, pitch: Double, bearing: Double) -> Unit,
     onSelectStation: (PogodaStation?) -> Unit,
+    onSelectToaleta: (ToaletaFeature?) -> Unit,
+    onSelectMiejsceChlodu: (MiejsceChloduItem?) -> Unit,
     onMapClicked: (lat: Double, lon: Double) -> Unit,
     modifier: Modifier,
     overlays: @Composable BoxScope.() -> Unit,
@@ -94,7 +108,11 @@ actual fun PlatformMapView(
     }
 
     val currentStations by rememberUpdatedState(stations)
+    val currentToilets by rememberUpdatedState(toilets)
+    val currentMiejscaChlodu by rememberUpdatedState(miejscaChlodu)
     val currentOnSelectStation by rememberUpdatedState(onSelectStation)
+    val currentOnSelectToaleta by rememberUpdatedState(onSelectToaleta)
+    val currentOnSelectMiejsceChlodu by rememberUpdatedState(onSelectMiejsceChlodu)
     val currentOnMapClicked by rememberUpdatedState(onMapClicked)
     val currentOnCameraMoved by rememberUpdatedState(onCameraMoved)
 
@@ -120,6 +138,16 @@ actual fun PlatformMapView(
             MapOverlayGeoJson.buildStationsGeoJson(stations, selectedStation, minTemp, maxTemp)
         }
 
+    val toaletyGeoJson =
+        remember(toilets, selectedToaleta) {
+            MapOverlayGeoJson.buildToaletyGeoJson(toilets, selectedToaleta?.id)
+        }
+
+    val miejscaChloduGeoJson =
+        remember(miejscaChlodu, selectedMiejsceChlodu) {
+            MapOverlayGeoJson.buildMiejscaChloduGeoJson(miejscaChlodu, selectedMiejsceChlodu?.id)
+        }
+
     val inspectionGeoJson =
         remember(activeInspection, minTemp, maxTemp) {
             MapOverlayGeoJson.buildInspectionGeoJson(activeInspection, minTemp, maxTemp)
@@ -134,12 +162,13 @@ actual fun PlatformMapView(
                     style = style,
                     idwBitmap = idwBitmap,
                     stationsGeoJson = stationsGeoJson,
+                    toaletyGeoJson = toaletyGeoJson,
+                    miejscaChloduGeoJson = miejscaChloduGeoJson,
                     inspectionGeoJson = inspectionGeoJson,
-                    stations = stations,
-                    minTemp = minTemp,
-                    maxTemp = maxTemp,
                     showHeatmap = showHeatmap,
                     showStations = showStations,
+                    showToilets = showToilets,
+                    showMiejscaChlodu = showMiejscaChlodu,
                     is3dMode = is3dMode,
                 )
                 styleReadyCounter++
@@ -147,19 +176,23 @@ actual fun PlatformMapView(
         }
     }
 
-    LaunchedEffect(styleReadyCounter, idwBitmap, stationsGeoJson, inspectionGeoJson, showHeatmap, showStations, is3dMode) {
+    LaunchedEffect(
+        styleReadyCounter, idwBitmap, stationsGeoJson, toaletyGeoJson, miejscaChloduGeoJson,
+        inspectionGeoJson, showHeatmap, showStations, showToilets, showMiejscaChlodu, is3dMode
+    ) {
         val style = mapInstance?.style ?: return@LaunchedEffect
         if (!style.isFullyLoaded) return@LaunchedEffect
         updateOverlayLayers(
             style = style,
             idwBitmap = idwBitmap,
             stationsGeoJson = stationsGeoJson,
+            toaletyGeoJson = toaletyGeoJson,
+            miejscaChloduGeoJson = miejscaChloduGeoJson,
             inspectionGeoJson = inspectionGeoJson,
-            stations = stations,
-            minTemp = minTemp,
-            maxTemp = maxTemp,
             showHeatmap = showHeatmap,
             showStations = showStations,
+            showToilets = showToilets,
+            showMiejscaChlodu = showMiejscaChlodu,
             is3dMode = is3dMode,
         )
     }
@@ -235,21 +268,32 @@ actual fun PlatformMapView(
                                     screenPoint.x + 24f,
                                     screenPoint.y + 24f,
                                 )
-                            val features = map.queryRenderedFeatures(hitRect, STATIONS_LAYER_ID)
-                            val clickedName =
-                                features
-                                    .firstOrNull()
-                                    ?.getStringProperty("lokalizacja")
-                            val matched =
-                                if (clickedName != null) {
-                                    currentStations.find { it.lokalizacja == clickedName }
-                                } else {
-                                    null
+
+                            val stationFeatures = map.queryRenderedFeatures(hitRect, STATIONS_LAYER_ID)
+                            val clickedStationName = stationFeatures.firstOrNull()?.getStringProperty("lokalizacja")
+
+                            val toiletFeatures = map.queryRenderedFeatures(hitRect, TOILETS_LAYER_ID)
+                            val clickedToiletId = toiletFeatures.firstOrNull()?.getStringProperty("id")
+
+                            val coolingFeatures = map.queryRenderedFeatures(hitRect, MIEJSCA_CHLODU_LAYER_ID)
+                            val clickedCoolingId = coolingFeatures.firstOrNull()?.getStringProperty("id")
+
+                            when {
+                                clickedStationName != null -> {
+                                    val matched = currentStations.find { it.lokalizacja == clickedStationName }
+                                    currentOnSelectStation(matched)
                                 }
-                            if (matched != null) {
-                                currentOnSelectStation(matched)
-                            } else {
-                                currentOnMapClicked(latLng.latitude, latLng.longitude)
+                                clickedToiletId != null -> {
+                                    val matched = currentToilets.find { it.id == clickedToiletId }
+                                    currentOnSelectToaleta(matched)
+                                }
+                                clickedCoolingId != null -> {
+                                    val matched = currentMiejscaChlodu.find { it.id == clickedCoolingId }
+                                    currentOnSelectMiejsceChlodu(matched)
+                                }
+                                else -> {
+                                    currentOnMapClicked(latLng.latitude, latLng.longitude)
+                                }
                             }
                             true
                         }
@@ -269,12 +313,13 @@ private fun setupOverlayLayers(
     style: Style,
     idwBitmap: Bitmap,
     stationsGeoJson: String,
+    toaletyGeoJson: String,
+    miejscaChloduGeoJson: String,
     inspectionGeoJson: String,
-    stations: List<PogodaStation>,
-    minTemp: Double,
-    maxTemp: Double,
     showHeatmap: Boolean,
     showStations: Boolean,
+    showToilets: Boolean,
+    showMiejscaChlodu: Boolean,
     is3dMode: Boolean,
 ) {
     val quad =
@@ -339,6 +384,42 @@ private fun setupOverlayLayers(
         style.addLayer(circleLayer)
     }
 
+    if (style.getSource(TOILETS_SOURCE_ID) == null) {
+        style.addSource(GeoJsonSource(TOILETS_SOURCE_ID, toaletyGeoJson))
+    }
+
+    if (style.getLayer(TOILETS_LAYER_ID) == null) {
+        val circleLayer =
+            CircleLayer(TOILETS_LAYER_ID, TOILETS_SOURCE_ID)
+                .withProperties(
+                    circleColor(toColor(get("color"))),
+                    circleRadius(toNumber(get("radius"))),
+                    circleStrokeColor(Color.WHITE),
+                    circleStrokeWidth(toNumber(get("strokeWidth"))),
+                    circlePitchAlignment(Property.CIRCLE_PITCH_ALIGNMENT_MAP),
+                    visibility(if (showToilets) Property.VISIBLE else Property.NONE),
+                )
+        style.addLayer(circleLayer)
+    }
+
+    if (style.getSource(MIEJSCA_CHLODU_SOURCE_ID) == null) {
+        style.addSource(GeoJsonSource(MIEJSCA_CHLODU_SOURCE_ID, miejscaChloduGeoJson))
+    }
+
+    if (style.getLayer(MIEJSCA_CHLODU_LAYER_ID) == null) {
+        val circleLayer =
+            CircleLayer(MIEJSCA_CHLODU_LAYER_ID, MIEJSCA_CHLODU_SOURCE_ID)
+                .withProperties(
+                    circleColor(toColor(get("color"))),
+                    circleRadius(toNumber(get("radius"))),
+                    circleStrokeColor(Color.WHITE),
+                    circleStrokeWidth(toNumber(get("strokeWidth"))),
+                    circlePitchAlignment(Property.CIRCLE_PITCH_ALIGNMENT_MAP),
+                    visibility(if (showMiejscaChlodu) Property.VISIBLE else Property.NONE),
+                )
+        style.addLayer(circleLayer)
+    }
+
     if (style.getSource(INSPECTION_SOURCE_ID) == null) {
         style.addSource(GeoJsonSource(INSPECTION_SOURCE_ID, inspectionGeoJson))
     }
@@ -361,12 +442,13 @@ private fun updateOverlayLayers(
     style: Style,
     idwBitmap: Bitmap,
     stationsGeoJson: String,
+    toaletyGeoJson: String,
+    miejscaChloduGeoJson: String,
     inspectionGeoJson: String,
-    stations: List<PogodaStation>,
-    minTemp: Double,
-    maxTemp: Double,
     showHeatmap: Boolean,
     showStations: Boolean,
+    showToilets: Boolean,
+    showMiejscaChlodu: Boolean,
     is3dMode: Boolean,
 ) {
     (style.getSourceAs<ImageSource>(IDW_SOURCE_ID))?.setImage(idwBitmap)
@@ -391,6 +473,16 @@ private fun updateOverlayLayers(
     (style.getSourceAs<GeoJsonSource>(STATIONS_SOURCE_ID))?.setGeoJson(stationsGeoJson)
     style.getLayer(STATIONS_LAYER_ID)?.setProperties(
         visibility(if (showStations) Property.VISIBLE else Property.NONE),
+    )
+
+    (style.getSourceAs<GeoJsonSource>(TOILETS_SOURCE_ID))?.setGeoJson(toaletyGeoJson)
+    style.getLayer(TOILETS_LAYER_ID)?.setProperties(
+        visibility(if (showToilets) Property.VISIBLE else Property.NONE),
+    )
+
+    (style.getSourceAs<GeoJsonSource>(MIEJSCA_CHLODU_SOURCE_ID))?.setGeoJson(miejscaChloduGeoJson)
+    style.getLayer(MIEJSCA_CHLODU_LAYER_ID)?.setProperties(
+        visibility(if (showMiejscaChlodu) Property.VISIBLE else Property.NONE),
     )
 
     (style.getSourceAs<GeoJsonSource>(INSPECTION_SOURCE_ID))?.setGeoJson(inspectionGeoJson)

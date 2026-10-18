@@ -51,9 +51,13 @@
                 heatmapCoords: null,
                 showHeatmap: true,
                 showStations: true,
+                showToilets: true,
+                showMiejscaChlodu: true,
                 is3dMode: false,
                 stationsGeoJsonStr: null,
                 inspectionGeoJsonStr: null,
+                toaletyGeoJsonStr: null,
+                miejscaChloduGeoJsonStr: null,
                 buildingColorExprJsonStr: null,
                 offCanvas: null,
                 offCanvasCtx: null
@@ -210,6 +214,88 @@
                     }
                 }
 
+                if (state.toaletyGeoJsonStr) {
+                    try {
+                        const geojson = JSON.parse(state.toaletyGeoJsonStr);
+                        const existingToalety = map.getSource('toalety-source');
+                        if (existingToalety) {
+                            existingToalety.setData(geojson);
+                        } else {
+                            map.addSource('toalety-source', {
+                                type: 'geojson',
+                                data: geojson
+                            });
+                        }
+
+                        if (!map.getLayer('toalety-circle-layer')) {
+                            map.addLayer({
+                                id: 'toalety-circle-layer',
+                                type: 'circle',
+                                source: 'toalety-source',
+                                paint: {
+                                    'circle-color': ['get', 'color'],
+                                    'circle-radius': ['get', 'radius'],
+                                    'circle-stroke-color': '#ffffff',
+                                    'circle-stroke-width': ['get', 'strokeWidth'],
+                                    'circle-pitch-alignment': 'map'
+                                },
+                                layout: {
+                                    visibility: state.showToilets ? 'visible' : 'none'
+                                }
+                            });
+                        } else {
+                            map.setLayoutProperty(
+                                'toalety-circle-layer',
+                                'visibility',
+                                state.showToilets ? 'visible' : 'none'
+                            );
+                        }
+                    } catch (e) {
+                        console.error('Failed to parse toalety GeoJSON', e);
+                    }
+                }
+
+                if (state.miejscaChloduGeoJsonStr) {
+                    try {
+                        const geojson = JSON.parse(state.miejscaChloduGeoJsonStr);
+                        const existingMiejsca = map.getSource('miejsca-chlodu-source');
+                        if (existingMiejsca) {
+                            existingMiejsca.setData(geojson);
+                        } else {
+                            map.addSource('miejsca-chlodu-source', {
+                                type: 'geojson',
+                                data: geojson
+                            });
+                        }
+
+                        if (!map.getLayer('miejsca-chlodu-circle-layer')) {
+                            map.addLayer({
+                                id: 'miejsca-chlodu-circle-layer',
+                                type: 'circle',
+                                source: 'miejsca-chlodu-source',
+                                paint: {
+                                    'circle-color': ['get', 'color'],
+                                    'circle-radius': ['get', 'radius'],
+                                    'circle-stroke-color': '#ffffff',
+                                    'circle-stroke-width': ['get', 'strokeWidth'],
+                                    'circle-pitch-alignment': 'map'
+                                },
+                                layout: {
+                                    visibility: state.showMiejscaChlodu ? 'visible' : 'none'
+                                }
+                            });
+                        } else {
+                            map.setLayoutProperty(
+                                'miejsca-chlodu-circle-layer',
+                                'visibility',
+                                state.showMiejscaChlodu ? 'visible' : 'none'
+                            );
+                        }
+                    } catch (e) {
+                        console.error('Failed to parse miejsca chlodu GeoJSON', e);
+                    }
+                }
+
                 if (state.inspectionGeoJsonStr) {
                     try {
                         const geojson = JSON.parse(state.inspectionGeoJsonStr);
@@ -304,15 +390,23 @@
                     east,
                     showHeatmap,
                     showStations,
+                    showToilets,
+                    showMiejscaChlodu,
                     is3dMode,
                     stationsGeoJsonStr,
-                    inspectionGeoJsonStr
+                    inspectionGeoJsonStr,
+                    toaletyGeoJsonStr,
+                    miejscaChloduGeoJsonStr
                 ) {
                     state.showHeatmap = showHeatmap;
                     state.showStations = showStations;
+                    state.showToilets = showToilets;
+                    state.showMiejscaChlodu = showMiejscaChlodu;
                     state.is3dMode = is3dMode;
                     state.stationsGeoJsonStr = stationsGeoJsonStr;
                     state.inspectionGeoJsonStr = inspectionGeoJsonStr;
+                    state.toaletyGeoJsonStr = toaletyGeoJsonStr;
+                    state.miejscaChloduGeoJsonStr = miejscaChloduGeoJsonStr;
 
                     if (base64Rgba && width > 0 && height > 0) {
                         if (!state.offCanvas) {
@@ -412,6 +506,34 @@
                     const features = map.queryRenderedFeatures(bbox, { layers: ['stations-circle-layer'] });
                     if (features && features.length > 0 && features[0].properties) {
                         return features[0].properties.lokalizacja || '';
+                    }
+                    return '';
+                },
+
+                queryToaletaAt: function(xPhysical, yPhysical) {
+                    const map = state.map;
+                    if (!map || !state.styleLoaded || !map.getLayer('toalety-circle-layer')) return '';
+                    const dpr = window.devicePixelRatio || 1;
+                    const x = xPhysical / dpr;
+                    const y = yPhysical / dpr;
+                    const bbox = [[x - 14, y - 14], [x + 14, y + 14]];
+                    const features = map.queryRenderedFeatures(bbox, { layers: ['toalety-circle-layer'] });
+                    if (features && features.length > 0 && features[0].properties) {
+                        return features[0].properties.id != null ? String(features[0].properties.id) : '';
+                    }
+                    return '';
+                },
+
+                queryMiejsceChloduAt: function(xPhysical, yPhysical) {
+                    const map = state.map;
+                    if (!map || !state.styleLoaded || !map.getLayer('miejsca-chlodu-circle-layer')) return '';
+                    const dpr = window.devicePixelRatio || 1;
+                    const x = xPhysical / dpr;
+                    const y = yPhysical / dpr;
+                    const bbox = [[x - 14, y - 14], [x + 14, y + 14]];
+                    const features = map.queryRenderedFeatures(bbox, { layers: ['miejsca-chlodu-circle-layer'] });
+                    if (features && features.length > 0 && features[0].properties) {
+                        return features[0].properties.id != null ? String(features[0].properties.id) : '';
                     }
                     return '';
                 }

@@ -235,6 +235,139 @@ fun MapAttributionBadge(
 }
 
 @Composable
+fun ToaletaDetailCard(
+    toaleta: dev.monand.opendata.api.model.ToaletaFeature,
+    onClose: (() -> Unit)? = null,
+    modifier: Modifier = Modifier,
+) {
+    val props = toaleta.properties
+    MapOverlayCard(
+        title = props.lokalizacja ?: "Toaleta publiczna",
+        onClose = onClose,
+        modifier = modifier,
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Surface(
+                shape = RoundedCornerShape(4.dp),
+                color = if (props.isFree) Color(0xFF2A9D8F) else Color(0xFFE76F51),
+            ) {
+                Text(
+                    text = if (props.isFree) "Bezpłatna" else "Płatna",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.White,
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                )
+            }
+            props.typ?.let { typ ->
+                Surface(
+                    shape = RoundedCornerShape(4.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                ) {
+                    Text(
+                        text = typ,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                    )
+                }
+            }
+        }
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            if (props.isAccessible) {
+                Text(
+                    text = "♿ Dostępna dla wózków",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+            }
+            if (props.hasBabyChangingTable) {
+                Text(
+                    text = "👶 Przewijak",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+            }
+        }
+
+        props.godziny?.takeIf { it.isNotBlank() }?.let { hours ->
+            Text(
+                text = "Godziny otwarcia:\n$hours",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+
+        props.zarzadca?.takeIf { it.isNotBlank() }?.let { zarzadca ->
+            Text(
+                text = "Zarządca: $zarzadca",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+
+        props.uwagi?.takeIf { it.isNotBlank() }?.let { uwagi ->
+            Text(
+                text = "Uwagi: $uwagi",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+@Composable
+fun MiejsceChloduDetailCard(
+    place: dev.monand.opendata.api.model.MiejsceChloduItem,
+    onClose: (() -> Unit)? = null,
+    modifier: Modifier = Modifier,
+) {
+    MapOverlayCard(
+        title = place.nazwa,
+        onClose = onClose,
+        modifier = modifier,
+    ) {
+        Surface(
+            shape = RoundedCornerShape(4.dp),
+            color = Color(0xFF00B4D8),
+        ) {
+            Text(
+                text = "❄️ Miejsce Chłodu • ${place.dzielnica}",
+                style = MaterialTheme.typography.labelSmall,
+                color = Color.White,
+                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+            )
+        }
+
+        Text(
+            text = "Adres: ${place.adres}",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+
+        place.uwagiAdres?.takeIf { it.isNotBlank() }?.let { uwagi ->
+            Text(
+                text = "Lokalizacja: $uwagi",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+
+        Text(
+            text = "Godziny otwarcia:\n${place.godzinyOtwarcia}",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
+@Composable
 fun LocationInspectionCard(
     inspection: LocationInspection,
     minTemp: Double,

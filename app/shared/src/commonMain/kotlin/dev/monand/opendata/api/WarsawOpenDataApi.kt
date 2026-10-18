@@ -3,6 +3,7 @@ package dev.monand.opendata.api
 import dev.monand.opendata.BuildEnv
 import dev.monand.opendata.api.model.MonitoringJakosciPowietrzaItem
 import dev.monand.opendata.api.model.PogodaItem
+import dev.monand.opendata.api.model.ToaletaFeature
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.header
@@ -15,6 +16,8 @@ interface WarsawOpenDataApi {
     suspend fun getPogoda(): List<PogodaItem>
 
     suspend fun getMonitoringJakosciPowietrza(): List<MonitoringJakosciPowietrzaItem>
+
+    suspend fun getToalety(): List<ToaletaFeature>
 }
 
 class KtorWarsawOpenDataApi(
@@ -26,6 +29,8 @@ class KtorWarsawOpenDataApi(
     override suspend fun getPogoda(): List<PogodaItem> = postAction(POGODA_PATH)
 
     override suspend fun getMonitoringJakosciPowietrza(): List<MonitoringJakosciPowietrzaItem> = postAction(AIR_QUALITY_PATH)
+
+    override suspend fun getToalety(): List<ToaletaFeature> = postAction(TOALETY_PATH)
 
     private suspend inline fun <reified T> postAction(path: String): T {
         val primaryResult =
@@ -56,5 +61,6 @@ class KtorWarsawOpenDataApi(
         const val DEFAULT_PROXY_URL = "/warsaw-api"
         const val POGODA_PATH = "/api/action/get_zom_pogoda"
         const val AIR_QUALITY_PATH = "/api/action/get_bopipk_monitoring_jakosci_powietrza"
+        const val TOALETY_PATH = "/api/action/get_m_toalety"
     }
 }

@@ -1,5 +1,8 @@
 package dev.monand.opendata.feature.heatmap
 
+import dev.monand.opendata.api.model.MiejsceChloduItem
+import dev.monand.opendata.api.model.MiejsceChloduSeed
+import dev.monand.opendata.api.model.ToaletaFeature
 import dev.monand.opendata.core.map.MapTileSource
 import dev.monand.opendata.data.model.LocationInspection
 import dev.monand.opendata.data.model.PogodaStation
@@ -20,8 +23,14 @@ data class HeatmapUiState(
     val cameraCommandId: Int = 0,
     val showHeatmap: Boolean = true,
     val showStations: Boolean = true,
+    val showToilets: Boolean = true,
+    val showMiejscaChlodu: Boolean = true,
+    val toilets: List<ToaletaFeature> = emptyList(),
+    val miejscaChlodu: List<MiejsceChloduItem> = MiejsceChloduSeed.items,
     val tileSource: MapTileSource = MapTileSource.OpenFreeMap3D,
     val selectedStation: PogodaStation? = null,
+    val selectedToaleta: ToaletaFeature? = null,
+    val selectedMiejsceChlodu: MiejsceChloduItem? = null,
     val activeInspection: LocationInspection? = null,
 ) {
     val stations: List<PogodaStation>

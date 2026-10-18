@@ -2,6 +2,10 @@ package dev.monand.opendata.feature.heatmap
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.monand.opendata.api.KtorWarsawOpenDataApi
+import dev.monand.opendata.api.WarsawOpenDataApi
+import dev.monand.opendata.api.model.MiejsceChloduItem
+import dev.monand.opendata.api.model.ToaletaFeature
 import dev.monand.opendata.core.geo.IdwInterpolator
 import dev.monand.opendata.core.map.MapTileSource
 import dev.monand.opendata.data.model.LocationInspection
@@ -16,12 +20,14 @@ import kotlinx.coroutines.launch
 
 class HeatmapViewModel(
     private val repository: PogodaRepository = DefaultPogodaRepository(),
+    private val warsawApi: WarsawOpenDataApi = KtorWarsawOpenDataApi(),
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HeatmapUiState())
     val uiState: StateFlow<HeatmapUiState> = _uiState.asStateFlow()
 
     init {
         refreshStations()
+        fetchToilets()
     }
 
     fun refreshStations() {
@@ -53,6 +59,18 @@ class HeatmapViewModel(
                         )
                     }
                 }
+        }
+    }
+
+    fun fetchToilets() {
+        viewModelScope.launch {
+            runCatching {
+                warsawApi.getToalety()
+            }.onSuccess { fetchedToilets ->
+                _uiState.update { current ->
+                    current.copy(toilets = fetchedToilets)
+                }
+            }
         }
     }
 
@@ -142,6 +160,18 @@ class HeatmapViewModel(
         }
     }
 
+    fun onToggleToiletsVisibility() {
+        _uiState.update { current ->
+            current.copy(showToilets = !current.showToilets)
+        }
+    }
+
+    fun onToggleMiejscaChloduVisibility() {
+        _uiState.update { current ->
+            current.copy(showMiejscaChlodu = !current.showMiejscaChlodu)
+        }
+    }
+
     fun onSelectTileSource(source: MapTileSource) {
         _uiState.update { current ->
             current.copy(tileSource = source)
@@ -152,7 +182,31 @@ class HeatmapViewModel(
         _uiState.update { current ->
             current.copy(
                 selectedStation = station,
+                selectedToaleta = if (station != null) null else current.selectedToaleta,
+                selectedMiejsceChlodu = if (station != null) null else current.selectedMiejsceChlodu,
                 activeInspection = if (station != null) null else current.activeInspection,
+            )
+        }
+    }
+
+    fun onSelectToaleta(toaleta: ToaletaFeature?) {
+        _uiState.update { current ->
+            current.copy(
+                selectedToaleta = toaleta,
+                selectedStation = if (toaleta != null) null else current.selectedStation,
+                selectedMiejsceChlodu = if (toaleta != null) null else current.selectedMiejsceChlodu,
+                activeInspection = if (toaleta != null) null else current.activeInspection,
+            )
+        }
+    }
+
+    fun onSelectMiejsceChlodu(place: MiejsceChloduItem?) {
+        _uiState.update { current ->
+            current.copy(
+                selectedMiejsceChlodu = place,
+                selectedStation = if (place != null) null else current.selectedStation,
+                selectedToaleta = if (place != null) null else current.selectedToaleta,
+                activeInspection = if (place != null) null else current.activeInspection,
             )
         }
     }
@@ -177,6 +231,8 @@ class HeatmapViewModel(
             current.copy(
                 activeInspection = inspection,
                 selectedStation = null,
+                selectedToaleta = null,
+                selectedMiejsceChlodu = null,
             )
         }
     }

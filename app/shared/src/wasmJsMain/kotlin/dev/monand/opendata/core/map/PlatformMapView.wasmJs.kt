@@ -34,6 +34,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.unit.dp
+import dev.monand.opendata.api.model.MiejsceChloduItem
+import dev.monand.opendata.api.model.ToaletaFeature
 import dev.monand.opendata.data.model.LocationInspection
 import dev.monand.opendata.data.model.PogodaStation
 import kotlin.io.encoding.Base64
@@ -69,10 +71,10 @@ private external fun jsEnsureMap(
 )
 
 @JsFun(
-    """(base64Rgba, width, height, north, south, west, east, showHeatmap, showStations, is3dMode, stationsGeoJsonStr, inspectionGeoJsonStr) => {
+    """(base64Rgba, width, height, north, south, west, east, showHeatmap, showStations, showToilets, showMiejscaChlodu, is3dMode, stationsGeoJsonStr, inspectionGeoJsonStr, toaletyGeoJsonStr, miejscaChloduGeoJsonStr) => {
         if (window.warsawMapBridge) {
             window.warsawMapBridge.updateOverlays(
-                base64Rgba, width, height, north, south, west, east, showHeatmap, showStations, is3dMode, stationsGeoJsonStr, inspectionGeoJsonStr
+                base64Rgba, width, height, north, south, west, east, showHeatmap, showStations, showToilets, showMiejscaChlodu, is3dMode, stationsGeoJsonStr, inspectionGeoJsonStr, toaletyGeoJsonStr, miejscaChloduGeoJsonStr
             );
         }
     }""",
@@ -87,9 +89,13 @@ private external fun jsUpdateOverlays(
     east: Double,
     showHeatmap: Boolean,
     showStations: Boolean,
+    showToilets: Boolean,
+    showMiejscaChlodu: Boolean,
     is3dMode: Boolean,
     stationsGeoJsonStr: String,
     inspectionGeoJsonStr: String,
+    toaletyGeoJsonStr: String,
+    miejscaChloduGeoJsonStr: String,
 )
 
 @JsFun(
@@ -152,6 +158,26 @@ private external fun jsQueryStationAt(
 
 @JsFun(
     """(xPhysical, yPhysical) => {
+        return window.warsawMapBridge ? window.warsawMapBridge.queryToaletaAt(xPhysical, yPhysical) : '';
+    }""",
+)
+private external fun jsQueryToaletaAt(
+    xPhysical: Double,
+    yPhysical: Double,
+): String
+
+@JsFun(
+    """(xPhysical, yPhysical) => {
+        return window.warsawMapBridge ? window.warsawMapBridge.queryMiejsceChloduAt(xPhysical, yPhysical) : '';
+    }""",
+)
+private external fun jsQueryMiejsceChloduAt(
+    xPhysical: Double,
+    yPhysical: Double,
+): String
+
+@JsFun(
+    """(xPhysical, yPhysical) => {
         return window.warsawMapBridge ? window.warsawMapBridge.unproject(xPhysical, yPhysical) : '';
     }""",
 )
@@ -164,6 +190,10 @@ private external fun jsUnproject(
 actual fun PlatformMapView(
     stations: List<PogodaStation>,
     selectedStation: PogodaStation?,
+    toilets: List<ToaletaFeature>,
+    selectedToaleta: ToaletaFeature?,
+    miejscaChlodu: List<MiejsceChloduItem>,
+    selectedMiejsceChlodu: MiejsceChloduItem?,
     activeInspection: LocationInspection?,
     tileSource: MapTileSource,
     centerLat: Double,
@@ -174,18 +204,26 @@ actual fun PlatformMapView(
     is3dMode: Boolean,
     showHeatmap: Boolean,
     showStations: Boolean,
+    showToilets: Boolean,
+    showMiejscaChlodu: Boolean,
     minTemp: Double,
     maxTemp: Double,
     cameraCommandId: Int,
     onCameraMoved: (lat: Double, lon: Double, zoom: Double, pitch: Double, bearing: Double) -> Unit,
     onSelectStation: (PogodaStation?) -> Unit,
+    onSelectToaleta: (ToaletaFeature?) -> Unit,
+    onSelectMiejsceChlodu: (MiejsceChloduItem?) -> Unit,
     onMapClicked: (lat: Double, lon: Double) -> Unit,
     modifier: Modifier,
     overlays: @Composable BoxScope.() -> Unit,
 ) {
     val currentStations by rememberUpdatedState(stations)
+    val currentToilets by rememberUpdatedState(toilets)
+    val currentMiejscaChlodu by rememberUpdatedState(miejscaChlodu)
     val currentOnCameraMoved by rememberUpdatedState(onCameraMoved)
     val currentOnSelectStation by rememberUpdatedState(onSelectStation)
+    val currentOnSelectToaleta by rememberUpdatedState(onSelectToaleta)
+    val currentOnSelectMiejsceChlodu by rememberUpdatedState(onSelectMiejsceChlodu)
     val currentOnMapClicked by rememberUpdatedState(onMapClicked)
 
     var lastAppliedCommandId by remember { mutableIntStateOf(cameraCommandId) }
@@ -212,6 +250,20 @@ actual fun PlatformMapView(
                 maxTemp = maxTemp,
             )
         }
+    val toaletyGeoJson =
+        remember(toilets, selectedToaleta) {
+            MapOverlayGeoJson.buildToaletyGeoJson(
+                toilets = toilets,
+                selectedToaletaId = selectedToaleta?.id,
+            )
+        }
+    val miejscaChloduGeoJson =
+        remember(miejscaChlodu, selectedMiejsceChlodu) {
+            MapOverlayGeoJson.buildMiejscaChloduGeoJson(
+                places = miejscaChlodu,
+                selectedPlaceId = selectedMiejsceChlodu?.id,
+            )
+        }
     val inspectionGeoJson =
         remember(activeInspection, minTemp, maxTemp) {
             MapOverlayGeoJson.buildInspectionGeoJson(
@@ -232,13 +284,17 @@ actual fun PlatformMapView(
             east = idwTexture.eastLon,
             showHeatmap = showHeatmap,
             showStations = showStations,
+            showToilets = showToilets,
+            showMiejscaChlodu = showMiejscaChlodu,
             is3dMode = is3dMode,
             stationsGeoJsonStr = stationsGeoJson,
             inspectionGeoJsonStr = inspectionGeoJson,
+            toaletyGeoJsonStr = toaletyGeoJson,
+            miejscaChloduGeoJsonStr = miejscaChloduGeoJson,
         )
     }
 
-    LaunchedEffect(base64Texture, showHeatmap, showStations, is3dMode, stationsGeoJson, inspectionGeoJson) {
+    LaunchedEffect(base64Texture, showHeatmap, showStations, showToilets, showMiejscaChlodu, is3dMode, stationsGeoJson, inspectionGeoJson, toaletyGeoJson, miejscaChloduGeoJson) {
         jsUpdateOverlays(
             base64Rgba = base64Texture,
             width = idwTexture.width,
@@ -249,9 +305,13 @@ actual fun PlatformMapView(
             east = idwTexture.eastLon,
             showHeatmap = showHeatmap,
             showStations = showStations,
+            showToilets = showToilets,
+            showMiejscaChlodu = showMiejscaChlodu,
             is3dMode = is3dMode,
             stationsGeoJsonStr = stationsGeoJson,
             inspectionGeoJsonStr = inspectionGeoJson,
+            toaletyGeoJsonStr = toaletyGeoJson,
+            miejscaChloduGeoJsonStr = miejscaChloduGeoJson,
         )
     }
 
@@ -329,12 +389,23 @@ actual fun PlatformMapView(
                                         isDragging = false
                                         val totalDist = (change.position - downPos).getDistance()
                                         if (totalDist < 6f && !isOrbitDrag) {
-                                            val stationName = jsQueryStationAt(change.position.x.toDouble(), change.position.y.toDouble())
+                                            val posX = change.position.x.toDouble()
+                                            val posY = change.position.y.toDouble()
+                                            val stationName = jsQueryStationAt(posX, posY)
+                                            val toiletIdStr = jsQueryToaletaAt(posX, posY)
+                                            val coolingIdStr = jsQueryMiejsceChloduAt(posX, posY)
+
                                             if (stationName.isNotEmpty()) {
                                                 val tapped = currentStations.find { it.lokalizacja == stationName }
                                                 currentOnSelectStation(tapped)
+                                            } else if (toiletIdStr.isNotEmpty()) {
+                                                val tapped = currentToilets.find { it.id == toiletIdStr }
+                                                currentOnSelectToaleta(tapped)
+                                            } else if (coolingIdStr.isNotEmpty()) {
+                                                val tapped = currentMiejscaChlodu.find { it.id == coolingIdStr }
+                                                currentOnSelectMiejsceChlodu(tapped)
                                             } else {
-                                                val unprojected = jsUnproject(change.position.x.toDouble(), change.position.y.toDouble())
+                                                val unprojected = jsUnproject(posX, posY)
                                                 if (unprojected.isNotEmpty()) {
                                                     val parts = unprojected.split(',')
                                                     if (parts.size == 2) {
