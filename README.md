@@ -1,4 +1,6 @@
-# Spacerownik Warszawski Prototype by School Of Ideas
+# Spacerownik Warszawski Prototype
+
+by School of Ideas Team
 
 Sprawdź temperaturę w dowolnym miejscu w Warszawie. Na podstawie danych z sieci sensorów IoT Warszawy
 
