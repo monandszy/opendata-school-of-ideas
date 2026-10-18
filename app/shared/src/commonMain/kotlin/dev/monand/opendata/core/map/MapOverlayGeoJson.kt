@@ -124,6 +124,7 @@ object MapOverlayGeoJson {
                                     put("lokalizacja", s.lokalizacja)
                                     put("tempPow", s.tempPow)
                                     put("color", hexColor)
+                                    put("icon", "🌡️")
                                     put("radius", if (isSelected) 10.0 else 7.0)
                                     put("strokeWidth", if (isSelected) 3.0 else 2.0)
                                 }
@@ -213,6 +214,7 @@ object MapOverlayGeoJson {
                                     put("dzielnica", t.properties.dzielnica.orEmpty())
                                     put("typ", t.properties.typ.orEmpty())
                                     put("color", hexColor)
+                                    put("icon", "🚻")
                                     put("radius", if (isSelected) 10.0 else 6.5)
                                     put("strokeWidth", if (isSelected) 3.0 else 1.5)
                                 }
@@ -254,6 +256,7 @@ object MapOverlayGeoJson {
                                     put("adres", p.adres)
                                     put("dzielnica", p.dzielnica)
                                     put("color", hexColor)
+                                    put("icon", "❄️")
                                     put("radius", if (isSelected) 11.0 else 7.5)
                                     put("strokeWidth", if (isSelected) 3.0 else 2.0)
                                 }

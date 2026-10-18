@@ -53,7 +53,13 @@ import org.maplibre.android.style.layers.PropertyFactory.fillExtrusionHeight
 import org.maplibre.android.style.layers.PropertyFactory.fillExtrusionOpacity
 import org.maplibre.android.style.layers.PropertyFactory.rasterOpacity
 import org.maplibre.android.style.layers.PropertyFactory.rasterResampling
+import org.maplibre.android.style.layers.PropertyFactory.textAllowOverlap
+import org.maplibre.android.style.layers.PropertyFactory.textField
+import org.maplibre.android.style.layers.PropertyFactory.textIgnorePlacement
+import org.maplibre.android.style.layers.PropertyFactory.textPitchAlignment
+import org.maplibre.android.style.layers.PropertyFactory.textSize
 import org.maplibre.android.style.layers.PropertyFactory.visibility
+import org.maplibre.android.style.layers.SymbolLayer
 import org.maplibre.android.style.sources.GeoJsonSource
 import org.maplibre.android.style.sources.ImageSource
 
@@ -62,10 +68,13 @@ private const val IDW_LAYER_ID = "idw-heatmap-layer"
 private const val BUILDINGS_3D_LAYER_ID = "warsaw-3d-buildings-layer"
 private const val STATIONS_SOURCE_ID = "stations-source"
 private const val STATIONS_LAYER_ID = "stations-circle-layer"
+private const val STATIONS_SYMBOL_LAYER_ID = "stations-symbol-layer"
 private const val TOILETS_SOURCE_ID = "toalety-source"
 private const val TOILETS_LAYER_ID = "toalety-circle-layer"
+private const val TOILETS_SYMBOL_LAYER_ID = "toalety-symbol-layer"
 private const val MIEJSCA_CHLODU_SOURCE_ID = "miejsca-chlodu-source"
 private const val MIEJSCA_CHLODU_LAYER_ID = "miejsca-chlodu-circle-layer"
+private const val MIEJSCA_CHLODU_SYMBOL_LAYER_ID = "miejsca-chlodu-symbol-layer"
 private const val INSPECTION_SOURCE_ID = "inspection-source"
 private const val INSPECTION_LAYER_ID = "inspection-circle-layer"
 
@@ -384,6 +393,20 @@ private fun setupOverlayLayers(
         style.addLayer(circleLayer)
     }
 
+    if (style.getLayer(STATIONS_SYMBOL_LAYER_ID) == null) {
+        val symbolLayer =
+            SymbolLayer(STATIONS_SYMBOL_LAYER_ID, STATIONS_SOURCE_ID)
+                .withProperties(
+                    textField(get("icon")),
+                    textSize(11f),
+                    textAllowOverlap(true),
+                    textIgnorePlacement(true),
+                    textPitchAlignment(Property.TEXT_PITCH_ALIGNMENT_MAP),
+                    visibility(if (showStations) Property.VISIBLE else Property.NONE),
+                )
+        style.addLayer(symbolLayer)
+    }
+
     if (style.getSource(TOILETS_SOURCE_ID) == null) {
         style.addSource(GeoJsonSource(TOILETS_SOURCE_ID, toaletyGeoJson))
     }
@@ -402,6 +425,20 @@ private fun setupOverlayLayers(
         style.addLayer(circleLayer)
     }
 
+    if (style.getLayer(TOILETS_SYMBOL_LAYER_ID) == null) {
+        val symbolLayer =
+            SymbolLayer(TOILETS_SYMBOL_LAYER_ID, TOILETS_SOURCE_ID)
+                .withProperties(
+                    textField(get("icon")),
+                    textSize(11f),
+                    textAllowOverlap(true),
+                    textIgnorePlacement(true),
+                    textPitchAlignment(Property.TEXT_PITCH_ALIGNMENT_MAP),
+                    visibility(if (showToilets) Property.VISIBLE else Property.NONE),
+                )
+        style.addLayer(symbolLayer)
+    }
+
     if (style.getSource(MIEJSCA_CHLODU_SOURCE_ID) == null) {
         style.addSource(GeoJsonSource(MIEJSCA_CHLODU_SOURCE_ID, miejscaChloduGeoJson))
     }
@@ -418,6 +455,20 @@ private fun setupOverlayLayers(
                     visibility(if (showMiejscaChlodu) Property.VISIBLE else Property.NONE),
                 )
         style.addLayer(circleLayer)
+    }
+
+    if (style.getLayer(MIEJSCA_CHLODU_SYMBOL_LAYER_ID) == null) {
+        val symbolLayer =
+            SymbolLayer(MIEJSCA_CHLODU_SYMBOL_LAYER_ID, MIEJSCA_CHLODU_SOURCE_ID)
+                .withProperties(
+                    textField(get("icon")),
+                    textSize(12f),
+                    textAllowOverlap(true),
+                    textIgnorePlacement(true),
+                    textPitchAlignment(Property.TEXT_PITCH_ALIGNMENT_MAP),
+                    visibility(if (showMiejscaChlodu) Property.VISIBLE else Property.NONE),
+                )
+        style.addLayer(symbolLayer)
     }
 
     if (style.getSource(INSPECTION_SOURCE_ID) == null) {
@@ -474,14 +525,23 @@ private fun updateOverlayLayers(
     style.getLayer(STATIONS_LAYER_ID)?.setProperties(
         visibility(if (showStations) Property.VISIBLE else Property.NONE),
     )
+    style.getLayer(STATIONS_SYMBOL_LAYER_ID)?.setProperties(
+        visibility(if (showStations) Property.VISIBLE else Property.NONE),
+    )
 
     (style.getSourceAs<GeoJsonSource>(TOILETS_SOURCE_ID))?.setGeoJson(toaletyGeoJson)
     style.getLayer(TOILETS_LAYER_ID)?.setProperties(
         visibility(if (showToilets) Property.VISIBLE else Property.NONE),
     )
+    style.getLayer(TOILETS_SYMBOL_LAYER_ID)?.setProperties(
+        visibility(if (showToilets) Property.VISIBLE else Property.NONE),
+    )
 
     (style.getSourceAs<GeoJsonSource>(MIEJSCA_CHLODU_SOURCE_ID))?.setGeoJson(miejscaChloduGeoJson)
     style.getLayer(MIEJSCA_CHLODU_LAYER_ID)?.setProperties(
+        visibility(if (showMiejscaChlodu) Property.VISIBLE else Property.NONE),
+    )
+    style.getLayer(MIEJSCA_CHLODU_SYMBOL_LAYER_ID)?.setProperties(
         visibility(if (showMiejscaChlodu) Property.VISIBLE else Property.NONE),
     )
 
